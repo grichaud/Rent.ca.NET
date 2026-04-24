@@ -1,0 +1,142 @@
+@page "/landlord/listings/edit/{id:guid}"
+@model Rent.Web.Features.LandlordManage.Pages.Listings.EditModel
+@{
+    ViewData["Title"] = "Edit listing";
+}
+
+@if (Model.ListingMissing)
+{
+    <section class="max-w-xl mx-auto glass-card p-10 text-center">
+        <h1 class="font-display text-3xl text-slate-900">Listing not found</h1>
+        <a href="/landlord/listings" class="glass-button-primary inline-block mt-6">Back to listings</a>
+    </section>
+    return;
+}
+
+<section class="max-w-3xl mx-auto">
+    <a href="/landlord/listings" class="text-sm text-slate-500 hover:underline">&larr; Back to listings</a>
+    <h1 class="font-display text-3xl text-slate-900 mt-2">Edit listing</h1>
+
+    <form method="post" enctype="multipart/form-data" class="mt-6 space-y-6">
+        <div asp-validation-summary="All" class="text-sm text-red-600"></div>
+
+        <section class="glass-card p-6 space-y-4">
+            <h2 class="font-semibold text-slate-900">Basics</h2>
+            <div>
+                <label asp-for="Input.Title" class="block text-sm text-slate-700 mb-1">Title</label>
+                <input asp-for="Input.Title" class="glass-input" />
+            </div>
+            <div>
+                <label asp-for="Input.Description" class="block text-sm text-slate-700 mb-1">Description</label>
+                <textarea asp-for="Input.Description" rows="5" class="glass-input"></textarea>
+            </div>
+            <div>
+                <label asp-for="Input.PropertyType" class="block text-sm text-slate-700 mb-1">Property type</label>
+                <select asp-for="Input.PropertyType" class="glass-input">
+                    @foreach (var t in Enum.GetValues<Rent.Web.Domain.PropertyType>())
+                    {
+                        <option value="@t">@t</option>
+                    }
+                </select>
+            </div>
+        </section>
+
+        <section class="glass-card p-6 space-y-4">
+            <h2 class="font-semibold text-slate-900">Location</h2>
+            <div>
+                <label asp-for="Input.StreetAddress" class="block text-sm text-slate-700 mb-1">Street address</label>
+                <input asp-for="Input.StreetAddress" class="glass-input" />
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label asp-for="Input.CityName" class="block text-sm text-slate-700 mb-1">City</label>
+                    <input asp-for="Input.CityName" class="glass-input" />
+                </div>
+                <div>
+                    <label asp-for="Input.Province" class="block text-sm text-slate-700 mb-1">Province</label>
+                    <input asp-for="Input.Province" class="glass-input" />
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label asp-for="Input.PostalCode" class="block text-sm text-slate-700 mb-1">Postal code</label>
+                    <input asp-for="Input.PostalCode" class="glass-input" />
+                </div>
+                <div>
+                    <label asp-for="Input.Neighbourhood" class="block text-sm text-slate-700 mb-1">Neighbourhood</label>
+                    <input asp-for="Input.Neighbourhood" class="glass-input" />
+                </div>
+            </div>
+        </section>
+
+        <section class="glass-card p-6 space-y-4">
+            <h2 class="font-semibold text-slate-900">Unit details</h2>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div>
+                    <label asp-for="Input.Bedrooms" class="block text-sm text-slate-700 mb-1">Bedrooms</label>
+                    <input asp-for="Input.Bedrooms" type="number" min="0" max="20" class="glass-input" />
+                </div>
+                <div>
+                    <label asp-for="Input.Bathrooms" class="block text-sm text-slate-700 mb-1">Bathrooms</label>
+                    <input asp-for="Input.Bathrooms" type="number" step="0.5" min="0.5" class="glass-input" />
+                </div>
+                <div>
+                    <label asp-for="Input.SqFt" class="block text-sm text-slate-700 mb-1">Sq ft</label>
+                    <input asp-for="Input.SqFt" type="number" min="0" class="glass-input" />
+                </div>
+                <div>
+                    <label asp-for="Input.Price" class="block text-sm text-slate-700 mb-1">Price</label>
+                    <input asp-for="Input.Price" type="number" step="50" min="0" class="glass-input" />
+                </div>
+            </div>
+            <div>
+                <label asp-for="Input.AvailableDate" class="block text-sm text-slate-700 mb-1">Available from</label>
+                <input asp-for="Input.AvailableDate" type="date" class="glass-input" />
+            </div>
+            <div class="flex gap-6">
+                <label class="flex items-center gap-2 text-sm text-slate-700">
+                    <input asp-for="Input.PetsAllowed" type="checkbox" class="rounded border-slate-300" />
+                    Pet friendly
+                </label>
+                <label class="flex items-center gap-2 text-sm text-slate-700">
+                    <input asp-for="Input.Furnished" type="checkbox" class="rounded border-slate-300" />
+                    Furnished
+                </label>
+            </div>
+        </section>
+
+        @if (Model.ExistingImages.Count > 0)
+        {
+            <section class="glass-card p-6 space-y-3">
+                <h2 class="font-semibold text-slate-900">Current photos</h2>
+                <div class="grid grid-cols-3 sm:grid-cols-4 gap-3">
+                    @foreach (var img in Model.ExistingImages)
+                    {
+                        <div class="relative aspect-square rounded-xl overflow-hidden bg-slate-100">
+                            <img src="@img.Url" alt="" class="absolute inset-0 w-full h-full object-cover" />
+                            @if (img.IsPrimary)
+                            {
+                                <span class="absolute top-1 left-1 bg-brand-500 text-white text-[10px] uppercase font-semibold px-1.5 py-0.5 rounded">Cover</span>
+                            }
+                        </div>
+                    }
+                </div>
+            </section>
+        }
+
+        <section class="glass-card p-6 space-y-3">
+            <h2 class="font-semibold text-slate-900">Add more photos</h2>
+            <input type="file" name="Input.NewImages" multiple accept="image/*"
+                   class="block w-full text-sm text-slate-700 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-brand-500 file:text-white file:font-medium hover:file:bg-brand-600" />
+        </section>
+
+        <div class="flex gap-3 justify-end">
+            <a href="/landlord/listings" class="glass-button">Cancel</a>
+            <button type="submit" class="glass-button-primary">Save changes</button>
+        </div>
+    </form>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

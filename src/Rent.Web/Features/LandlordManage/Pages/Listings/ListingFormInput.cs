@@ -1,0 +1,27 @@
+using Rent.Web.Domain;
+
+namespace Rent.Web.Features.LandlordManage.Pages.Listings;
+
+public class ListingFormInput
+{
+    public string Title { get; set; } = string.Empty;
+    public string? Description { get; set; }
+    public PropertyType PropertyType { get; set; } = PropertyType.Apartment;
+
+    public string StreetAddress { get; set; } = string.Empty;
+    public string CityName { get; set; } = string.Empty;
+    public string Province { get; set; } = string.Empty;
+    public string PostalCode { get; set; } = string.Empty;
+    public string? Neighbourhood { get; set; }
+
+    public bool PetsAllowed { get; set; }
+    public bool Furnished { get; set; }
+
+    public int Bedrooms { get; set; } = 1;
+    public decimal Bathrooms { get; set; } = 1;
+    public int? SqFt { get; set; }
+    public decimal Price { get; set; }
+    public DateOnly? AvailableDate { get; set; }
+
+    public IFormFileCollection? NewImages { get; set; }
+}

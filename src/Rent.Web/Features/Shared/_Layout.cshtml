@@ -1,0 +1,58 @@
+@using Microsoft.AspNetCore.Identity
+@using Rent.Web.Domain
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@(ViewData["Title"] ?? "Rent.ca") - Rent.ca</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="icon" href="/favicon.ico" />
+</head>
+<body class="h-full page-background text-slate-800 antialiased">
+    <header class="sticky top-0 z-40 bg-white/70 backdrop-blur-xl border-b border-white/60">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+            <a href="/" class="flex items-center gap-2">
+                <span class="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-brand-500 text-white font-bold shadow-md shadow-brand-500/30">R</span>
+                <span class="font-display text-xl text-slate-900">Rent.ca</span>
+                <span class="text-xs uppercase tracking-wider text-brand-600 font-semibold">.NET</span>
+            </a>
+            <nav class="flex items-center gap-3 sm:gap-6 text-sm">
+                <a href="/" class="text-slate-600 hover:text-slate-900 hidden sm:inline-block">Browse</a>
+                <a href="/landlords" class="text-slate-600 hover:text-slate-900 hidden sm:inline-block">For Landlords</a>
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <a href="/landlord" class="text-slate-600 hover:text-slate-900">Dashboard</a>
+                    <form method="post" action="/logout" class="inline">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="glass-button text-slate-700">Log out</button>
+                    </form>
+                }
+                else
+                {
+                    <a href="/login" class="text-slate-700 hover:text-slate-900">Log in</a>
+                    <a href="/signup" class="glass-button-primary">Sign up</a>
+                }
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+        @RenderBody()
+    </main>
+
+    <footer class="max-w-7xl mx-auto px-4 sm:px-6 py-8 text-sm text-slate-500 border-t border-white/50 mt-12">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-2">
+            <span>&copy; @DateTime.UtcNow.Year Rent.ca.NET &mdash; Portfolio build by Giovanni Richaud</span>
+            <div class="flex gap-4">
+                <a href="https://rent-ca.vercel.app/en" class="hover:text-slate-700" target="_blank">Next.js version</a>
+                <a href="/privacy" class="hover:text-slate-700">Privacy</a>
+            </div>
+        </div>
+    </footer>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

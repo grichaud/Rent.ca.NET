@@ -1,0 +1,15 @@
+@page "/Error"
+@model ErrorModel
+@{
+    ViewData["Title"] = "Error";
+}
+
+<section class="max-w-xl mx-auto glass-card p-10 text-center">
+    <h1 class="font-display text-4xl text-slate-900">Something went wrong</h1>
+    <p class="text-slate-600 mt-4">An error occurred processing your request.</p>
+    @if (Model.ShowRequestId)
+    {
+        <p class="text-xs text-slate-400 mt-6 font-mono">Request ID: @Model.RequestId</p>
+    }
+    <a href="/" class="glass-button-primary inline-block mt-8">Back to home</a>
+</section>

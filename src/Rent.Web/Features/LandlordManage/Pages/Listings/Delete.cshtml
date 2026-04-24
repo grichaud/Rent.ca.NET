@@ -1,0 +1,28 @@
+@page "/landlord/listings/delete/{id:guid}"
+@model Rent.Web.Features.LandlordManage.Pages.Listings.DeleteModel
+@{
+    ViewData["Title"] = "Delete listing";
+}
+
+@if (Model.ListingMissing)
+{
+    <section class="max-w-xl mx-auto glass-card p-10 text-center">
+        <h1 class="font-display text-3xl text-slate-900">Listing not found</h1>
+        <a href="/landlord/listings" class="glass-button-primary inline-block mt-6">Back to listings</a>
+    </section>
+    return;
+}
+
+<section class="max-w-xl mx-auto glass-card p-10">
+    <h1 class="font-display text-3xl text-slate-900">Remove this listing?</h1>
+    <p class="text-slate-600 mt-3">
+        <strong>@Model.Title</strong> will be set to <em>Inactive</em> and hidden from search.
+        You can re-activate it later by editing (ship in slice 2).
+    </p>
+
+    <form method="post" class="mt-6 flex gap-3">
+        @Html.AntiForgeryToken()
+        <a href="/landlord/listings" class="glass-button flex-1 text-center">Cancel</a>
+        <button type="submit" class="flex-1 bg-red-600 hover:bg-red-700 text-white rounded-xl px-5 py-2 font-medium transition-all">Deactivate</button>
+    </form>
+</section>

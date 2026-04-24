@@ -1,0 +1,35 @@
+@model Rent.Web.Features.Search.PropertyCard
+
+<a href="/@Model.CitySlug/@Model.Slug" class="glass-card p-0 overflow-hidden hover:scale-[1.01] transition-transform flex flex-col">
+    @if (!string.IsNullOrEmpty(Model.PrimaryImageUrl))
+    {
+        <div class="relative aspect-[4/3] w-full bg-slate-100">
+            <img src="@Model.PrimaryImageUrl" alt="@Model.Title" class="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+            @if (Model.Tier == Rent.Web.Domain.ListingTier.Featured)
+            {
+                <span class="absolute top-3 left-3 bg-brand-500 text-white text-xs uppercase tracking-wider font-semibold px-2 py-1 rounded-md shadow">Featured</span>
+            }
+            else if (Model.Tier == Rent.Web.Domain.ListingTier.Promoted)
+            {
+                <span class="absolute top-3 left-3 bg-slate-900/80 text-white text-xs uppercase tracking-wider font-semibold px-2 py-1 rounded-md">Promoted</span>
+            }
+        </div>
+    }
+    <div class="p-4 flex-1 flex flex-col">
+        <div class="font-semibold text-slate-900 line-clamp-1">@Model.Title</div>
+        <div class="text-xs text-slate-500 mt-1">@(Model.Neighbourhood ?? Model.City), @Model.City</div>
+        <div class="mt-auto pt-3 flex items-end justify-between">
+            @if (Model.FromPrice.HasValue)
+            {
+                <div>
+                    <div class="text-xs text-slate-500">From</div>
+                    <div class="font-display text-xl text-slate-900">$@Model.FromPrice.Value.ToString("N0")<span class="text-xs text-slate-500">/mo</span></div>
+                </div>
+            }
+            <div class="text-xs text-slate-500 text-right">
+                <div>@(Model.MinBedrooms == 0 ? "Studio" : $"{Model.MinBedrooms}+ bed")</div>
+                <div>@Model.PropertyType</div>
+            </div>
+        </div>
+    </div>
+</a>

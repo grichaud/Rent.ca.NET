@@ -1,0 +1,39 @@
+# .NET
+bin/
+obj/
+out/
+publish/
+*.user
+*.suo
+.vs/
+
+# Rider / VS Code
+.idea/
+.vscode/
+
+# NuGet
+*.nupkg
+packages/
+
+# EF Core
+*.mdf
+*.ldf
+
+# Node / Tailwind
+node_modules/
+src/Rent.Web/wwwroot/css/site.css
+src/Rent.Web/wwwroot/css/site.css.map
+
+# User uploads (dev only; prod usa Azure Blob)
+src/Rent.Web/wwwroot/uploads/
+
+# OS / editor
+Thumbs.db
+.DS_Store
+*.swp
+
+# Secrets
+**/appsettings.Local.json
+.env
+.env.*
+!.env.example

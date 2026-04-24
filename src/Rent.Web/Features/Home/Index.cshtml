@@ -1,0 +1,27 @@
+@page "/"
+@model Rent.Web.Features.Home.IndexModel
+@{
+    ViewData["Title"] = "Find your next home";
+}
+
+<section class="text-center py-16 sm:py-24">
+    <h1 class="font-display text-5xl sm:text-6xl text-slate-900 leading-tight">Find your next home in Canada</h1>
+    <p class="text-lg text-slate-600 mt-6 max-w-2xl mx-auto">Thousands of rentals across Canadian cities. Search, compare, contact &mdash; without the noise.</p>
+    <div class="flex items-center justify-center gap-3 mt-10">
+        <a href="/toronto" class="glass-button-primary">Browse Toronto</a>
+        <a href="/landlords" class="glass-button">I'm a landlord</a>
+    </div>
+</section>
+
+<section class="mt-12">
+    <h2 class="font-display text-2xl text-slate-900 mb-6">Popular cities</h2>
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+        @foreach (var city in Model.FeaturedCities)
+        {
+            <a href="/@city.Slug" class="glass-card p-4 text-center hover:scale-[1.02] transition-transform">
+                <div class="font-semibold text-slate-900">@city.Name</div>
+                <div class="text-xs text-slate-500 mt-1">@city.Province</div>
+            </a>
+        }
+    </div>
+</section>

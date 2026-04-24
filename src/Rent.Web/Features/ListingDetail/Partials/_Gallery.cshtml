@@ -1,0 +1,24 @@
+@model IReadOnlyList<Rent.Web.Domain.PropertyImage>
+
+@if (Model.Count == 0)
+{
+    <div class="glass-card p-10 text-center text-slate-500">No photos yet.</div>
+    return;
+}
+
+@{
+    var hero = Model.First();
+    var rest = Model.Skip(1).Take(4).ToList();
+}
+
+<section class="grid sm:grid-cols-4 gap-2 aspect-[16/9] overflow-hidden rounded-3xl">
+    <div class="relative sm:col-span-2 sm:row-span-2 bg-slate-100">
+        <img src="@hero.Url" alt="@hero.AltText" class="absolute inset-0 w-full h-full object-cover" />
+    </div>
+    @foreach (var img in rest)
+    {
+        <div class="relative bg-slate-100 hidden sm:block">
+            <img src="@img.Url" alt="@img.AltText" class="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+        </div>
+    }
+</section>
