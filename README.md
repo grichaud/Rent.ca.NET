@@ -1,12 +1,15 @@
 # Rent.ca.NET
 
+[![Live on Azure](https://img.shields.io/badge/Live%20on-Azure%20App%20Service-0078D4?logo=microsoftazure&logoColor=white)](https://rent-ca-net.azurewebsites.net)
+[![.NET 9](https://img.shields.io/badge/.NET-9-512BD4?logo=dotnet&logoColor=white)](https://dotnet.microsoft.com)
+
 > ASP.NET Core 9 port of [rent-ca.vercel.app](https://rent-ca.vercel.app/en) &mdash; a marketplace for Canadian rentals originally built in Next.js + Supabase.
 
 This repo exists to show the same product in a pure Microsoft stack: **ASP.NET Core MVC + Razor Pages, EF Core, SQL Server, ASP.NET Core Identity, Tailwind CSS, deployed to Azure.** The Next.js original and this .NET port are feature-equivalent for the MVP slice and serve the same data model.
 
 | &nbsp; | Next.js version | .NET version (this repo) |
 | --- | --- | --- |
-| Live URL | https://rent-ca.vercel.app/en | _(pending Fase 7 deploy)_ `https://rent-ca-net.azurewebsites.net` |
+| Live URL | https://rent-ca.vercel.app/en | https://rent-ca-net.azurewebsites.net |
 | Runtime | Node.js | .NET 9 |
 | Web framework | Next.js 16 (App Router) | ASP.NET Core 9 (MVC + Razor Pages) |
 | Database | Supabase (Postgres) | SQL Server |
