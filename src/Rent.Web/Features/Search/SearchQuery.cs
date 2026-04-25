@@ -25,9 +25,12 @@ public class PropertyCard
     public string? PrimaryImageUrl { get; set; }
     public decimal? FromPrice { get; set; }
     public int MinBedrooms { get; set; }
+    public decimal MinBathrooms { get; set; }
     public PropertyType PropertyType { get; set; }
     public ListingTier Tier { get; set; }
     public bool IsVerified { get; set; }
+    public bool PetsAllowed { get; set; }
+    public bool Furnished { get; set; }
 }
 
 public class SearchResult

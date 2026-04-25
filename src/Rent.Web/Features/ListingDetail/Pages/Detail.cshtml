@@ -7,8 +7,8 @@
 @if (Model.Property is null)
 {
     <section class="max-w-xl mx-auto glass-card p-10 text-center">
-        <h1 class="font-display text-3xl text-slate-900">Listing not found</h1>
-        <p class="text-slate-500 mt-2">This listing is no longer available.</p>
+        <h1 class="font-display text-3xl text-slate-900 dark:text-white">Listing not found</h1>
+        <p class="text-slate-500 dark:text-white/60 mt-2">This listing is no longer available.</p>
         <a href="/" class="glass-button-primary inline-block mt-6">Back home</a>
     </section>
     return;
@@ -21,12 +21,12 @@
     var amenityGroups = p.Amenities.GroupBy(a => a.Category ?? "other").OrderBy(g => g.Key);
 }
 
-<nav class="text-sm text-slate-500 mb-4">
-    <a href="/" class="hover:underline">Home</a>
-    <span class="mx-2">/</span>
-    <a href="/@Model.CitySlug" class="hover:underline">@p.City</a>
-    <span class="mx-2">/</span>
-    <span class="text-slate-700">@p.Title</span>
+<nav class="text-sm text-slate-500 dark:text-white/50 mb-4 inline-flex items-center gap-2">
+    <a href="/" class="hover:text-brand-600 dark:hover:text-brand-400">Home</a>
+    <span class="opacity-50">/</span>
+    <a href="/@Model.CitySlug" class="hover:text-brand-600 dark:hover:text-brand-400">@p.City</a>
+    <span class="opacity-50">/</span>
+    <span class="text-slate-700 dark:text-white/80 truncate max-w-[40ch]">@p.Title</span>
 </nav>
 
 <partial name="/Features/ListingDetail/Partials/_Gallery.cshtml" model="orderedImages" />
@@ -34,24 +34,40 @@
 <section class="grid lg:grid-cols-[1fr_400px] gap-8 mt-8">
     <article class="space-y-6">
         <header>
-            <h1 class="font-display text-4xl text-slate-900">@p.Title</h1>
-            <p class="text-slate-600 mt-2">@p.StreetAddress, @(p.Neighbourhood is null ? "" : p.Neighbourhood + ", ")@p.City, @p.Province @p.PostalCode</p>
-            <div class="flex gap-2 mt-3">
-                <span class="px-2 py-1 bg-white/70 border border-white/60 rounded-lg text-xs text-slate-700">@p.PropertyType</span>
+            <h1 class="font-display text-4xl text-slate-900 dark:text-white">@p.Title</h1>
+            <p class="text-slate-600 dark:text-white/60 mt-2 inline-flex items-start gap-1.5">
+                <icon name="map-pin" class="h-4 w-4 mt-1 shrink-0 text-brand-500" />
+                <span>@p.StreetAddress, @(p.Neighbourhood is null ? "" : p.Neighbourhood + ", ")@p.City, @p.Province @p.PostalCode</span>
+            </p>
+            <div class="flex flex-wrap gap-2 mt-4">
+                <span class="glass-badge inline-flex items-center gap-1">
+                    <icon name="home" class="h-3.5 w-3.5" />
+                    @p.PropertyType
+                </span>
                 @if (p.PetsAllowed)
                 {
-                    <span class="px-2 py-1 bg-brand-50 border border-brand-200 rounded-lg text-xs text-brand-700">Pet friendly</span>
+                    <span class="glass-badge inline-flex items-center gap-1 !bg-brand-50 !border-brand-200 !text-brand-700 dark:!bg-brand-900/40 dark:!border-brand-700/40 dark:!text-brand-200">
+                        <icon name="dog" class="h-3.5 w-3.5" /> Pet friendly
+                    </span>
+                }
+                @if (p.Furnished)
+                {
+                    <span class="glass-badge inline-flex items-center gap-1">
+                        <icon name="sofa" class="h-3.5 w-3.5" /> Furnished
+                    </span>
                 }
                 @if (p.IsVerified)
                 {
-                    <span class="px-2 py-1 bg-emerald-50 border border-emerald-200 rounded-lg text-xs text-emerald-700">Verified</span>
+                    <span class="glass-badge inline-flex items-center gap-1 !bg-emerald-50 !border-emerald-200 !text-emerald-700 dark:!bg-emerald-900/40 dark:!border-emerald-700/40 dark:!text-emerald-200">
+                        <icon name="check" class="h-3.5 w-3.5" /> Verified
+                    </span>
                 }
             </div>
         </header>
 
         <section class="glass-card p-6">
-            <h2 class="font-semibold text-slate-900 mb-3">About this listing</h2>
-            <p class="text-slate-700 whitespace-pre-line">@p.Description</p>
+            <h2 class="font-semibold text-slate-900 dark:text-white mb-3">About this listing</h2>
+            <p class="text-slate-700 dark:text-white/80 whitespace-pre-line">@p.Description</p>
         </section>
 
         <partial name="/Features/ListingDetail/Partials/_UnitsTable.cshtml" model="p.Units" />
@@ -59,16 +75,16 @@
         @if (amenityGroups.Any())
         {
             <section class="glass-card p-6">
-                <h2 class="font-semibold text-slate-900 mb-4">Amenities</h2>
+                <h2 class="font-semibold text-slate-900 dark:text-white mb-4">Amenities</h2>
                 <div class="space-y-4">
                     @foreach (var group in amenityGroups)
                     {
                         <div>
-                            <div class="text-xs uppercase tracking-wider text-slate-500 mb-2">@group.Key</div>
+                            <div class="text-xs uppercase tracking-wider text-slate-500 dark:text-white/50 mb-2">@group.Key</div>
                             <div class="flex flex-wrap gap-2">
                                 @foreach (var a in group)
                                 {
-                                    <span class="px-3 py-1 bg-white/70 border border-white/60 rounded-full text-sm text-slate-700">@a.Name</span>
+                                    <span class="glass-badge">@a.Name</span>
                                 }
                             </div>
                         </div>
@@ -82,9 +98,9 @@
         <div class="glass-card p-6">
             @if (minPrice.HasValue)
             {
-                <div class="mb-4">
-                    <div class="text-xs text-slate-500">From</div>
-                    <div class="font-display text-3xl text-slate-900">$@minPrice.Value.ToString("N0")<span class="text-base text-slate-500">/mo</span></div>
+                <div class="mb-4 pb-4 border-b border-gray-200 dark:border-white/10">
+                    <div class="text-xs uppercase tracking-wider text-slate-500 dark:text-white/50">From</div>
+                    <div class="font-display text-3xl text-slate-900 dark:text-white">$@minPrice.Value.ToString("N0")<span class="text-base text-slate-500 dark:text-white/50">/mo</span></div>
                 </div>
             }
             <partial name="/Features/ListingDetail/Partials/_ContactForm.cshtml" model="Model" />

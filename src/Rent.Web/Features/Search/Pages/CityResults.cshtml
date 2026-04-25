@@ -7,34 +7,45 @@
 @if (Model.Result.City is null)
 {
     <section class="max-w-xl mx-auto glass-card p-10 text-center">
-        <h1 class="font-display text-3xl text-slate-900">City not found</h1>
-        <p class="text-slate-500 mt-2">We couldn&rsquo;t find a city with that name.</p>
+        <h1 class="font-display text-3xl text-slate-900 dark:text-white">City not found</h1>
+        <p class="text-slate-500 dark:text-white/60 mt-2">We couldn&rsquo;t find a city with that name.</p>
         <a href="/" class="glass-button-primary inline-block mt-6">Back home</a>
     </section>
     return;
 }
 
 <section class="mb-8">
-    <h1 class="font-display text-4xl text-slate-900">@Model.Result.City.Name, @Model.Result.City.Province</h1>
-    <p class="text-slate-600 mt-2">@Model.Result.TotalCount rentals available.</p>
+    <nav class="text-sm text-slate-500 dark:text-white/50 mb-3 inline-flex items-center gap-2">
+        <a href="/" class="hover:text-brand-600 dark:hover:text-brand-400">Home</a>
+        <span class="opacity-50">/</span>
+        <span class="text-slate-700 dark:text-white/80">@Model.Result.City.Name</span>
+    </nav>
+    <h1 class="font-display text-4xl sm:text-5xl text-slate-900 dark:text-white inline-flex items-center gap-3">
+        <icon name="map-pin" class="h-8 w-8 text-brand-500" />
+        @Model.Result.City.Name, @Model.Result.City.Province
+    </h1>
+    <p class="text-slate-600 dark:text-white/60 mt-2">@Model.Result.TotalCount rentals available.</p>
 </section>
 
 <section class="grid lg:grid-cols-[280px_1fr] gap-8">
-    <aside class="glass-base p-5 h-fit sticky top-24">
-        <h2 class="font-semibold text-slate-900 mb-4">Filters</h2>
+    <aside class="glass-sidebar p-6 h-fit lg:sticky lg:top-24">
+        <h2 class="font-semibold text-slate-900 dark:text-white mb-4 inline-flex items-center gap-2">
+            <icon name="tag" class="h-4 w-4 text-brand-500" />
+            Filters
+        </h2>
         <form method="get" class="space-y-4 text-sm">
             <div class="grid grid-cols-2 gap-2">
                 <div>
-                    <label asp-for="Query.MinPrice" class="block text-xs text-slate-500 mb-1">Min price</label>
+                    <label asp-for="Query.MinPrice" class="block text-xs text-slate-500 dark:text-white/50 mb-1">Min price</label>
                     <input asp-for="Query.MinPrice" type="number" min="0" class="glass-input !py-2 !text-sm" />
                 </div>
                 <div>
-                    <label asp-for="Query.MaxPrice" class="block text-xs text-slate-500 mb-1">Max price</label>
+                    <label asp-for="Query.MaxPrice" class="block text-xs text-slate-500 dark:text-white/50 mb-1">Max price</label>
                     <input asp-for="Query.MaxPrice" type="number" min="0" class="glass-input !py-2 !text-sm" />
                 </div>
             </div>
             <div>
-                <label asp-for="Query.Bedrooms" class="block text-xs text-slate-500 mb-1">Min bedrooms</label>
+                <label asp-for="Query.Bedrooms" class="block text-xs text-slate-500 dark:text-white/50 mb-1">Min bedrooms</label>
                 <select asp-for="Query.Bedrooms" class="glass-input !py-2 !text-sm">
                     <option value="">Any</option>
                     <option value="0">Studio</option>
@@ -44,7 +55,7 @@
                 </select>
             </div>
             <div>
-                <label asp-for="Query.Type" class="block text-xs text-slate-500 mb-1">Property type</label>
+                <label asp-for="Query.Type" class="block text-xs text-slate-500 dark:text-white/50 mb-1">Property type</label>
                 <select asp-for="Query.Type" class="glass-input !py-2 !text-sm">
                     <option value="">Any</option>
                     @foreach (var t in Enum.GetValues<Rent.Web.Domain.PropertyType>())
@@ -53,25 +64,29 @@
                     }
                 </select>
             </div>
-            <label class="flex items-center gap-2 text-slate-700">
-                <input asp-for="Query.PetsAllowed" type="checkbox" class="rounded border-slate-300" />
+            <label class="flex items-center gap-2 text-slate-700 dark:text-white/80">
+                <input asp-for="Query.PetsAllowed" type="checkbox" class="rounded border-gray-300 dark:border-white/20 text-brand-500 focus:ring-brand-500" />
+                <icon name="dog" class="h-4 w-4 text-slate-500 dark:text-white/60" />
                 Pet friendly
             </label>
-            <button type="submit" class="glass-button-primary w-full">Apply</button>
-            <a href="/@Model.Query.CitySlug" class="block text-center text-xs text-slate-500 hover:underline">Clear filters</a>
+            <button type="submit" class="glass-button-primary w-full inline-flex items-center justify-center gap-2">
+                <icon name="search" class="h-4 w-4" />
+                Apply filters
+            </button>
+            <a href="/@Model.Query.CitySlug" class="block text-center text-xs text-slate-500 dark:text-white/50 hover:underline">Clear filters</a>
         </form>
     </aside>
 
     <div>
         @if (Model.Result.Properties.Count == 0)
         {
-            <div class="glass-card p-10 text-center text-slate-600">
-                No listings match your filters. <a href="/@Model.Query.CitySlug" class="text-brand-600 underline">Clear filters</a>.
+            <div class="glass-card p-10 text-center text-slate-600 dark:text-white/70">
+                No listings match your filters. <a href="/@Model.Query.CitySlug" class="text-brand-600 dark:text-brand-400 underline">Clear filters</a>.
             </div>
         }
         else
         {
-            <div class="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
+            <div class="grid sm:grid-cols-2 xl:grid-cols-3 gap-5">
                 @foreach (var p in Model.Result.Properties)
                 {
                     <partial name="/Features/Search/Partials/_PropertyCard.cshtml" model="p" />

@@ -14,7 +14,7 @@ This repo exists to show the same product in a pure Microsoft stack: **ASP.NET C
 | Web framework | Next.js 16 (App Router) | ASP.NET Core 9 (MVC + Razor Pages) |
 | Database | Supabase (Postgres) | SQL Server |
 | Auth | Supabase Auth | ASP.NET Core Identity |
-| Styling | Tailwind + shadcn/ui | Tailwind + Liquid Glass |
+| Styling | Tailwind + shadcn/ui | Tailwind + Liquid Glass (port of original system) |
 | Hosting | Vercel | Azure App Service F1 + Azure SQL Free |
 
 ## MVP slice
@@ -28,6 +28,10 @@ This slice covers the core marketplace loop &mdash; enough to demonstrate the fu
 5. **Inquiries** &mdash; renters (or anonymous visitors) contact landlords via a validated form; landlords manage inquiries in an inbox with unread-filter and mark-read toggle.
 
 Deferred to later slices (wired up, not built): Google OAuth, transactional emails (Resend), renter portal with favorites and alerts, AI chat assistant (OpenRouter + Claude), Google Maps, French i18n, landlord tier upgrades, rent specials.
+
+### Slice 1.5 &mdash; Visual fidelity pass
+
+Ported the original Liquid Glass design system from the Next.js codebase: brand palette (`#338dff` &rarr; `#142857`), Google Fonts (Inter + DM Serif Display), Lucide-style SVG iconography via a Razor `IconTagHelper`, mesh background with animated aurora orbs, dark mode (Tailwind `class` strategy with cookie-persisted toggle), and a property card variant with overlay gradient, floating badges, MapPin / bed / bath icons, and brand-glow hover. The two sites now share the same look at the page level.
 
 ## Architecture
 

@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: 'class',
   content: [
     './Pages/**/*.cshtml',
     './Features/**/*.cshtml',
@@ -10,16 +11,17 @@ module.exports = {
     extend: {
       colors: {
         brand: {
-          50:  '#fdf6ee',
-          100: '#f9e7cf',
-          200: '#f3cd9e',
-          300: '#eaac65',
-          400: '#e08d3b',
-          500: '#c86f1e',
-          600: '#a05414',
-          700: '#7e4213',
-          800: '#5d3110',
-          900: '#3f220c'
+          50:  '#eef7ff',
+          100: '#d9edff',
+          200: '#bce0ff',
+          300: '#8ecdff',
+          400: '#59b0ff',
+          500: '#338dff',
+          600: '#1a6df5',
+          700: '#1457e1',
+          800: '#1747b6',
+          900: '#193f8f',
+          950: '#142857'
         }
       },
       fontFamily: {
@@ -28,14 +30,22 @@ module.exports = {
       },
       animation: {
         'float-bg': 'floatBG 15s ease-in-out infinite',
-        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        shimmer: 'shimmer 2s linear infinite',
+        glow: 'glow 2s ease-in-out infinite alternate'
       },
       keyframes: {
         floatBG: {
           '0%, 100%': { backgroundPosition: 'center center' },
-          '25%':      { backgroundPosition: '30% 70%' },
-          '50%':      { backgroundPosition: '70% 30%' },
-          '75%':      { backgroundPosition: '40% 60%' }
+          '50%':      { backgroundPosition: '70% 30%' }
+        },
+        shimmer: {
+          '0%':   { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(100%)' }
+        },
+        glow: {
+          '0%':   { boxShadow: '0 0 20px rgba(51, 141, 255, 0.3)' },
+          '100%': { boxShadow: '0 0 40px rgba(51, 141, 255, 0.6)' }
         }
       },
       backdropBlur: {

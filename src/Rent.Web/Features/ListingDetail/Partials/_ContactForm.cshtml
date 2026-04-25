@@ -2,7 +2,7 @@
 
 @if (TempData["InquirySuccess"] as string is string success)
 {
-    <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm rounded-xl p-3 mb-4">@success</div>
+    <div class="bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-700/40 text-emerald-800 dark:text-emerald-200 text-sm rounded-xl p-3 mb-4">@success</div>
 }
 
 <form method="post" action="/inquiries/submit" class="space-y-3 text-sm">
@@ -11,26 +11,29 @@
     <input type="hidden" name="ReturnCitySlug" value="@Model.CitySlug" />
     <input type="hidden" name="ReturnPropertySlug" value="@Model.Property!.Slug" />
 
-    <h3 class="font-semibold text-slate-900">Contact the landlord</h3>
+    <h3 class="font-semibold text-slate-900 dark:text-white inline-flex items-center gap-2">
+        <icon name="mail" class="h-4 w-4 text-brand-500" />
+        Contact the landlord
+    </h3>
 
     <div>
-        <label for="SenderName" class="block text-xs text-slate-500 mb-1">Your name</label>
+        <label for="SenderName" class="block text-xs text-slate-500 dark:text-white/50 mb-1">Your name</label>
         <input id="SenderName" name="SenderName" required class="glass-input !py-2 !text-sm" />
     </div>
     <div>
-        <label for="SenderEmail" class="block text-xs text-slate-500 mb-1">Email</label>
+        <label for="SenderEmail" class="block text-xs text-slate-500 dark:text-white/50 mb-1">Email</label>
         <input id="SenderEmail" name="SenderEmail" type="email" required class="glass-input !py-2 !text-sm" />
     </div>
     <div>
-        <label for="SenderPhone" class="block text-xs text-slate-500 mb-1">Phone (optional)</label>
+        <label for="SenderPhone" class="block text-xs text-slate-500 dark:text-white/50 mb-1">Phone (optional)</label>
         <input id="SenderPhone" name="SenderPhone" class="glass-input !py-2 !text-sm" />
     </div>
     <div>
-        <label for="MoveInDate" class="block text-xs text-slate-500 mb-1">Move-in date</label>
+        <label for="MoveInDate" class="block text-xs text-slate-500 dark:text-white/50 mb-1">Move-in date</label>
         <input id="MoveInDate" name="MoveInDate" type="date" class="glass-input !py-2 !text-sm" />
     </div>
     <div>
-        <label for="Message" class="block text-xs text-slate-500 mb-1">Message</label>
+        <label for="Message" class="block text-xs text-slate-500 dark:text-white/50 mb-1">Message</label>
         <textarea id="Message" name="Message" rows="4" required class="glass-input !py-2 !text-sm"></textarea>
     </div>
     <button type="submit" class="glass-button-primary w-full">Send inquiry</button>

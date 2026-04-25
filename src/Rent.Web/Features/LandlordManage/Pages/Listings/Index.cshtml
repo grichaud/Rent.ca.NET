@@ -6,8 +6,8 @@
 
 <section class="flex items-end justify-between mb-6">
     <div>
-        <h1 class="font-display text-3xl text-slate-900">My listings</h1>
-        <p class="text-slate-600 mt-1">@Model.Listings.Count listing@(Model.Listings.Count == 1 ? "" : "s").</p>
+        <h1 class="font-display text-3xl text-slate-900 dark:text-white">My listings</h1>
+        <p class="text-slate-600 dark:text-white/70 mt-1">@Model.Listings.Count listing@(Model.Listings.Count == 1 ? "" : "s").</p>
     </div>
     <a href="/landlord/listings/create" class="glass-button-primary">+ New listing</a>
 </section>
@@ -20,7 +20,7 @@
 @if (Model.Listings.Count == 0)
 {
     <div class="glass-card p-10 text-center">
-        <p class="text-slate-600">You don&rsquo;t have any listings yet.</p>
+        <p class="text-slate-600 dark:text-white/70">You don&rsquo;t have any listings yet.</p>
         <a href="/landlord/listings/create" class="glass-button-primary inline-block mt-4">Create your first listing</a>
     </div>
 }
@@ -36,20 +36,20 @@ else
                 }
                 else
                 {
-                    <div class="w-24 h-24 rounded-xl bg-slate-100 flex items-center justify-center text-xs text-slate-400">No image</div>
+                    <div class="w-24 h-24 rounded-xl bg-slate-100 dark:bg-white/5 flex items-center justify-center text-xs text-slate-400 dark:text-white/40">No image</div>
                 }
                 <div class="flex-1 min-w-0">
                     <div class="flex items-center gap-2">
-                        <a href="/@item.CitySlug/@item.Slug" class="font-semibold text-slate-900 hover:underline line-clamp-1">@item.Title</a>
-                        <span class="text-xs px-2 py-0.5 rounded-md @(item.Status == Rent.Web.Domain.ListingStatus.Active ? "bg-emerald-50 text-emerald-700 border border-emerald-200" : "bg-slate-100 text-slate-600 border border-slate-200")">
+                        <a href="/@item.CitySlug/@item.Slug" class="font-semibold text-slate-900 dark:text-white hover:underline line-clamp-1">@item.Title</a>
+                        <span class="text-xs px-2 py-0.5 rounded-md @(item.Status == Rent.Web.Domain.ListingStatus.Active ? "bg-emerald-50 text-emerald-700 border border-emerald-200" : "bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-white/70 border border-slate-200")">
                             @item.Status
                         </span>
                     </div>
-                    <p class="text-sm text-slate-500 mt-1">@item.CityName, @item.Province &middot; @item.Bedrooms bed &middot; $@item.Price.ToString("N0")/mo</p>
-                    <p class="text-xs text-slate-400 mt-1">@item.ViewCount views &middot; @item.LeadCount leads</p>
+                    <p class="text-sm text-slate-500 dark:text-white/50 mt-1">@item.CityName, @item.Province &middot; @item.Bedrooms bed &middot; $@item.Price.ToString("N0")/mo</p>
+                    <p class="text-xs text-slate-400 dark:text-white/40 mt-1">@item.ViewCount views &middot; @item.LeadCount leads</p>
                 </div>
                 <div class="flex gap-2">
-                    <a href="/landlord/listings/edit/@item.Id" class="glass-button text-slate-700">Edit</a>
+                    <a href="/landlord/listings/edit/@item.Id" class="glass-button text-slate-700 dark:text-white/80">Edit</a>
                     <a href="/landlord/listings/delete/@item.Id" class="glass-button text-red-600">Delete</a>
                 </div>
             </article>

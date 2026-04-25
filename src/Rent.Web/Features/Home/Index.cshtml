@@ -2,26 +2,148 @@
 @model Rent.Web.Features.Home.IndexModel
 @{
     ViewData["Title"] = "Find your next home";
+
+    string CityGradient(string slug)
+    {
+        var hash = 0;
+        foreach (var c in slug) hash = (hash * 31 + c) & 0x7fffffff;
+        return (hash % 6) switch
+        {
+            0 => "from-brand-500 to-cyan-500",
+            1 => "from-purple-500 to-pink-500",
+            2 => "from-emerald-500 to-teal-500",
+            3 => "from-amber-500 to-orange-500",
+            4 => "from-rose-500 to-fuchsia-500",
+            _ => "from-sky-500 to-indigo-500"
+        };
+    }
 }
 
-<section class="text-center py-16 sm:py-24">
-    <h1 class="font-display text-5xl sm:text-6xl text-slate-900 leading-tight">Find your next home in Canada</h1>
-    <p class="text-lg text-slate-600 mt-6 max-w-2xl mx-auto">Thousands of rentals across Canadian cities. Search, compare, contact &mdash; without the noise.</p>
-    <div class="flex items-center justify-center gap-3 mt-10">
-        <a href="/toronto" class="glass-button-primary">Browse Toronto</a>
-        <a href="/landlords" class="glass-button">I'm a landlord</a>
+<section>
+    <div class="flex items-end justify-between mb-8">
+        <div>
+            <h2 class="font-display text-3xl sm:text-4xl text-slate-900 dark:text-white">Popular cities</h2>
+            <p class="text-slate-600 dark:text-white/60 mt-1 text-sm">Hand-picked Canadian metros with active listings.</p>
+        </div>
     </div>
-</section>
 
-<section class="mt-12">
-    <h2 class="font-display text-2xl text-slate-900 mb-6">Popular cities</h2>
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+    <div class="grid grid-cols-3 sm:grid-cols-6 gap-6 sm:gap-8">
         @foreach (var city in Model.FeaturedCities)
         {
-            <a href="/@city.Slug" class="glass-card p-4 text-center hover:scale-[1.02] transition-transform">
-                <div class="font-semibold text-slate-900">@city.Name</div>
-                <div class="text-xs text-slate-500 mt-1">@city.Province</div>
+            <a href="/@city.Slug" class="group flex flex-col items-center text-center">
+                <div class="relative h-24 w-24 sm:h-28 sm:w-28 rounded-full bg-gradient-to-br @CityGradient(city.Slug) flex items-center justify-center text-white font-display text-3xl sm:text-4xl shadow-xl group-hover:shadow-brand-500/40 group-hover:scale-105 transition-all duration-300 ring-2 ring-white/40 dark:ring-white/15 group-hover:ring-brand-400/60">
+                    @city.Name.Substring(0, 1)
+                </div>
+                <div class="mt-3 font-semibold text-slate-900 dark:text-white text-sm">@city.Name</div>
+                <div class="text-xs text-slate-500 dark:text-white/50">@city.Province</div>
             </a>
         }
     </div>
 </section>
+
+@if (Model.LatestListings.Count > 0)
+{
+    <section class="mt-16 sm:mt-24">
+        <div class="flex items-end justify-between mb-8">
+            <div>
+                <h2 class="font-display text-3xl sm:text-4xl text-slate-900 dark:text-white">Newest listings</h2>
+                <p class="text-slate-600 dark:text-white/60 mt-1 text-sm">Fresh on the market, just added by landlords.</p>
+            </div>
+        </div>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            @foreach (var p in Model.LatestListings)
+            {
+                <partial name="/Features/Search/Partials/_PropertyCard.cshtml" model="p" />
+            }
+        </div>
+    </section>
+}
+
+<section class="mt-16 sm:mt-24">
+    <div class="glass-card-premium p-10 sm:p-14 text-center">
+        <span class="glass-highlight"></span>
+        <icon name="building" class="h-10 w-10 mx-auto text-brand-500 mb-4" />
+        <h2 class="font-display text-3xl sm:text-4xl text-slate-900 dark:text-white">Are you a landlord?</h2>
+        <p class="text-slate-600 dark:text-white/70 mt-3 max-w-xl mx-auto">
+            List your property in minutes. Reach renters across Canada from a single dashboard.
+        </p>
+        <a href="/landlords" class="glass-button-primary inline-flex items-center gap-2 mt-8">
+            <span>List your property</span>
+            <icon name="user-plus" class="h-4 w-4" />
+        </a>
+    </div>
+</section>
+
+@section Hero {
+    <section class="relative overflow-hidden min-h-[80vh] flex items-center" aria-label="Search for rentals in Canada">
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1517935706615-2717063c2225?w=1920&amp;h=1080&amp;fit=crop&amp;q=80"
+                 alt=""
+                 class="absolute inset-0 w-full h-full object-cover"
+                 loading="eager"
+                 fetchpriority="high" />
+            <div class="absolute inset-0 bg-white/40 dark:bg-slate-950/60"></div>
+            <div class="absolute inset-0 mesh-background opacity-40 dark:opacity-60"></div>
+        </div>
+
+        <div aria-hidden="true" class="pointer-events-none absolute inset-0 z-[1]">
+            <div class="absolute -top-[10%] -left-[5%] h-[600px] w-[600px] rounded-full bg-brand-500/10 dark:bg-brand-500/15 blur-[120px] animate-pulse-slow"></div>
+            <div class="absolute -top-[5%] -right-[10%] h-[500px] w-[500px] rounded-full bg-purple-500/10 dark:bg-purple-500/15 blur-[100px] animate-pulse-slow [animation-delay:2s]"></div>
+            <div class="absolute bottom-[5%] left-[30%] h-[400px] w-[400px] rounded-full bg-cyan-500/10 dark:bg-cyan-500/15 blur-[80px] animate-pulse-slow [animation-delay:4s]"></div>
+        </div>
+
+        <div aria-hidden="true" class="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-gray-50 dark:from-slate-900 to-transparent pointer-events-none z-[2]"></div>
+
+        <div class="relative z-10 w-full max-w-4xl mx-auto px-4 py-16 sm:py-24 text-center">
+            <div class="glass-badge mx-auto mb-8 inline-flex">
+                <icon name="sparkles" class="h-3.5 w-3.5 text-brand-600 dark:text-brand-300" />
+                <span class="text-xs font-medium text-slate-700 dark:text-white/80">AI-powered search coming soon</span>
+            </div>
+
+            <h1 class="font-display text-5xl sm:text-6xl md:text-7xl leading-[1.05] text-slate-900 dark:text-white">
+                Find your next
+                <span class="bg-gradient-to-r from-brand-500 to-cyan-500 bg-clip-text text-transparent">home</span>
+                in Canada
+            </h1>
+            <p class="text-lg sm:text-xl text-slate-600 dark:text-white/70 mt-6 max-w-2xl mx-auto">
+                Thousands of rentals across Canadian cities. Search, compare, and contact landlords &mdash; without the noise.
+            </p>
+
+            <form id="hero-search" class="mt-10 max-w-2xl mx-auto glass-card p-2 flex items-center gap-2" role="search">
+                <label for="hero-city" class="pl-3 text-slate-400 dark:text-white/40">
+                    <icon name="search" class="h-5 w-5" />
+                </label>
+                <select id="hero-city" required class="flex-1 bg-transparent border-0 outline-none text-slate-900 dark:text-white text-base py-3 focus:ring-0">
+                    <option value="">Where do you want to live?</option>
+                    @foreach (var c in Model.AllCities)
+                    {
+                        <option value="@c.Slug">@c.Name, @c.Province</option>
+                    }
+                </select>
+                <button type="submit" class="glass-button-primary inline-flex items-center gap-2 shrink-0">
+                    <span>Search</span>
+                    <icon name="search" class="h-4 w-4" />
+                </button>
+            </form>
+
+            <div class="mt-6 flex flex-wrap items-center justify-center gap-2 text-sm">
+                <span class="text-slate-500 dark:text-white/50">Popular:</span>
+                @foreach (var c in Model.FeaturedCities.Take(4))
+                {
+                    <a href="/@c.Slug" class="glass-badge hover:scale-105 transition-transform">@c.Name</a>
+                }
+            </div>
+        </div>
+    </section>
+}
+
+@section Scripts {
+    <script>
+      document.getElementById('hero-search').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var slug = document.getElementById('hero-city').value;
+        if (slug) window.location.href = '/' + slug;
+      });
+    </script>
+}

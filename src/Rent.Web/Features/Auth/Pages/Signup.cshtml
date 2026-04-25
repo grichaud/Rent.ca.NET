@@ -6,53 +6,63 @@
 
 <section class="max-w-md mx-auto">
     <div class="glass-card p-8 sm:p-10">
-        <h1 class="font-display text-3xl text-slate-900 text-center">Create your account</h1>
-        <p class="text-slate-500 text-center mt-2">Takes less than a minute.</p>
+        <div class="flex justify-center mb-4">
+            <div class="h-12 w-12 rounded-2xl bg-gradient-to-br from-brand-500 to-cyan-500 flex items-center justify-center text-white shadow-lg shadow-brand-500/30">
+                <icon name="user-plus" class="h-6 w-6" />
+            </div>
+        </div>
+        <h1 class="font-display text-3xl text-slate-900 dark:text-white text-center">Create your account</h1>
+        <p class="text-slate-500 dark:text-white/60 text-center mt-2">Takes less than a minute.</p>
 
         <form method="post" class="mt-8 space-y-4">
-            <div asp-validation-summary="ModelOnly" class="text-sm text-red-600"></div>
+            <div asp-validation-summary="ModelOnly" class="text-sm text-red-600 dark:text-red-400"></div>
 
             <div>
-                <label asp-for="Input.FullName" class="block text-sm text-slate-700 mb-1">Full name</label>
+                <label asp-for="Input.FullName" class="block text-sm text-slate-700 dark:text-white/80 mb-1">Full name</label>
                 <input asp-for="Input.FullName" class="glass-input" autocomplete="name" />
-                <span asp-validation-for="Input.FullName" class="text-xs text-red-600"></span>
+                <span asp-validation-for="Input.FullName" class="text-xs text-red-600 dark:text-red-400"></span>
             </div>
 
             <div>
-                <label asp-for="Input.Email" class="block text-sm text-slate-700 mb-1">Email</label>
+                <label asp-for="Input.Email" class="block text-sm text-slate-700 dark:text-white/80 mb-1">Email</label>
                 <input asp-for="Input.Email" type="email" class="glass-input" autocomplete="email" />
-                <span asp-validation-for="Input.Email" class="text-xs text-red-600"></span>
+                <span asp-validation-for="Input.Email" class="text-xs text-red-600 dark:text-red-400"></span>
             </div>
 
             <div>
-                <label asp-for="Input.Password" class="block text-sm text-slate-700 mb-1">Password</label>
+                <label asp-for="Input.Password" class="block text-sm text-slate-700 dark:text-white/80 mb-1">Password</label>
                 <input asp-for="Input.Password" type="password" class="glass-input" autocomplete="new-password" />
-                <span asp-validation-for="Input.Password" class="text-xs text-red-600"></span>
-                <p class="text-xs text-slate-500 mt-1">At least 8 characters, one uppercase, one digit.</p>
+                <span asp-validation-for="Input.Password" class="text-xs text-red-600 dark:text-red-400"></span>
+                <p class="text-xs text-slate-500 dark:text-white/50 mt-1">At least 8 characters, one uppercase, one digit.</p>
             </div>
 
             <fieldset class="pt-2">
-                <legend class="block text-sm text-slate-700 mb-2">I am a&hellip;</legend>
+                <legend class="block text-sm text-slate-700 dark:text-white/80 mb-2">I am a&hellip;</legend>
                 <div class="grid grid-cols-2 gap-3">
-                    <label class="glass-base p-4 flex flex-col items-start cursor-pointer has-[:checked]:border-brand-500 has-[:checked]:bg-brand-50">
+                    <label class="glass-base p-4 flex flex-col items-start cursor-pointer has-[:checked]:border-brand-500 has-[:checked]:bg-brand-50 dark:has-[:checked]:bg-brand-500/20 transition-colors">
                         <input type="radio" asp-for="Input.Role" value="Renter" class="sr-only" />
-                        <span class="font-semibold text-slate-900">Renter</span>
-                        <span class="text-xs text-slate-500 mt-1">Looking for a place.</span>
+                        <icon name="user" class="h-5 w-5 text-brand-500 mb-2" />
+                        <span class="font-semibold text-slate-900 dark:text-white">Renter</span>
+                        <span class="text-xs text-slate-500 dark:text-white/60 mt-1">Looking for a place.</span>
                     </label>
-                    <label class="glass-base p-4 flex flex-col items-start cursor-pointer has-[:checked]:border-brand-500 has-[:checked]:bg-brand-50">
+                    <label class="glass-base p-4 flex flex-col items-start cursor-pointer has-[:checked]:border-brand-500 has-[:checked]:bg-brand-50 dark:has-[:checked]:bg-brand-500/20 transition-colors">
                         <input type="radio" asp-for="Input.Role" value="Landlord" class="sr-only" />
-                        <span class="font-semibold text-slate-900">Landlord</span>
-                        <span class="text-xs text-slate-500 mt-1">Posting properties.</span>
+                        <icon name="building" class="h-5 w-5 text-brand-500 mb-2" />
+                        <span class="font-semibold text-slate-900 dark:text-white">Landlord</span>
+                        <span class="text-xs text-slate-500 dark:text-white/60 mt-1">Posting properties.</span>
                     </label>
                 </div>
-                <span asp-validation-for="Input.Role" class="text-xs text-red-600"></span>
+                <span asp-validation-for="Input.Role" class="text-xs text-red-600 dark:text-red-400"></span>
             </fieldset>
 
-            <button type="submit" class="glass-button-primary w-full mt-2">Create account</button>
+            <button type="submit" class="glass-button-primary w-full mt-2 inline-flex items-center justify-center gap-2">
+                <icon name="user-plus" class="h-4 w-4" />
+                Create account
+            </button>
         </form>
 
-        <p class="text-center text-sm text-slate-500 mt-6">
-            Already have an account? <a href="/login" class="text-brand-600 font-medium hover:underline">Log in</a>
+        <p class="text-center text-sm text-slate-500 dark:text-white/60 mt-6">
+            Already have an account? <a href="/login" class="text-brand-600 dark:text-brand-400 font-medium hover:underline">Log in</a>
         </p>
     </div>
 </section>

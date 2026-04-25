@@ -63,9 +63,12 @@ public class SearchHandler
                     .FirstOrDefault(),
                 FromPrice = p.Units.Min(u => (decimal?)u.Price),
                 MinBedrooms = p.Units.Min(u => (int?)u.Bedrooms) ?? 0,
+                MinBathrooms = p.Units.Min(u => (decimal?)u.Bathrooms) ?? 0m,
                 PropertyType = p.PropertyType,
                 Tier = p.Tier,
-                IsVerified = p.IsVerified
+                IsVerified = p.IsVerified,
+                PetsAllowed = p.PetsAllowed,
+                Furnished = p.Furnished
             })
             .ToListAsync(ct);
 
