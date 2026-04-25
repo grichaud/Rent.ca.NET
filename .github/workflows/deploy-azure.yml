@@ -1,0 +1,77 @@
+name: Deploy to Azure App Service
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  AZURE_WEBAPP_NAME: rent-ca-net
+  DOTNET_VERSION: '9.0.x'
+  NODE_VERSION: '20.x'
+  WEB_PROJECT: src/Rent.Web/Rent.Web.csproj
+  WEB_DIR: src/Rent.Web
+
+jobs:
+  test:
+    name: Build and test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore
+        run: dotnet restore Rent.ca.NET.sln
+
+      - name: Build
+        run: dotnet build Rent.ca.NET.sln --configuration Release --no-restore -warnaserror
+
+      - name: Test
+        run: dotnet test Rent.ca.NET.sln --configuration Release --no-build --verbosity normal
+
+  publish:
+    name: Publish and deploy
+    runs-on: ubuntu-latest
+    needs: test
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install Tailwind deps
+        working-directory: ${{ env.WEB_DIR }}
+        run: npm ci
+
+      - name: Build Tailwind CSS
+        working-directory: ${{ env.WEB_DIR }}
+        run: npm run build:css
+
+      - name: Publish
+        run: dotnet publish ${{ env.WEB_PROJECT }} --configuration Release --output publish /p:UseAppHost=false
+
+      - name: Apply EF Core migrations
+        env:
+          ConnectionStrings__DefaultConnection: ${{ secrets.AZURE_SQL_CONNECTION_STRING }}
+        run: |
+          dotnet tool install --global dotnet-ef --version 9.0.0
+          dotnet ef database update --project ${{ env.WEB_PROJECT }} --configuration Release --no-build
+
+      - name: Deploy to Azure App Service
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: publish
