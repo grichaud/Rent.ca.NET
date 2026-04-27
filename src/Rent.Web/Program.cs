@@ -59,6 +59,14 @@ if (googleConfigured)
         });
 }
 
+// The Identity.External cookie defaults to a 5-minute ExpireTimeSpan, which is too short
+// for a user reading the role-picker on /external-login-confirm. Bump to 30 min so the
+// signup completes even if the user takes a few minutes to decide.
+builder.Services.ConfigureExternalCookie(options =>
+{
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+});
+
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddScoped<Rent.Web.Features.Search.SearchHandler>();
 

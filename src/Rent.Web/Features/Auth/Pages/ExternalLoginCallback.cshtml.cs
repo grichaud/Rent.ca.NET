@@ -36,7 +36,8 @@ public class ExternalLoginCallbackModel : PageModel
         var info = await _signInManager.GetExternalLoginInfoAsync();
         if (info is null)
         {
-            TempData["LoginError"] = "Could not retrieve external login info. Please try again.";
+            _logger.LogWarning("ExternalLoginCallback: external cookie missing/expired immediately after provider redirect.");
+            TempData["LoginError"] = "Could not retrieve external login info. Please click \"Continue with Google\" again.";
             return Redirect("/login");
         }
 

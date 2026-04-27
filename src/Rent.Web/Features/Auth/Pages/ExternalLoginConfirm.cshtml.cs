@@ -42,10 +42,17 @@ public class ExternalLoginConfirmModel : PageModel
     public string Email { get; private set; } = string.Empty;
     public string Provider { get; private set; } = string.Empty;
 
+    private const string SessionExpiredMessage =
+        "Your sign-up session expired before you finished. Please click \"Continue with Google\" again.";
+
     public async Task<IActionResult> OnGetAsync()
     {
         var info = await _signInManager.GetExternalLoginInfoAsync();
-        if (info is null) return Redirect("/login");
+        if (info is null)
+        {
+            TempData["LoginError"] = SessionExpiredMessage;
+            return Redirect("/login");
+        }
 
         Email = info.GetEmail() ?? string.Empty;
         Provider = info.ProviderDisplayName ?? info.LoginProvider;
@@ -56,7 +63,12 @@ public class ExternalLoginConfirmModel : PageModel
     public async Task<IActionResult> OnPostAsync(CancellationToken ct)
     {
         var info = await _signInManager.GetExternalLoginInfoAsync();
-        if (info is null) return Redirect("/login");
+        if (info is null)
+        {
+            _logger.LogWarning("ExternalLoginConfirm POST: external cookie missing/expired before user submitted.");
+            TempData["LoginError"] = SessionExpiredMessage;
+            return Redirect("/login");
+        }
 
         Email = info.GetEmail() ?? string.Empty;
         Provider = info.ProviderDisplayName ?? info.LoginProvider;
