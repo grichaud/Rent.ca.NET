@@ -106,7 +106,10 @@ public class SignupModel : PageModel
 
     public IActionResult OnPostExternalLogin(string provider, string? returnUrl = null)
     {
-        var redirectUrl = Url.Page("/ExternalLoginCallback", pageHandler: null, values: new { returnUrl });
+        // See LoginModel.OnPostExternalLogin for why we hardcode the URL instead of using Url.Page.
+        var redirectUrl = string.IsNullOrEmpty(returnUrl)
+            ? "/external-login-callback"
+            : $"/external-login-callback?returnUrl={Uri.EscapeDataString(returnUrl)}";
         var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
         return Challenge(properties, provider);
     }

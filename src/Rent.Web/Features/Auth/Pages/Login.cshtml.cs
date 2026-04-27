@@ -63,7 +63,11 @@ public class LoginModel : PageModel
 
     public IActionResult OnPostExternalLogin(string provider, string? returnUrl = null)
     {
-        var redirectUrl = Url.Page("/ExternalLoginCallback", pageHandler: null, values: new { returnUrl });
+        // Use the literal route from ExternalLoginCallback's @page directive — Url.Page("/ExternalLoginCallback")
+        // returns null because RootDirectory='/Features' makes the page name '/Auth/Pages/ExternalLoginCallback'.
+        var redirectUrl = string.IsNullOrEmpty(returnUrl)
+            ? "/external-login-callback"
+            : $"/external-login-callback?returnUrl={Uri.EscapeDataString(returnUrl)}";
         var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
         return Challenge(properties, provider);
     }
