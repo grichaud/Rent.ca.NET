@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Rent.Web.Features.Email;
 using Rent.Web.Infrastructure.Data;
 using Rent.Web.Infrastructure.Data.Seed;
 using Rent.Web.Infrastructure.Identity;
@@ -15,11 +17,18 @@ public class RentAppFactory : WebApplicationFactory<Program>
 {
     private readonly SqliteConnection _connection;
 
+    public FakeEmailSender EmailSender { get; } = new();
+
     static RentAppFactory()
     {
         // Set BEFORE Program.Main runs, so the startup connection-string check passes.
         // Real DbContext config is swapped out in ConfigureWebHost.
         Environment.SetEnvironmentVariable("ConnectionStrings__DefaultConnection", "Data Source=:memory:");
+
+        // Google OAuth dummy creds so AddGoogle() registers the scheme and the
+        // "Continue with Google" button renders. Real OAuth handshake is never invoked in tests.
+        Environment.SetEnvironmentVariable("Authentication__Google__ClientId", "test-google-client-id");
+        Environment.SetEnvironmentVariable("Authentication__Google__ClientSecret", "test-google-client-secret");
     }
 
     public RentAppFactory()
@@ -45,6 +54,12 @@ public class RentAppFactory : WebApplicationFactory<Program>
 
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlite(_connection));
+
+            services.RemoveAll<IEmailSender>();
+            services.AddSingleton<IEmailSender>(EmailSender);
+
+            services.RemoveAll<IAntiforgery>();
+            services.AddSingleton<IAntiforgery, NoOpAntiforgery>();
 
             var sp = services.BuildServiceProvider();
             using var scope = sp.CreateScope();

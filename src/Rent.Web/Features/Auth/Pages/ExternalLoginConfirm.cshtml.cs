@@ -1,5 +1,4 @@
 using FluentValidation;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,25 +11,25 @@ using Rent.Web.Infrastructure.Identity;
 namespace Rent.Web.Features.Auth.Pages;
 
 [AllowAnonymous]
-public class SignupModel : PageModel
+public class ExternalLoginConfirmModel : PageModel
 {
-    private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly UserManager<ApplicationUser> _userManager;
     private readonly AppDbContext _db;
     private readonly IValidator<InputModel> _validator;
     private readonly IEmailSender _emailSender;
-    private readonly ILogger<SignupModel> _logger;
+    private readonly ILogger<ExternalLoginConfirmModel> _logger;
 
-    public SignupModel(
-        UserManager<ApplicationUser> userManager,
+    public ExternalLoginConfirmModel(
         SignInManager<ApplicationUser> signInManager,
+        UserManager<ApplicationUser> userManager,
         AppDbContext db,
         IValidator<InputModel> validator,
         IEmailSender emailSender,
-        ILogger<SignupModel> logger)
+        ILogger<ExternalLoginConfirmModel> logger)
     {
-        _userManager = userManager;
         _signInManager = signInManager;
+        _userManager = userManager;
         _db = db;
         _validator = validator;
         _emailSender = emailSender;
@@ -40,16 +39,34 @@ public class SignupModel : PageModel
     [BindProperty]
     public InputModel Input { get; set; } = new();
 
-    public IList<AuthenticationScheme> ExternalLogins { get; private set; } = new List<AuthenticationScheme>();
+    public string Email { get; private set; } = string.Empty;
+    public string Provider { get; private set; } = string.Empty;
 
-    public async Task OnGetAsync()
+    public async Task<IActionResult> OnGetAsync()
     {
-        ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+        var info = await _signInManager.GetExternalLoginInfoAsync();
+        if (info is null) return Redirect("/login");
+
+        Email = info.GetEmail() ?? string.Empty;
+        Provider = info.ProviderDisplayName ?? info.LoginProvider;
+        Input.FullName = info.GetFullName() ?? string.Empty;
+        return Page();
     }
 
     public async Task<IActionResult> OnPostAsync(CancellationToken ct)
     {
-        ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+        var info = await _signInManager.GetExternalLoginInfoAsync();
+        if (info is null) return Redirect("/login");
+
+        Email = info.GetEmail() ?? string.Empty;
+        Provider = info.ProviderDisplayName ?? info.LoginProvider;
+
+        if (string.IsNullOrWhiteSpace(Email))
+        {
+            ModelState.AddModelError(string.Empty, "External provider did not return an email address.");
+            return Page();
+        }
+
         var validation = await _validator.ValidateAsync(Input, ct);
         if (!validation.IsValid)
         {
@@ -61,12 +78,13 @@ public class SignupModel : PageModel
         var user = new ApplicationUser
         {
             Id = Guid.NewGuid(),
-            Email = Input.Email,
-            UserName = Input.Email,
-            FullName = Input.FullName
+            Email = Email,
+            UserName = Email,
+            FullName = Input.FullName,
+            EmailConfirmed = true
         };
 
-        var create = await _userManager.CreateAsync(user, Input.Password);
+        var create = await _userManager.CreateAsync(user);
         if (!create.Succeeded)
         {
             foreach (var e in create.Errors)
@@ -86,8 +104,17 @@ public class SignupModel : PageModel
             await _db.SaveChangesAsync(ct);
         }
 
+        var addLogin = await _userManager.AddLoginAsync(user, info);
+        if (!addLogin.Succeeded)
+        {
+            foreach (var e in addLogin.Errors)
+                ModelState.AddModelError(string.Empty, e.Description);
+            return Page();
+        }
+
         await _signInManager.SignInAsync(user, isPersistent: true);
-        _logger.LogInformation("User {Email} signed up with role {Role}.", user.Email, Input.Role);
+        _logger.LogInformation(
+            "User {Email} created via {Provider} with role {Role}.", user.Email, info.LoginProvider, Input.Role);
 
         try
         {
@@ -104,18 +131,9 @@ public class SignupModel : PageModel
         return Input.Role == Roles.Landlord ? Redirect("/landlord") : Redirect("/");
     }
 
-    public IActionResult OnPostExternalLogin(string provider, string? returnUrl = null)
-    {
-        var redirectUrl = Url.Page("/ExternalLoginCallback", pageHandler: null, values: new { returnUrl });
-        var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
-        return Challenge(properties, provider);
-    }
-
     public class InputModel
     {
         public string FullName { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
-        public string Password { get; set; } = string.Empty;
         public string Role { get; set; } = Roles.Renter;
     }
 }

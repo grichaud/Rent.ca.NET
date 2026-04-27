@@ -72,4 +72,46 @@ public class AuthTests : IClassFixture<RentAppFactory>
         response.StatusCode.Should().Be(HttpStatusCode.Redirect);
         response.Headers.Location!.ToString().Should().Contain("/login");
     }
+
+    [Fact]
+    public async Task Login_ShowsContinueWithGoogleButton_WhenProviderConfigured()
+    {
+        using var client = _factory.CreateClient();
+        var response = await client.GetAsync("/login");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var body = await response.Content.ReadAsStringAsync();
+        body.Should().Contain("Continue with Google");
+    }
+
+    [Fact]
+    public async Task ExternalLogin_LinkedToUser_PersistsAndRoundTrips()
+    {
+        using var scope = _factory.Services.CreateScope();
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+        var user = new ApplicationUser
+        {
+            Id = Guid.NewGuid(),
+            Email = "external.landlord@example.com",
+            UserName = "external.landlord@example.com",
+            FullName = "External Landlord",
+            EmailConfirmed = true
+        };
+        var created = await userManager.CreateAsync(user);
+        created.Succeeded.Should().BeTrue();
+
+        await userManager.AddToRoleAsync(user, Roles.Landlord);
+
+        var loginInfo = new UserLoginInfo("Google", "google-sub-abcdef", "Google");
+        var addLogin = await userManager.AddLoginAsync(user, loginInfo);
+        addLogin.Succeeded.Should().BeTrue();
+
+        var logins = await userManager.GetLoginsAsync(user);
+        logins.Should().Contain(l => l.LoginProvider == "Google" && l.ProviderKey == "google-sub-abcdef");
+
+        var roundTrip = await userManager.FindByLoginAsync("Google", "google-sub-abcdef");
+        roundTrip.Should().NotBeNull();
+        roundTrip!.Email.Should().Be("external.landlord@example.com");
+    }
 }

@@ -37,3 +37,7 @@ Thumbs.db
 .env
 .env.*
 !.env.example
+
+# Local-only test artefacts
+/.playwright-mcp/
+/slice*-*.png

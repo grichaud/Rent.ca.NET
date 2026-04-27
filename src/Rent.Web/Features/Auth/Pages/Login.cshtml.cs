@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -26,10 +27,19 @@ public class LoginModel : PageModel
     [BindProperty(SupportsGet = true)]
     public string? ReturnUrl { get; set; }
 
-    public void OnGet() { }
+    public IList<AuthenticationScheme> ExternalLogins { get; private set; } = new List<AuthenticationScheme>();
+
+    public string? StatusMessage => TempData["LoginError"] as string;
+    public string? SuccessMessage => TempData["LoginSuccess"] as string;
+
+    public async Task OnGetAsync()
+    {
+        ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+    }
 
     public async Task<IActionResult> OnPostAsync()
     {
+        ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         if (!ModelState.IsValid) return Page();
 
         var result = await _signInManager.PasswordSignInAsync(
@@ -49,6 +59,13 @@ public class LoginModel : PageModel
             return Redirect("/landlord");
 
         return Redirect("/");
+    }
+
+    public IActionResult OnPostExternalLogin(string provider, string? returnUrl = null)
+    {
+        var redirectUrl = Url.Page("/ExternalLoginCallback", pageHandler: null, values: new { returnUrl });
+        var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+        return Challenge(properties, provider);
     }
 
     public class InputModel

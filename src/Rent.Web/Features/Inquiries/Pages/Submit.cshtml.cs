@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Rent.Web.Domain;
+using Rent.Web.Features.Email;
 using Rent.Web.Infrastructure.Data;
 
 namespace Rent.Web.Features.Inquiries.Pages;
@@ -15,17 +16,20 @@ public class SubmitModel : PageModel
     private readonly AppDbContext _db;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IValidator<InquiryRequest> _validator;
+    private readonly IEmailSender _emailSender;
     private readonly ILogger<SubmitModel> _logger;
 
     public SubmitModel(
         AppDbContext db,
         UserManager<ApplicationUser> userManager,
         IValidator<InquiryRequest> validator,
+        IEmailSender emailSender,
         ILogger<SubmitModel> logger)
     {
         _db = db;
         _userManager = userManager;
         _validator = validator;
+        _emailSender = emailSender;
         _logger = logger;
     }
 
@@ -40,10 +44,12 @@ public class SubmitModel : PageModel
             return RedirectBackToListing(request);
         }
 
-        var exists = await _db.Properties
+        var property = await _db.Properties
             .AsNoTracking()
-            .AnyAsync(p => p.Id == request.PropertyId && p.Status == ListingStatus.Active, ct);
-        if (!exists)
+            .Include(p => p.LandlordProfile)
+                .ThenInclude(lp => lp.User)
+            .FirstOrDefaultAsync(p => p.Id == request.PropertyId && p.Status == ListingStatus.Active, ct);
+        if (property is null)
         {
             TempData["InquiryError"] = "This listing is no longer accepting inquiries.";
             return RedirectBackToListing(request);
@@ -77,6 +83,34 @@ public class SubmitModel : PageModel
         await _db.SaveChangesAsync(ct);
 
         _logger.LogInformation("Inquiry submitted for property {PropertyId} by {Email}", request.PropertyId, request.SenderEmail);
+
+        try
+        {
+            var landlordEmail = property.LandlordProfile?.User?.Email;
+            if (!string.IsNullOrWhiteSpace(landlordEmail))
+            {
+                var origin = $"{Request.Scheme}://{Request.Host}";
+                var propertyUrl = !string.IsNullOrEmpty(request.ReturnCitySlug) && !string.IsNullOrEmpty(request.ReturnPropertySlug)
+                    ? $"{origin}/{request.ReturnCitySlug}/{request.ReturnPropertySlug}"
+                    : origin;
+
+                await _emailSender.SendInquiryToLandlordAsync(new InquiryEmail(
+                    LandlordEmail: landlordEmail,
+                    LandlordName: property.LandlordProfile?.User?.FullName ?? "there",
+                    PropertyTitle: property.Title,
+                    PropertyUrl: propertyUrl,
+                    InboxUrl: $"{origin}/landlord/inbox",
+                    SenderName: request.SenderName.Trim(),
+                    SenderEmail: request.SenderEmail.Trim(),
+                    SenderPhone: string.IsNullOrWhiteSpace(request.SenderPhone) ? null : request.SenderPhone.Trim(),
+                    Message: request.Message.Trim(),
+                    MoveInDate: request.MoveInDate), ct);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to send inquiry email for property {PropertyId}", request.PropertyId);
+        }
 
         TempData["InquirySuccess"] = "Your message has been sent to the landlord.";
         return RedirectBackToListing(request);
