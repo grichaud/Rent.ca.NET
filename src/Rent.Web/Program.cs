@@ -69,6 +69,7 @@ builder.Services.ConfigureExternalCookie(options =>
 
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddScoped<Rent.Web.Features.Search.SearchHandler>();
+builder.Services.AddScoped<Rent.Web.Features.Favorites.IFavoriteService, Rent.Web.Features.Favorites.FavoriteService>();
 
 builder.Services.Configure<Rent.Web.Features.Email.EmailOptions>(
     builder.Configuration.GetSection(Rent.Web.Features.Email.EmailOptions.SectionName));

@@ -9,6 +9,7 @@ public sealed class IconTagHelper : TagHelper
 {
     public string Name { get; set; } = string.Empty;
     public string? Class { get; set; }
+    public string? Fill { get; set; }
     public int StrokeWidth { get; set; } = 2;
 
     public override void Process(TagHelperContext context, TagHelperOutput output)
@@ -26,7 +27,7 @@ public sealed class IconTagHelper : TagHelper
         output.TagMode = TagMode.StartTagAndEndTag;
         output.Attributes.SetAttribute("xmlns", "http://www.w3.org/2000/svg");
         output.Attributes.SetAttribute("viewBox", "0 0 24 24");
-        output.Attributes.SetAttribute("fill", "none");
+        output.Attributes.SetAttribute("fill", string.IsNullOrWhiteSpace(Fill) ? "none" : Fill);
         output.Attributes.SetAttribute("stroke", "currentColor");
         output.Attributes.SetAttribute("stroke-width", StrokeWidth.ToString());
         output.Attributes.SetAttribute("stroke-linecap", "round");
@@ -64,5 +65,19 @@ public sealed class IconTagHelper : TagHelper
         ["building"]     = "<rect width='16' height='20' x='4' y='2' rx='2' ry='2'/><path d='M9 22v-4h6v4'/><path d='M8 6h.01'/><path d='M16 6h.01'/><path d='M12 6h.01'/><path d='M12 10h.01'/><path d='M12 14h.01'/><path d='M16 10h.01'/><path d='M16 14h.01'/><path d='M8 10h.01'/><path d='M8 14h.01'/>",
         ["tag"]          = "<path d='M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z'/><circle cx='7.5' cy='7.5' r='.5' fill='currentColor'/>",
         ["lock"]         = "<rect width='18' height='11' x='3' y='11' rx='2' ry='2'/><path d='M7 11V7a5 5 0 0 1 10 0v4'/>",
+        ["layout-dashboard"] = "<rect width='7' height='9' x='3' y='3' rx='1'/><rect width='7' height='5' x='14' y='3' rx='1'/><rect width='7' height='9' x='14' y='12' rx='1'/><rect width='7' height='5' x='3' y='16' rx='1'/>",
+        ["bell"]         = "<path d='M10.268 21a2 2 0 0 0 3.464 0'/><path d='M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326'/>",
+        ["bell-off"]     = "<path d='M10.268 21a2 2 0 0 0 3.464 0'/><path d='M17 17H4a1 1 0 0 1-.74-1.673C4.59 13.956 6 12.499 6 8a6 6 0 0 1 .258-1.742'/><path d='m2 2 20 20'/><path d='M8.668 3.01A6 6 0 0 1 18 8c0 2.687.77 4.653 1.707 6.05'/>",
+        ["message-square"] = "<path d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'/>",
+        ["external-link"] = "<path d='M15 3h6v6'/><path d='M10 14 21 3'/><path d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6'/>",
+        ["arrow-right"]  = "<path d='M5 12h14'/><path d='m12 5 7 7-7 7'/>",
+        ["trash-2"]      = "<path d='M3 6h18'/><path d='M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6'/><path d='M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2'/><line x1='10' x2='10' y1='11' y2='17'/><line x1='14' x2='14' y1='11' y2='17'/>",
+        ["plus"]         = "<path d='M5 12h14'/><path d='M12 5v14'/>",
+        ["eye"]          = "<path d='M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0'/><circle cx='12' cy='12' r='3'/>",
+        ["filter"]       = "<polygon points='22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3'/>",
+        ["calendar"]     = "<path d='M8 2v4'/><path d='M16 2v4'/><rect width='18' height='18' x='3' y='4' rx='2'/><path d='M3 10h18'/>",
+        ["check-circle"] = "<path d='M21.801 10A10 10 0 1 1 17 3.335'/><path d='m9 11 3 3L22 4'/>",
+        ["alert-circle"] = "<circle cx='12' cy='12' r='10'/><line x1='12' x2='12' y1='8' y2='12'/><line x1='12' x2='12.01' y1='16' y2='16'/>",
+        ["info"]         = "<circle cx='12' cy='12' r='10'/><path d='M12 16v-4'/><path d='M12 8h.01'/>",
     };
 }

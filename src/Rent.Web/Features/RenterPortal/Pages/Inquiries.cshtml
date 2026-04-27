@@ -1,0 +1,62 @@
+@page "/renter/inquiries"
+@model Rent.Web.Features.RenterPortal.Pages.InquiriesModel
+@{
+    ViewData["Title"] = "My inquiries";
+}
+
+<div class="space-y-6">
+    <header>
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">My Inquiries</h1>
+        <p class="mt-1 text-sm text-slate-600 dark:text-white/70">Messages you've sent to landlords.</p>
+    </header>
+
+    @if (!Model.Inquiries.Any())
+    {
+        <div class="glass-card p-10 text-center">
+            <div class="inline-flex h-16 w-16 rounded-2xl bg-cyan-500/15 items-center justify-center mb-4">
+                <icon name="message-square" class="h-7 w-7 text-cyan-500 dark:text-cyan-300" />
+            </div>
+            <h2 class="font-display text-2xl text-slate-900 dark:text-white">No inquiries sent</h2>
+            <p class="text-slate-500 dark:text-white/60 mt-2 max-w-sm mx-auto">When you contact a landlord from a listing page, your message will show up here.</p>
+            <a href="/" class="glass-button-primary inline-flex items-center gap-2 mt-6">
+                <icon name="search" class="h-4 w-4" />
+                Browse listings
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="space-y-3">
+            @foreach (var inq in Model.Inquiries)
+            {
+                <article class="glass-card p-5">
+                    <div class="flex items-start justify-between gap-3 flex-wrap">
+                        <div class="min-w-0">
+                            <a href="/@inq.CitySlug/@inq.PropertySlug" class="font-semibold text-slate-900 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
+                                @inq.PropertyTitle
+                            </a>
+                            <div class="text-xs text-slate-500 dark:text-white/60 mt-0.5 inline-flex items-center gap-1">
+                                <icon name="map-pin" class="h-3 w-3" />
+                                @inq.PropertyCity
+                            </div>
+                        </div>
+                        <div class="text-xs text-slate-500 dark:text-white/50 inline-flex items-center gap-1.5 shrink-0">
+                            <icon name="calendar" class="h-3.5 w-3.5" />
+                            Sent @inq.CreatedAt.ToLocalTime().ToString("MMM d, yyyy")
+                        </div>
+                    </div>
+
+                    @if (inq.MoveInDate.HasValue)
+                    {
+                        <div class="mt-2 text-xs text-slate-600 dark:text-white/70 inline-flex items-center gap-1.5">
+                            <icon name="home" class="h-3.5 w-3.5" />
+                            Move-in: @inq.MoveInDate.Value.ToString("MMM d, yyyy")
+                        </div>
+                    }
+
+                    <p class="mt-3 text-sm text-slate-700 dark:text-white/80 line-clamp-3">@inq.Message</p>
+                </article>
+            }
+        </div>
+    }
+</div>

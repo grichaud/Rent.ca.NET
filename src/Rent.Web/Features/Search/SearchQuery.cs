@@ -31,6 +31,7 @@ public class PropertyCard
     public bool IsVerified { get; set; }
     public bool PetsAllowed { get; set; }
     public bool Furnished { get; set; }
+    public bool IsFavorited { get; set; }
 }
 
 public class SearchResult

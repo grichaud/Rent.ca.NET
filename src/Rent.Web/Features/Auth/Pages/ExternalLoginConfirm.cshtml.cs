@@ -128,19 +128,25 @@ public class ExternalLoginConfirmModel : PageModel
         _logger.LogInformation(
             "User {Email} created via {Provider} with role {Role}.", user.Email, info.LoginProvider, Input.Role);
 
+        var portalPath = Input.Role switch
+        {
+            Roles.Landlord => "/landlord",
+            Roles.Renter => "/renter",
+            _ => "/"
+        };
+
         try
         {
             var origin = $"{Request.Scheme}://{Request.Host}";
-            var portalUrl = Input.Role == Roles.Landlord ? $"{origin}/landlord" : $"{origin}/";
             await _emailSender.SendWelcomeAsync(
-                new WelcomeEmail(user.Email!, user.FullName ?? string.Empty, Input.Role, portalUrl), ct);
+                new WelcomeEmail(user.Email!, user.FullName ?? string.Empty, Input.Role, $"{origin}{portalPath}"), ct);
         }
         catch (Exception ex)
         {
             _logger.LogWarning(ex, "Failed to send welcome email to {Email}", user.Email);
         }
 
-        return Input.Role == Roles.Landlord ? Redirect("/landlord") : Redirect("/");
+        return Redirect(portalPath);
     }
 
     public class InputModel

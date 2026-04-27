@@ -55,8 +55,13 @@ public class LoginModel : PageModel
             return Redirect(ReturnUrl);
 
         var user = await _userManager.FindByEmailAsync(Input.Email);
-        if (user is not null && await _userManager.IsInRoleAsync(user, Roles.Landlord))
-            return Redirect("/landlord");
+        if (user is not null)
+        {
+            if (await _userManager.IsInRoleAsync(user, Roles.Landlord))
+                return Redirect("/landlord");
+            if (await _userManager.IsInRoleAsync(user, Roles.Renter))
+                return Redirect("/renter");
+        }
 
         return Redirect("/");
     }

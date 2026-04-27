@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Rent.Web.Domain;
+using Rent.Web.Features.Favorites;
 using Rent.Web.Infrastructure.Data;
 
 namespace Rent.Web.Features.Search;
@@ -7,13 +8,18 @@ namespace Rent.Web.Features.Search;
 public class SearchHandler
 {
     private readonly AppDbContext _db;
+    private readonly IFavoriteService _favorites;
 
-    public SearchHandler(AppDbContext db)
+    public SearchHandler(AppDbContext db, IFavoriteService favorites)
     {
         _db = db;
+        _favorites = favorites;
     }
 
     public async Task<SearchResult> ExecuteAsync(SearchQuery query, CancellationToken ct = default)
+        => await ExecuteAsync(query, currentUserId: null, ct);
+
+    public async Task<SearchResult> ExecuteAsync(SearchQuery query, Guid? currentUserId, CancellationToken ct = default)
     {
         var citySlug = query.CitySlug?.ToLowerInvariant() ?? string.Empty;
 
@@ -71,6 +77,13 @@ public class SearchHandler
                 Furnished = p.Furnished
             })
             .ToListAsync(ct);
+
+        if (currentUserId is Guid uid)
+        {
+            var favIds = await _favorites.GetFavoritedIdsAsync(uid, items.Select(i => i.Id), ct);
+            foreach (var card in items)
+                card.IsFavorited = favIds.Contains(card.Id);
+        }
 
         return new SearchResult
         {

@@ -36,3 +36,10 @@ public enum LeaseTerm
     TwoYears,
     Flexible
 }
+
+public enum AlertFrequency
+{
+    Instant,
+    Daily,
+    Weekly
+}

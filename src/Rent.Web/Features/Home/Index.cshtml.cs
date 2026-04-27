@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Rent.Web.Domain;
+using Rent.Web.Features.Favorites;
 using Rent.Web.Features.Search;
 using Rent.Web.Infrastructure.Data;
 
@@ -9,10 +11,14 @@ namespace Rent.Web.Features.Home;
 public class IndexModel : PageModel
 {
     private readonly AppDbContext _db;
+    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly IFavoriteService _favorites;
 
-    public IndexModel(AppDbContext db)
+    public IndexModel(AppDbContext db, UserManager<ApplicationUser> userManager, IFavoriteService favorites)
     {
         _db = db;
+        _userManager = userManager;
+        _favorites = favorites;
     }
 
     public IReadOnlyList<City> FeaturedCities { get; private set; } = [];
@@ -67,5 +73,13 @@ public class IndexModel : PageModel
             Furnished = p.Furnished
         })
             .ToList();
+
+        if (User.Identity?.IsAuthenticated == true
+            && Guid.TryParse(_userManager.GetUserId(User), out var uid))
+        {
+            var favIds = await _favorites.GetFavoritedIdsAsync(uid, LatestListings.Select(c => c.Id), ct);
+            foreach (var card in LatestListings)
+                card.IsFavorited = favIds.Contains(card.Id);
+        }
     }
 }

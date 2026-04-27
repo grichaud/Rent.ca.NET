@@ -1,0 +1,182 @@
+@page "/renter/alerts"
+@using Rent.Web.Domain
+@model Rent.Web.Features.Alerts.Pages.IndexModel
+@{
+    ViewData["Title"] = "Search alerts";
+    string FormatPrice(decimal? p) => p.HasValue ? "$" + p.Value.ToString("N0") : "—";
+    string Summarize(Rent.Web.Domain.Alert a)
+    {
+        var parts = new List<string>();
+        if (a.PriceMin.HasValue || a.PriceMax.HasValue)
+        {
+            parts.Add(string.Format("{0}–{1}", FormatPrice(a.PriceMin), FormatPrice(a.PriceMax)));
+        }
+        if (a.BedroomsMin.HasValue) parts.Add($"{a.BedroomsMin}+ bd");
+        if (a.PropertyType.HasValue) parts.Add(a.PropertyType.Value.ToString());
+        if (a.PetsAllowed == true) parts.Add("Pet friendly");
+        return parts.Count == 0 ? "Any property" : string.Join(" • ", parts);
+    }
+}
+
+<div class="space-y-6">
+    <div class="flex items-center justify-between gap-3 flex-wrap">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Search Alerts</h1>
+            <p class="mt-1 text-sm text-slate-600 dark:text-white/70">Get notified when new listings match your criteria.</p>
+        </div>
+        <a href="@(Model.ShowForm ? "/renter/alerts" : "/renter/alerts?showForm=true")"
+           class="glass-button-primary inline-flex items-center gap-2 text-sm">
+            <icon name="@(Model.ShowForm ? "x" : "plus")" class="h-4 w-4" />
+            @(Model.ShowForm ? "Cancel" : "New Alert")
+        </a>
+    </div>
+
+    @if (Model.FlashSuccess is not null)
+    {
+        <div class="p-3 rounded-lg border border-emerald-300 bg-emerald-50 dark:border-emerald-500/40 dark:bg-emerald-500/10 text-sm text-emerald-700 dark:text-emerald-300 inline-flex items-center gap-2">
+            <icon name="check-circle" class="h-4 w-4" />
+            @Model.FlashSuccess
+        </div>
+    }
+
+    @if (Model.ShowForm || !ModelState.IsValid)
+    {
+        <section class="glass-card p-6">
+            <h2 class="font-semibold text-slate-900 dark:text-white mb-4">Create a new alert</h2>
+            <form method="post" asp-page-handler="Create" class="grid gap-4 sm:grid-cols-2">
+                <div asp-validation-summary="ModelOnly" class="text-sm text-red-600 dark:text-red-400 sm:col-span-2"></div>
+
+                <div>
+                    <label asp-for="Input.City" class="block text-sm text-slate-700 dark:text-white/80 mb-1">City</label>
+                    <select asp-for="Input.City" class="glass-input">
+                        <option value="">Select a city…</option>
+                        @foreach (var city in Model.Cities)
+                        {
+                            <option value="@city.Name">@city.Name, @city.Province</option>
+                        }
+                    </select>
+                    <span asp-validation-for="Input.City" class="text-xs text-red-600 dark:text-red-400"></span>
+                </div>
+
+                <div>
+                    <label asp-for="Input.PropertyType" class="block text-sm text-slate-700 dark:text-white/80 mb-1">Property type</label>
+                    <select asp-for="Input.PropertyType" class="glass-input">
+                        <option value="">Any</option>
+                        @foreach (var t in Enum.GetValues<PropertyType>())
+                        {
+                            <option value="@t">@t</option>
+                        }
+                    </select>
+                    <span asp-validation-for="Input.PropertyType" class="text-xs text-red-600 dark:text-red-400"></span>
+                </div>
+
+                <div>
+                    <label asp-for="Input.PriceMin" class="block text-sm text-slate-700 dark:text-white/80 mb-1">Min price ($/mo)</label>
+                    <input asp-for="Input.PriceMin" type="number" step="50" min="0" class="glass-input" placeholder="No min" />
+                    <span asp-validation-for="Input.PriceMin" class="text-xs text-red-600 dark:text-red-400"></span>
+                </div>
+
+                <div>
+                    <label asp-for="Input.PriceMax" class="block text-sm text-slate-700 dark:text-white/80 mb-1">Max price ($/mo)</label>
+                    <input asp-for="Input.PriceMax" type="number" step="50" min="0" class="glass-input" placeholder="No max" />
+                    <span asp-validation-for="Input.PriceMax" class="text-xs text-red-600 dark:text-red-400"></span>
+                </div>
+
+                <div>
+                    <label asp-for="Input.BedroomsMin" class="block text-sm text-slate-700 dark:text-white/80 mb-1">Min bedrooms</label>
+                    <input asp-for="Input.BedroomsMin" type="number" step="1" min="0" max="10" class="glass-input" placeholder="Any" />
+                    <span asp-validation-for="Input.BedroomsMin" class="text-xs text-red-600 dark:text-red-400"></span>
+                </div>
+
+                <div>
+                    <label asp-for="Input.PetsAllowed" class="block text-sm text-slate-700 dark:text-white/80 mb-1">Pets allowed</label>
+                    <select asp-for="Input.PetsAllowed" class="glass-input">
+                        <option value="">Any</option>
+                        <option value="true">Yes — pet friendly</option>
+                        <option value="false">No</option>
+                    </select>
+                    <span asp-validation-for="Input.PetsAllowed" class="text-xs text-red-600 dark:text-red-400"></span>
+                </div>
+
+                <div class="sm:col-span-2">
+                    <label asp-for="Input.Frequency" class="block text-sm text-slate-700 dark:text-white/80 mb-1">Notification frequency</label>
+                    <select asp-for="Input.Frequency" class="glass-input">
+                        <option value="@AlertFrequency.Instant">Instant</option>
+                        <option value="@AlertFrequency.Daily">Daily digest</option>
+                        <option value="@AlertFrequency.Weekly">Weekly digest</option>
+                    </select>
+                    <span asp-validation-for="Input.Frequency" class="text-xs text-red-600 dark:text-red-400"></span>
+                </div>
+
+                <div class="sm:col-span-2 flex items-center gap-3">
+                    <button type="submit" class="glass-button-primary inline-flex items-center gap-2">
+                        <icon name="check" class="h-4 w-4" />
+                        Create alert
+                    </button>
+                    <a href="/renter/alerts" class="glass-button inline-flex items-center gap-2">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </section>
+    }
+
+    @if (!Model.Alerts.Any())
+    {
+        <div class="glass-card p-10 text-center">
+            <div class="inline-flex h-16 w-16 rounded-2xl bg-brand-500/10 items-center justify-center mb-4">
+                <icon name="bell" class="h-7 w-7 text-brand-500 dark:text-brand-300" />
+            </div>
+            <h2 class="font-display text-2xl text-slate-900 dark:text-white">No alerts set up</h2>
+            <p class="text-slate-500 dark:text-white/60 mt-2 max-w-sm mx-auto">Create an alert to get notified when new properties matching your criteria become available.</p>
+            <a href="/renter/alerts?showForm=true" class="glass-button-primary inline-flex items-center gap-2 mt-6">
+                <icon name="plus" class="h-4 w-4" />
+                Create alert
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="space-y-3">
+            @foreach (var a in Model.Alerts)
+            {
+                <div class="glass-card p-4 sm:p-5 flex items-center gap-4 flex-wrap">
+                    <div class="flex items-center justify-center h-12 w-12 rounded-2xl bg-brand-500/20 shrink-0">
+                        <icon name="bell" class="h-6 w-6 text-brand-500 dark:text-brand-300" />
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <span class="font-semibold text-slate-900 dark:text-white truncate">@(a.City ?? "Any city")</span>
+                            @if (a.IsActive)
+                            {
+                                <span class="text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-700 dark:text-emerald-300">Active</span>
+                            }
+                            else
+                            {
+                                <span class="text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-md bg-slate-500/20 text-slate-600 dark:text-slate-300">Paused</span>
+                            }
+                            <span class="text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-md bg-cyan-500/15 text-cyan-700 dark:text-cyan-300">@a.Frequency</span>
+                        </div>
+                        <p class="text-sm text-slate-500 dark:text-white/60 mt-1 truncate">@Summarize(a)</p>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <form method="post" asp-page-handler="Toggle">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@a.Id" />
+                            <button type="submit" class="h-9 w-9 inline-flex items-center justify-center rounded-lg text-slate-600 dark:text-white/70 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors" title="@(a.IsActive ? "Pause" : "Resume")" aria-label="@(a.IsActive ? "Pause" : "Resume")">
+                                <icon name="@(a.IsActive ? "bell-off" : "bell")" class="h-4 w-4" />
+                            </button>
+                        </form>
+                        <form method="post" asp-page-handler="Delete" onsubmit="return confirm('Delete this alert?');">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@a.Id" />
+                            <button type="submit" class="h-9 w-9 inline-flex items-center justify-center rounded-lg text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-colors" title="Delete" aria-label="Delete">
+                                <icon name="trash-2" class="h-4 w-4" />
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

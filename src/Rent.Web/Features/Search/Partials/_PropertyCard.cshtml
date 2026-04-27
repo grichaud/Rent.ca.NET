@@ -49,10 +49,13 @@
         </div>
 
         <button type="button"
-                class="absolute top-3 right-3 h-9 w-9 inline-flex items-center justify-center rounded-full bg-white/80 dark:bg-slate-900/60 backdrop-blur-md text-slate-700 dark:text-white/80 hover:text-rose-500 hover:scale-110 transition-all duration-200"
+                data-favorite-toggle
+                data-property-id="@Model.Id"
+                data-favorited="@(Model.IsFavorited ? "true" : "false")"
+                class="@(Model.IsFavorited ? "absolute top-3 right-3 h-9 w-9 inline-flex items-center justify-center rounded-full bg-white/80 dark:bg-slate-900/60 backdrop-blur-md text-rose-500 hover:scale-110 transition-all duration-200" : "absolute top-3 right-3 h-9 w-9 inline-flex items-center justify-center rounded-full bg-white/80 dark:bg-slate-900/60 backdrop-blur-md text-slate-700 dark:text-white/80 hover:text-rose-500 hover:scale-110 transition-all duration-200")"
                 onclick="event.preventDefault(); event.stopPropagation();"
-                aria-label="Save to favorites" title="Save (coming soon)">
-            <icon name="heart" class="h-4 w-4" />
+                aria-label="Save to favorites" aria-pressed="@(Model.IsFavorited ? "true" : "false")">
+            <icon name="heart" class="h-4 w-4" fill="@(Model.IsFavorited ? "currentColor" : null)" />
         </button>
 
         <div class="absolute bottom-3 left-3 right-3 flex items-end justify-between text-white">

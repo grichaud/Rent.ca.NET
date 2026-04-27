@@ -16,6 +16,8 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid
     public DbSet<PropertyImage> PropertyImages => Set<PropertyImage>();
     public DbSet<Amenity> Amenities => Set<Amenity>();
     public DbSet<ContactInquiry> ContactInquiries => Set<ContactInquiry>();
+    public DbSet<Favorite> Favorites => Set<Favorite>();
+    public DbSet<Alert> Alerts => Set<Alert>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -135,6 +137,46 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid
              .WithMany()
              .HasForeignKey(x => x.SenderUserId)
              .OnDelete(DeleteBehavior.SetNull);
+        });
+
+        builder.Entity<Favorite>(e =>
+        {
+            e.ToTable("Favorites");
+            e.HasKey(x => x.Id);
+
+            e.HasIndex(x => new { x.UserId, x.PropertyId }).IsUnique();
+            e.HasIndex(x => new { x.UserId, x.CreatedAt });
+
+            e.HasOne(x => x.User)
+             .WithMany()
+             .HasForeignKey(x => x.UserId)
+             .OnDelete(DeleteBehavior.Cascade);
+
+            e.HasOne(x => x.Property)
+             .WithMany()
+             .HasForeignKey(x => x.PropertyId)
+             .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        builder.Entity<Alert>(e =>
+        {
+            e.ToTable("Alerts");
+            e.HasKey(x => x.Id);
+
+            e.Property(x => x.City).HasMaxLength(100);
+            e.Property(x => x.PropertyType).HasConversion<string>().HasMaxLength(20);
+            e.Property(x => x.Frequency).HasConversion<string>().HasMaxLength(10);
+            e.Property(x => x.PriceMin).HasPrecision(10, 2);
+            e.Property(x => x.PriceMax).HasPrecision(10, 2);
+            e.Property(x => x.BathroomsMin).HasPrecision(3, 1);
+
+            e.HasIndex(x => new { x.UserId, x.IsActive });
+            e.HasIndex(x => new { x.IsActive, x.City });
+
+            e.HasOne(x => x.User)
+             .WithMany()
+             .HasForeignKey(x => x.UserId)
+             .OnDelete(DeleteBehavior.Cascade);
         });
     }
 }

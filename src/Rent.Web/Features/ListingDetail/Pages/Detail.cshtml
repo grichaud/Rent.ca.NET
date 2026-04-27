@@ -34,7 +34,34 @@
 <section class="grid lg:grid-cols-[1fr_400px] gap-8 mt-8">
     <article class="space-y-6">
         <header>
-            <h1 class="font-display text-4xl text-slate-900 dark:text-white">@p.Title</h1>
+            <div class="flex items-start justify-between gap-3">
+                <h1 class="font-display text-4xl text-slate-900 dark:text-white">@p.Title</h1>
+                @if (Model.IsAuthenticated)
+                {
+                    <form method="post" action="/renter/favorites/toggle" class="shrink-0">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="propertyId" value="@p.Id" />
+                        <input type="hidden" name="returnUrl" value="/@Model.CitySlug/@p.Slug" />
+                        <button type="submit"
+                                data-favorite-toggle
+                                data-property-id="@p.Id"
+                                data-favorited="@(Model.IsFavorited ? "true" : "false")"
+                                aria-label="@(Model.IsFavorited ? "Remove from favorites" : "Save to favorites")"
+                                aria-pressed="@(Model.IsFavorited ? "true" : "false")"
+                                class="@(Model.IsFavorited ? "h-11 w-11 inline-flex items-center justify-center rounded-full bg-rose-50 dark:bg-rose-500/20 text-rose-500 hover:scale-110 transition-all duration-200 shadow-sm" : "h-11 w-11 inline-flex items-center justify-center rounded-full bg-white/80 dark:bg-slate-900/60 backdrop-blur-md text-slate-700 dark:text-white/80 hover:text-rose-500 hover:scale-110 transition-all duration-200 shadow-sm border border-gray-200 dark:border-white/10")">
+                            <icon name="heart" class="h-5 w-5" fill="@(Model.IsFavorited ? "currentColor" : null)" />
+                        </button>
+                    </form>
+                }
+                else
+                {
+                    <a href="/login?returnUrl=@Uri.EscapeDataString($"/{Model.CitySlug}/{p.Slug}")"
+                       class="h-11 w-11 inline-flex items-center justify-center rounded-full bg-white/80 dark:bg-slate-900/60 backdrop-blur-md text-slate-700 dark:text-white/80 hover:text-rose-500 hover:scale-110 transition-all duration-200 shadow-sm border border-gray-200 dark:border-white/10 shrink-0"
+                       aria-label="Log in to save to favorites" title="Log in to save">
+                        <icon name="heart" class="h-5 w-5" />
+                    </a>
+                }
+            </div>
             <p class="text-slate-600 dark:text-white/60 mt-2 inline-flex items-start gap-1.5">
                 <icon name="map-pin" class="h-4 w-4 mt-1 shrink-0 text-brand-500" />
                 <span>@p.StreetAddress, @(p.Neighbourhood is null ? "" : p.Neighbourhood + ", ")@p.City, @p.Province @p.PostalCode</span>

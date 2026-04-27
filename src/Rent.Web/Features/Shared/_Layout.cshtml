@@ -1,10 +1,13 @@
 @using Microsoft.AspNetCore.Identity
 @using Rent.Web.Domain
+@using Rent.Web.Infrastructure.Identity
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 @{
     var themeCookie = Context.Request.Cookies["rentca-theme"];
     var htmlClass = themeCookie == "dark" ? "h-full dark" : "h-full";
+    var isLandlord = SignInManager.IsSignedIn(User) && User.IsInRole(Roles.Landlord);
+    var isRenter = SignInManager.IsSignedIn(User) && User.IsInRole(Roles.Renter);
 }
 <!DOCTYPE html>
 <html lang="en" class="@htmlClass">
@@ -19,6 +22,7 @@
     <link rel="icon" href="/favicon.ico" />
     <script src="~/js/theme-toggle.js" asp-append-version="true"></script>
     <script src="~/js/mobile-menu.js" asp-append-version="true" defer></script>
+    <script src="~/js/favorite-toggle.js" asp-append-version="true" defer></script>
 </head>
 <body class="h-full font-sans text-slate-800 dark:text-white/90 antialiased mesh-background">
 
@@ -33,9 +37,13 @@
             <nav class="hidden md:flex items-center gap-1 text-sm">
                 <a href="/" class="px-3 py-2 rounded-lg text-slate-700 dark:text-white/80 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">Browse</a>
                 <a href="/landlords" class="px-3 py-2 rounded-lg text-slate-700 dark:text-white/80 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">For Landlords</a>
-                @if (SignInManager.IsSignedIn(User))
+                @if (isLandlord)
                 {
                     <a href="/landlord" class="px-3 py-2 rounded-lg text-slate-700 dark:text-white/80 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">Dashboard</a>
+                }
+                else if (isRenter)
+                {
+                    <a href="/renter" class="px-3 py-2 rounded-lg text-slate-700 dark:text-white/80 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">My Portal</a>
                 }
             </nav>
 
@@ -102,7 +110,7 @@
                     <icon name="building" class="h-4 w-4 shrink-0" />
                     <span class="font-medium">For Landlords</span>
                 </a>
-                @if (SignInManager.IsSignedIn(User))
+                @if (isLandlord)
                 {
                     <a href="/landlord" class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-700 dark:text-white/80 hover:text-slate-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
                         <icon name="user" class="h-4 w-4 shrink-0" />
@@ -111,6 +119,21 @@
                     <a href="/landlord/inbox" class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-700 dark:text-white/80 hover:text-slate-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
                         <icon name="mail" class="h-4 w-4 shrink-0" />
                         <span class="font-medium">Inbox</span>
+                    </a>
+                }
+                else if (isRenter)
+                {
+                    <a href="/renter" class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-700 dark:text-white/80 hover:text-slate-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
+                        <icon name="layout-dashboard" class="h-4 w-4 shrink-0" />
+                        <span class="font-medium">My Portal</span>
+                    </a>
+                    <a href="/renter/favorites" class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-700 dark:text-white/80 hover:text-slate-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
+                        <icon name="heart" class="h-4 w-4 shrink-0" />
+                        <span class="font-medium">Favorites</span>
+                    </a>
+                    <a href="/renter/alerts" class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-700 dark:text-white/80 hover:text-slate-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
+                        <icon name="bell" class="h-4 w-4 shrink-0" />
+                        <span class="font-medium">Alerts</span>
                     </a>
                 }
             </nav>
@@ -142,6 +165,8 @@
     </div>
 
     @await RenderSectionAsync("Hero", required: false)
+
+    <form id="rentca-csrf" class="hidden" aria-hidden="true">@Html.AntiForgeryToken()</form>
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
         @RenderBody()
