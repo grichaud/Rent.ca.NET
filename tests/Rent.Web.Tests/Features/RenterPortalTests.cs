@@ -24,7 +24,7 @@ public class RenterPortalTests : IClassFixture<RentAppFactory>
     public async Task Dashboard_AnonymousIsRedirectedToLogin()
     {
         using var client = _factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
-        var response = await client.GetAsync("/renter");
+        var response = await client.GetAsync("/en/renter");
 
         response.StatusCode.Should().Be(HttpStatusCode.Redirect);
         response.Headers.Location!.ToString().Should().Contain("/login");
@@ -34,7 +34,7 @@ public class RenterPortalTests : IClassFixture<RentAppFactory>
     public async Task Dashboard_RequiresRenterRole_LandlordGetsAccessDenied()
     {
         using var client = await TestAuth.CreateAndSignInAsync(_factory, Roles.Landlord, "landlord-blocked");
-        var response = await client.GetAsync("/renter");
+        var response = await client.GetAsync("/en/renter");
 
         // ASP.NET Identity default for forbidden returns redirect to /Identity/Account/AccessDenied
         // (Cookie auth maps 403 to 302). The exact location is configurable; what matters is that
@@ -65,7 +65,7 @@ public class RenterPortalTests : IClassFixture<RentAppFactory>
         using var client = await TestAuth.SignInAsync(_factory, email, TestAuth.DefaultPassword);
         client.DefaultRequestHeaders.Add("Accept", "text/html");
 
-        var response = await client.GetAsync("/renter");
+        var response = await client.GetAsync("/en/renter");
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         var body = await response.Content.ReadAsStringAsync();
         body.Should().Contain("Saved Properties");
@@ -81,7 +81,7 @@ public class RenterPortalTests : IClassFixture<RentAppFactory>
         // Need to follow the post-login redirect to read a normal page
         client.DefaultRequestHeaders.Add("Accept", "text/html");
 
-        var response = await client.GetAsync("/");
+        var response = await client.GetAsync("/en");
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         var body = await response.Content.ReadAsStringAsync();
         body.Should().Contain("My Portal");

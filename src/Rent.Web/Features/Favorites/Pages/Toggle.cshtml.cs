@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Rent.Web.Domain;
 using Rent.Web.Infrastructure.Identity;
+using Rent.Web.Infrastructure.Localization;
 
 namespace Rent.Web.Features.Favorites.Pages;
 
@@ -41,7 +42,7 @@ public class ToggleModel : PageModel
 
         if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
             return Redirect(returnUrl);
-        return Redirect("/renter/favorites");
+        return Redirect(this.Localized("/renter/favorites"));
     }
 
     public async Task<IActionResult> OnPostRemoveAsync(
@@ -55,6 +56,6 @@ public class ToggleModel : PageModel
 
         await _favorites.RemoveAsync(uid, propertyId, ct);
         TempData["FavoriteSuccess"] = "Removed from favorites.";
-        return Redirect("/renter/favorites");
+        return Redirect(this.Localized("/renter/favorites"));
     }
 }

@@ -1,7 +1,9 @@
-@page "/landlords"
+@page "/{culture:locale}/landlords"
 @model Rent.Web.Features.Home.LandlordsLandingModel
 @{
-    ViewData["Title"] = "For landlords";
+    ViewData["Title"] = L["common.landlords"].Value;
+    var culture = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+    if (culture != "en" && culture != "fr") { culture = "en"; }
 }
 
 <section class="relative overflow-hidden rounded-3xl">
@@ -11,21 +13,21 @@
     <div class="relative max-w-3xl mx-auto text-center py-16 sm:py-24">
         <div class="glass-badge mx-auto mb-6 inline-flex">
             <icon name="building" class="h-3.5 w-3.5 text-brand-600 dark:text-brand-300" />
-            <span class="text-xs font-medium text-slate-700 dark:text-white/80">For landlords</span>
+            <span class="text-xs font-medium text-slate-700 dark:text-white/80">@L["landlordPage.badge"]</span>
         </div>
         <h1 class="font-display text-5xl sm:text-6xl text-slate-900 dark:text-white leading-tight">
-            List your rental on
-            <span class="bg-gradient-to-r from-brand-500 to-cyan-500 bg-clip-text text-transparent">Rent.ca</span>
+            @L["landlordPage.title"]
+            <span class="bg-gradient-to-r from-brand-500 to-cyan-500 bg-clip-text text-transparent">@L["landlordPage.titleHighlight"]</span>
         </h1>
         <p class="text-lg text-slate-600 dark:text-white/70 mt-6 max-w-xl mx-auto">
-            Reach thousands of renters across Canada. Free to post your first listing &mdash; pay only to promote.
+            @L["landlordPage.subtitle"]
         </p>
         <div class="mt-10 flex items-center justify-center gap-3">
-            <a href="/signup" class="glass-button-primary inline-flex items-center gap-2">
-                <span>Get started free</span>
+            <a href="/@culture/signup" class="glass-button-primary inline-flex items-center gap-2">
+                <span>@L["landlordPage.getStarted"]</span>
                 <icon name="user-plus" class="h-4 w-4" />
             </a>
-            <a href="/login" class="glass-button">I already have an account</a>
+            <a href="/@culture/login" class="glass-button">@L["landlordPage.haveAccount"]</a>
         </div>
     </div>
 </section>
@@ -33,23 +35,23 @@
 <section class="mt-16 grid sm:grid-cols-3 gap-6">
     <div class="glass-card p-6">
         <icon name="home" class="h-8 w-8 text-brand-500 mb-3" />
-        <h3 class="font-semibold text-slate-900 dark:text-white">Post in minutes</h3>
+        <h3 class="font-semibold text-slate-900 dark:text-white">@L["landlordPage.feature1Title"]</h3>
         <p class="text-sm text-slate-600 dark:text-white/60 mt-2">
-            Add photos, units, and amenities through a guided form. No upload limits, no setup calls.
+            @L["landlordPage.feature1Desc"]
         </p>
     </div>
     <div class="glass-card p-6">
         <icon name="mail" class="h-8 w-8 text-brand-500 mb-3" />
-        <h3 class="font-semibold text-slate-900 dark:text-white">Inquiries in one inbox</h3>
+        <h3 class="font-semibold text-slate-900 dark:text-white">@L["landlordPage.feature2Title"]</h3>
         <p class="text-sm text-slate-600 dark:text-white/60 mt-2">
-            Renter messages land in a single inbox with read/unread tracking and lead counts per listing.
+            @L["landlordPage.feature2Desc"]
         </p>
     </div>
     <div class="glass-card p-6">
         <icon name="sparkles" class="h-8 w-8 text-brand-500 mb-3" />
-        <h3 class="font-semibold text-slate-900 dark:text-white">Promote when you need it</h3>
+        <h3 class="font-semibold text-slate-900 dark:text-white">@L["landlordPage.feature3Title"]</h3>
         <p class="text-sm text-slate-600 dark:text-white/60 mt-2">
-            Boost a listing to the top of search results during slow weeks. Pay-as-you-go, no subscription.
+            @L["landlordPage.feature3Desc"]
         </p>
     </div>
 </section>

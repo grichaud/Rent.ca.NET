@@ -50,7 +50,7 @@ internal static class TestAuth
             new KeyValuePair<string, string>("Input.Password", password),
             new KeyValuePair<string, string>("Input.RememberMe", "false")
         });
-        var resp = await client.PostAsync("/login", form);
+        var resp = await client.PostAsync("/en/login", form);
         if (resp.StatusCode != System.Net.HttpStatusCode.Redirect)
             throw new InvalidOperationException($"Login failed with status {resp.StatusCode}");
         return client;

@@ -45,6 +45,11 @@ public static class AiSystemPrompt
         sb.AppendLine("- For tenant rights questions, provide accurate Canadian law context but recommend consulting a local tenant board for binding advice");
         sb.AppendLine("- Never fabricate listing data — always use search_properties or get_property_details tools");
         sb.Append("- Respond in the same language the user writes in (English or French)");
+        if (string.Equals(context.Locale, "fr", StringComparison.OrdinalIgnoreCase))
+        {
+            sb.AppendLine();
+            sb.Append("- Always respond in French.");
+        }
         return sb.ToString();
     }
 }

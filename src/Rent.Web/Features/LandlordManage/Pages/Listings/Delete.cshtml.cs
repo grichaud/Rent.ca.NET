@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Rent.Web.Domain;
 using Rent.Web.Infrastructure.Data;
 using Rent.Web.Infrastructure.Identity;
+using Rent.Web.Infrastructure.Localization;
 
 namespace Rent.Web.Features.LandlordManage.Pages.Listings;
 
@@ -50,6 +51,6 @@ public class DeleteModel : PageModel
         await _db.SaveChangesAsync(ct);
 
         TempData["ListingSuccess"] = $"\"{prop.Title}\" has been deactivated.";
-        return Redirect("/landlord/listings");
+        return Redirect(this.Localized("/landlord/listings"));
     }
 }

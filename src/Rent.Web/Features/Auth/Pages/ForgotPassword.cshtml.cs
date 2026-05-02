@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Rent.Web.Domain;
 using Rent.Web.Features.Email;
+using Rent.Web.Infrastructure.Localization;
 
 namespace Rent.Web.Features.Auth.Pages;
 
@@ -52,10 +53,11 @@ public class ForgotPasswordModel : PageModel
                 var token = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var encoded = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
                 var origin = $"{Request.Scheme}://{Request.Host}";
-                var resetUrl = $"{origin}/reset-password?email={Uri.EscapeDataString(user.Email)}&token={encoded}";
+                var locale = this.CurrentCulture();
+                var resetUrl = $"{origin}/{locale}/reset-password?email={Uri.EscapeDataString(user.Email)}&token={encoded}";
 
                 await _emailSender.SendPasswordResetAsync(
-                    new PasswordResetEmail(user.Email, user.FullName ?? string.Empty, resetUrl), ct);
+                    new PasswordResetEmail(user.Email, user.FullName ?? string.Empty, resetUrl, locale), ct);
             }
             catch (Exception ex)
             {

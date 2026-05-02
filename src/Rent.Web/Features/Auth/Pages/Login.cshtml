@@ -1,7 +1,9 @@
-@page "/login"
+@page "/{culture:locale}/login"
 @model Rent.Web.Features.Auth.Pages.LoginModel
 @{
-    ViewData["Title"] = "Log in";
+    ViewData["Title"] = L["common.signIn"].Value;
+    var culture = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+    if (culture != "en" && culture != "fr") { culture = "en"; }
 }
 
 <section class="max-w-md mx-auto">
@@ -11,8 +13,8 @@
                 <icon name="log-in" class="h-6 w-6" />
             </div>
         </div>
-        <h1 class="font-display text-3xl text-slate-900 dark:text-white text-center">Welcome back</h1>
-        <p class="text-slate-500 dark:text-white/60 text-center mt-2">Log in to your Rent.ca account.</p>
+        <h1 class="font-display text-3xl text-slate-900 dark:text-white text-center">@L["auth.welcomeBack"]</h1>
+        <p class="text-slate-500 dark:text-white/60 text-center mt-2">@L["auth.signInDesc"]</p>
 
         @if (Model.StatusMessage is not null)
         {
@@ -35,7 +37,7 @@
                 {
                     <form method="post" asp-page-handler="ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl">
                         <input type="hidden" name="provider" value="@scheme.Name" />
-                        <button type="submit" class="glass-button w-full inline-flex items-center justify-center gap-3" title="Continue with @scheme.DisplayName">
+                        <button type="submit" class="glass-button w-full inline-flex items-center justify-center gap-3" title="@L["auth.continueWithGoogle"]">
                             @if (scheme.Name == "Google")
                             {
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" class="h-5 w-5" aria-hidden="true">
@@ -45,7 +47,7 @@
                                     <path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303c-.792 2.237-2.231 4.166-4.087 5.571.001-.001.002-.001.003-.002l6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/>
                                 </svg>
                             }
-                            <span class="font-medium">Continue with @scheme.DisplayName</span>
+                            <span class="font-medium">@L["auth.continueWithGoogle"]</span>
                         </button>
                     </form>
                 }
@@ -53,7 +55,7 @@
 
             <div class="my-6 flex items-center gap-3 text-xs uppercase tracking-wider text-slate-400 dark:text-white/40">
                 <span class="flex-1 h-px bg-slate-200 dark:bg-white/10"></span>
-                <span>or</span>
+                <span>@L["auth.orContinueWith"]</span>
                 <span class="flex-1 h-px bg-slate-200 dark:bg-white/10"></span>
             </div>
         }
@@ -62,31 +64,31 @@
             <div asp-validation-summary="ModelOnly" class="text-sm text-red-600 dark:text-red-400"></div>
 
             <div>
-                <label asp-for="Input.Email" class="block text-sm text-slate-700 dark:text-white/80 mb-1">Email</label>
+                <label asp-for="Input.Email" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["auth.email"]</label>
                 <input asp-for="Input.Email" type="email" class="glass-input" autocomplete="email" />
                 <span asp-validation-for="Input.Email" class="text-xs text-red-600 dark:text-red-400"></span>
             </div>
 
             <div>
-                <label asp-for="Input.Password" class="block text-sm text-slate-700 dark:text-white/80 mb-1">Password</label>
+                <label asp-for="Input.Password" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["auth.password"]</label>
                 <input asp-for="Input.Password" type="password" class="glass-input" autocomplete="current-password" />
                 <span asp-validation-for="Input.Password" class="text-xs text-red-600 dark:text-red-400"></span>
             </div>
 
             <label class="inline-flex items-center gap-2 text-sm text-slate-600 dark:text-white/70">
                 <input asp-for="Input.RememberMe" type="checkbox" class="rounded border-gray-300 dark:border-white/20 text-brand-500 focus:ring-brand-500" />
-                Remember me
+                @L["auth.rememberMe"]
             </label>
 
             <button type="submit" class="glass-button-primary w-full mt-2 inline-flex items-center justify-center gap-2">
                 <icon name="log-in" class="h-4 w-4" />
-                Log in
+                @L["auth.signInButton"]
             </button>
         </form>
 
         <div class="flex items-center justify-between mt-6 text-sm">
-            <a href="/forgot-password" class="text-slate-500 dark:text-white/60 hover:underline">Forgot password?</a>
-            <a href="/signup" class="text-brand-600 dark:text-brand-400 font-medium hover:underline">Create account</a>
+            <a href="/@culture/forgot-password" class="text-slate-500 dark:text-white/60 hover:underline">@L["auth.forgotPassword"]</a>
+            <a href="/@culture/signup" class="text-brand-600 dark:text-brand-400 font-medium hover:underline">@L["auth.createAccount"]</a>
         </div>
     </div>
 </section>

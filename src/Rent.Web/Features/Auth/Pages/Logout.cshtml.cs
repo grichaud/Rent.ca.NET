@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Rent.Web.Domain;
+using Rent.Web.Infrastructure.Localization;
 
 namespace Rent.Web.Features.Auth.Pages;
 
@@ -19,6 +20,6 @@ public class LogoutModel : PageModel
     public async Task<IActionResult> OnPostAsync()
     {
         await _signInManager.SignOutAsync();
-        return Redirect("/");
+        return Redirect(this.Localized("/"));
     }
 }

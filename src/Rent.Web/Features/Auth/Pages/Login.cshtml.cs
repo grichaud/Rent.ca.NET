@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Rent.Web.Domain;
 using Rent.Web.Infrastructure.Identity;
+using Rent.Web.Infrastructure.Localization;
 
 namespace Rent.Web.Features.Auth.Pages;
 
@@ -58,12 +59,12 @@ public class LoginModel : PageModel
         if (user is not null)
         {
             if (await _userManager.IsInRoleAsync(user, Roles.Landlord))
-                return Redirect("/landlord");
+                return Redirect(this.Localized("/landlord"));
             if (await _userManager.IsInRoleAsync(user, Roles.Renter))
-                return Redirect("/renter");
+                return Redirect(this.Localized("/renter"));
         }
 
-        return Redirect("/");
+        return Redirect(this.Localized("/"));
     }
 
     public IActionResult OnPostExternalLogin(string provider, string? returnUrl = null)

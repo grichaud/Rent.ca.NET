@@ -1,7 +1,7 @@
-@page "/external-login-confirm"
+@page "/{culture:locale}/external-login-confirm"
 @model Rent.Web.Features.Auth.Pages.ExternalLoginConfirmModel
 @{
-    ViewData["Title"] = "Complete sign-up";
+    ViewData["Title"] = L["auth.externalConfirmTitle2"].Value;
 }
 
 <section class="max-w-md mx-auto">
@@ -11,40 +11,40 @@
                 <icon name="user-plus" class="h-6 w-6" />
             </div>
         </div>
-        <h1 class="font-display text-3xl text-slate-900 dark:text-white text-center">Almost there</h1>
+        <h1 class="font-display text-3xl text-slate-900 dark:text-white text-center">@L["auth.externalConfirmTitle2"]</h1>
         <p class="text-slate-500 dark:text-white/60 text-center mt-2">
-            Tell us how you&rsquo;ll use Rent.ca and we&rsquo;ll finish creating your account.
+            @L["auth.externalConfirmDesc2"]
         </p>
 
         <form method="post" class="mt-8 space-y-4">
             <div asp-validation-summary="ModelOnly" class="text-sm text-red-600 dark:text-red-400"></div>
 
             <div>
-                <label class="block text-sm text-slate-700 dark:text-white/80 mb-1">Email</label>
+                <label class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["auth.email"]</label>
                 <input value="@Model.Email" class="glass-input opacity-70 cursor-not-allowed" disabled />
-                <p class="text-xs text-slate-500 dark:text-white/50 mt-1">Verified by @Model.Provider.</p>
+                <p class="text-xs text-slate-500 dark:text-white/50 mt-1">@string.Format(L["auth.externalConfirmVerifiedBy"].Value, Model.Provider)</p>
             </div>
 
             <div>
-                <label asp-for="Input.FullName" class="block text-sm text-slate-700 dark:text-white/80 mb-1">Full name</label>
+                <label asp-for="Input.FullName" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["auth.fullName"]</label>
                 <input asp-for="Input.FullName" class="glass-input" autocomplete="name" />
                 <span asp-validation-for="Input.FullName" class="text-xs text-red-600 dark:text-red-400"></span>
             </div>
 
             <fieldset class="pt-2">
-                <legend class="block text-sm text-slate-700 dark:text-white/80 mb-2">I am a&hellip;</legend>
+                <legend class="block text-sm text-slate-700 dark:text-white/80 mb-2">@L["auth.iAmA"]</legend>
                 <div class="grid grid-cols-2 gap-3">
                     <label class="glass-base p-4 flex flex-col items-start cursor-pointer has-[:checked]:border-brand-500 has-[:checked]:bg-brand-50 dark:has-[:checked]:bg-brand-500/20 transition-colors">
                         <input type="radio" asp-for="Input.Role" value="Renter" class="sr-only" />
                         <icon name="user" class="h-5 w-5 text-brand-500 mb-2" />
-                        <span class="font-semibold text-slate-900 dark:text-white">Renter</span>
-                        <span class="text-xs text-slate-500 dark:text-white/60 mt-1">Looking for a place.</span>
+                        <span class="font-semibold text-slate-900 dark:text-white">@L["auth.renterRole"]</span>
+                        <span class="text-xs text-slate-500 dark:text-white/60 mt-1">@L["auth.renterCardLooking"]</span>
                     </label>
                     <label class="glass-base p-4 flex flex-col items-start cursor-pointer has-[:checked]:border-brand-500 has-[:checked]:bg-brand-50 dark:has-[:checked]:bg-brand-500/20 transition-colors">
                         <input type="radio" asp-for="Input.Role" value="Landlord" class="sr-only" />
                         <icon name="building" class="h-5 w-5 text-brand-500 mb-2" />
-                        <span class="font-semibold text-slate-900 dark:text-white">Landlord</span>
-                        <span class="text-xs text-slate-500 dark:text-white/60 mt-1">Posting properties.</span>
+                        <span class="font-semibold text-slate-900 dark:text-white">@L["auth.landlordRole"]</span>
+                        <span class="text-xs text-slate-500 dark:text-white/60 mt-1">@L["auth.landlordCardPosting"]</span>
                     </label>
                 </div>
                 <span asp-validation-for="Input.Role" class="text-xs text-red-600 dark:text-red-400"></span>
@@ -52,7 +52,7 @@
 
             <button type="submit" class="glass-button-primary w-full mt-2 inline-flex items-center justify-center gap-2">
                 <icon name="check" class="h-4 w-4" />
-                Finish sign-up
+                @L["auth.externalConfirmFinish"]
             </button>
         </form>
     </div>

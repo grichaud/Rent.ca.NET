@@ -8,6 +8,7 @@ using Rent.Web.Domain;
 using Rent.Web.Features.Shared.Services;
 using Rent.Web.Infrastructure.Data;
 using Rent.Web.Infrastructure.Identity;
+using Rent.Web.Infrastructure.Localization;
 using Rent.Web.Infrastructure.Storage;
 
 namespace Rent.Web.Features.LandlordManage.Pages.Listings;
@@ -146,7 +147,7 @@ public class EditModel : PageModel
         await _db.SaveChangesAsync(ct);
 
         TempData["ListingSuccess"] = $"Changes to \"{property.Title}\" saved.";
-        return Redirect("/landlord/listings");
+        return Redirect(this.Localized("/landlord/listings"));
     }
 
     private async Task LoadExistingAsync(CancellationToken ct)

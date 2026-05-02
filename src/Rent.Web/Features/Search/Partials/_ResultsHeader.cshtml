@@ -1,38 +1,42 @@
 @model Rent.Web.Features.Search.Pages.CityResultsModel
 @{
+    var culture = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+    if (culture != "en" && culture != "fr") { culture = "en"; }
     var totalCount = Model.Result.TotalCount;
     var cityName = Model.Result.City?.Name ?? Model.Query.CitySlug;
 
     var sortOptions = new (Rent.Web.Features.Search.SearchSort Value, string Label)[]
     {
-        (Rent.Web.Features.Search.SearchSort.Newest,   "Newest"),
-        (Rent.Web.Features.Search.SearchSort.PriceAsc, "Price: Low to High"),
-        (Rent.Web.Features.Search.SearchSort.PriceDesc,"Price: High to Low"),
-        (Rent.Web.Features.Search.SearchSort.Popular,  "Most Popular"),
+        (Rent.Web.Features.Search.SearchSort.Newest,   L["sort.newest"].Value),
+        (Rent.Web.Features.Search.SearchSort.PriceAsc, L["sort.priceAsc"].Value),
+        (Rent.Web.Features.Search.SearchSort.PriceDesc,L["sort.priceDesc"].Value),
+        (Rent.Web.Features.Search.SearchSort.Popular,  L["sort.popular"].Value),
     };
 
     var viewOptions = new (Rent.Web.Features.Search.SearchView Value, string Icon, string Label)[]
     {
-        (Rent.Web.Features.Search.SearchView.Grid, "grid-3x3", "Grid view"),
-        (Rent.Web.Features.Search.SearchView.List, "list",     "List view"),
-        (Rent.Web.Features.Search.SearchView.Map,  "map",      "Map view"),
+        (Rent.Web.Features.Search.SearchView.Grid, "grid-3x3", L["filters.viewGrid"].Value),
+        (Rent.Web.Features.Search.SearchView.List, "list",     L["filters.viewList"].Value),
+        (Rent.Web.Features.Search.SearchView.Map,  "map",      L["filters.viewMap"].Value),
     };
+
+    var resultsText = totalCount == 1
+        ? string.Format(L["results.headerCountSingular"].Value, cityName)
+        : string.Format(L["results.headerCountPlural"].Value, totalCount.ToString("N0"), cityName);
 }
 
 <div class="glass-base flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 py-3"
      aria-label="Search results controls"
      data-results-header
-     data-base-url="/@Model.Query.CitySlug">
+     data-base-url="/@culture/@Model.Query.CitySlug">
 
-    <p class="text-sm text-gray-600 dark:text-white/70">
-        <span class="text-gray-900 dark:text-white font-semibold text-base">@totalCount.ToString("N0")</span>
-        <span>rental@(totalCount == 1 ? "" : "s") in </span>
-        <span class="text-gray-900 dark:text-white font-medium">@cityName</span>
+    <p class="text-sm text-gray-900 dark:text-white font-medium">
+        @resultsText
     </p>
 
     <div class="flex items-center gap-2 flex-shrink-0">
         <select data-sort-select
-                aria-label="Sort listings"
+                aria-label="@L["filters.sortBy"]"
                 class="glass-button h-9 min-w-[160px] text-sm text-gray-700 dark:text-white/80 border-gray-200 dark:border-white/20 cursor-pointer pr-8">
             @foreach (var opt in sortOptions)
             {

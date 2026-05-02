@@ -1,24 +1,27 @@
 @model Rent.Web.Features.Search.SearchQuery
 @using Rent.Web.Domain
 @{
+    var culture = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+    if (culture != "en" && culture != "fr") { culture = "en"; }
     var typeOptions = new (PropertyType Value, string Label)[]
     {
-        (PropertyType.Apartment, "Apartment"),
-        (PropertyType.Condo,     "Condo"),
-        (PropertyType.House,     "House"),
-        (PropertyType.Townhouse, "Townhouse"),
-        (PropertyType.Basement,  "Basement"),
-        (PropertyType.Studio,    "Studio"),
-        (PropertyType.Loft,      "Loft"),
-        (PropertyType.Duplex,    "Duplex"),
+        (PropertyType.Apartment, L["filters.apartment"].Value),
+        (PropertyType.Condo,     L["filters.condo"].Value),
+        (PropertyType.House,     L["filters.house"].Value),
+        (PropertyType.Townhouse, L["filters.townhouse"].Value),
+        (PropertyType.Basement,  L["filters.basement"].Value),
+        (PropertyType.Studio,    L["filters.studio"].Value),
+        (PropertyType.Loft,      L["filters.loft"].Value),
+        (PropertyType.Duplex,    L["filters.duplex"].Value),
     };
+    var anyLabel = L["filters.any"].Value;
     var bedroomOptions = new (int Value, string Label)[]
     {
-        (0, "Any"), (1, "1"), (2, "2"), (3, "3"), (4, "4+"),
+        (0, anyLabel), (1, "1"), (2, "2"), (3, "3"), (4, "4+"),
     };
     var bathroomOptions = new (int Value, string Label)[]
     {
-        (0, "Any"), (1, "1"), (2, "2"), (3, "3+"),
+        (0, anyLabel), (1, "1"), (2, "2"), (3, "3+"),
     };
 
     var selectedTypes = (Model.EffectiveTypes() ?? Array.Empty<PropertyType>()).ToHashSet();
@@ -40,7 +43,7 @@
 }
 
 <form method="get"
-      action="/@Model.CitySlug"
+      action="/@culture/@Model.CitySlug"
       class="glass-sidebar p-5 flex flex-col gap-4 lg:sticky lg:top-4 lg:max-h-[calc(100vh-2rem)] lg:overflow-y-auto"
       data-filters-form>
 
@@ -51,7 +54,7 @@
     <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
             <icon name="sliders-horizontal" class="h-4 w-4 text-gray-500 dark:text-white/60" />
-            <h2 class="text-sm font-semibold text-gray-900 dark:text-white">Filters</h2>
+            <h2 class="text-sm font-semibold text-gray-900 dark:text-white">@L["filters.title"]</h2>
             @if (activeCount > 0)
             {
                 <span class="h-5 min-w-5 px-1.5 rounded-full bg-brand-500 dark:bg-brand-500/40 border border-brand-600 dark:border-brand-400/30 text-white dark:text-brand-300 text-xs font-semibold flex items-center justify-center">
@@ -61,9 +64,9 @@
         </div>
         @if (activeCount > 0)
         {
-            <a href="/@Model.CitySlug?Sort=@Model.Sort&View=@Model.View"
+            <a href="/@culture/@Model.CitySlug?Sort=@Model.Sort&View=@Model.View"
                class="text-xs text-gray-500 dark:text-white/50 hover:text-gray-700 dark:hover:text-white/80 transition-colors">
-                Clear all
+                @L["filters.clear"]
             </a>
         }
     </div>
@@ -71,7 +74,7 @@
     <div class="flex-1 flex flex-col gap-4">
         @* Property Type pills *@
         <section>
-            <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-white/50 mb-3">Property Type</p>
+            <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-white/50 mb-3">@L["filters.propertyType"]</p>
             <div class="flex flex-wrap gap-1.5" role="group" aria-label="Property type">
                 @foreach (var opt in typeOptions)
                 {
@@ -96,7 +99,7 @@
 
         @* Price Range with dual slider *@
         <section data-price-slider data-price-min="@minPrice" data-price-max="@maxPrice" data-price-step="50" data-price-cap="5000">
-            <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-white/50 mb-3">Price Range</p>
+            <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-white/50 mb-3">@L["filters.priceRange"]</p>
             <div class="space-y-3">
                 <div class="flex items-center justify-between text-sm">
                     <span class="text-gray-900 dark:text-white font-medium" data-price-label-min>$@minPrice.ToString("N0")</span>
@@ -115,7 +118,7 @@
                     <input type="hidden" name="MaxPrice" value="@(maxPrice >= 5000 ? "" : maxPrice.ToString())" data-price-hidden-max />
                 </div>
                 <p class="text-xs text-gray-400 dark:text-white/40 text-center" data-price-summary>
-                    $@minPrice.ToString("N0") – @(maxPrice >= 5000 ? "$5,000+" : "$" + maxPrice.ToString("N0")) per month
+                    $@minPrice.ToString("N0") – @(maxPrice >= 5000 ? "$5,000+" : "$" + maxPrice.ToString("N0"))@L["listings.perMonth"]
                 </p>
             </div>
         </section>
@@ -124,7 +127,7 @@
 
         @* Bedrooms pills (radio group) *@
         <section>
-            <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-white/50 mb-3">Bedrooms</p>
+            <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-white/50 mb-3">@L["filters.bedrooms"]</p>
             <div class="flex flex-wrap gap-1.5" role="radiogroup" aria-label="Bedrooms">
                 @foreach (var opt in bedroomOptions)
                 {
@@ -149,7 +152,7 @@
 
         @* Bathrooms pills (radio group) *@
         <section>
-            <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-white/50 mb-3">Bathrooms</p>
+            <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-white/50 mb-3">@L["filters.bathrooms"]</p>
             <div class="flex flex-wrap gap-1.5" role="radiogroup" aria-label="Bathrooms">
                 @foreach (var opt in bathroomOptions)
                 {
@@ -177,7 +180,7 @@
             <button type="button"
                     data-more-toggle
                     class="flex items-center justify-between w-full text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-white/50 hover:text-gray-700 dark:hover:text-white/70 transition-colors mb-3">
-                More Filters
+                @L["filters.moreFilters"]
                 <icon name="chevron-down" class="h-4 w-4 transition-transform duration-200" />
             </button>
             <div class="space-y-2" data-more-content>
@@ -186,7 +189,7 @@
                               has-[:checked]:bg-brand-500/15 has-[:checked]:border-brand-500/30 has-[:checked]:text-brand-700 dark:has-[:checked]:text-brand-300">
                     <span class="flex items-center gap-2 text-sm font-medium">
                         <icon name="dog" class="h-4 w-4" />
-                        Pets Allowed
+                        @L["filters.petsAllowed"]
                     </span>
                     <input type="checkbox" name="PetsAllowed" value="true" class="sr-only" @(Model.PetsAllowed ? "checked" : null) />
                     <span class="h-5 w-9 rounded-full border bg-gray-200 dark:bg-white/10 border-gray-300 dark:border-white/20 relative
@@ -198,7 +201,7 @@
                               has-[:checked]:bg-brand-500/15 has-[:checked]:border-brand-500/30 has-[:checked]:text-brand-700 dark:has-[:checked]:text-brand-300">
                     <span class="flex items-center gap-2 text-sm font-medium">
                         <icon name="sofa" class="h-4 w-4" />
-                        Furnished
+                        @L["filters.furnished"]
                     </span>
                     <input type="checkbox" name="Furnished" value="true" class="sr-only" @(Model.Furnished ? "checked" : null) />
                 </label>
@@ -207,7 +210,7 @@
                               has-[:checked]:bg-brand-500/15 has-[:checked]:border-brand-500/30 has-[:checked]:text-brand-700 dark:has-[:checked]:text-brand-300">
                     <span class="flex items-center gap-2 text-sm font-medium">
                         <icon name="car" class="h-4 w-4" />
-                        Parking Included
+                        @L["filters.parking"]
                     </span>
                     <input type="checkbox" name="HasParking" value="true" class="sr-only" @(Model.HasParking ? "checked" : null) />
                 </label>
@@ -217,12 +220,12 @@
 
     @* Footer actions *@
     <div class="pt-4 border-t border-gray-200 dark:border-white/10 flex gap-2">
-        <a href="/@Model.CitySlug?Sort=@Model.Sort&View=@Model.View"
+        <a href="/@culture/@Model.CitySlug?Sort=@Model.Sort&View=@Model.View"
            class="glass-button flex-1 py-2.5 text-sm font-medium text-center text-gray-700 dark:text-white/70">
-            Clear
+            @L["filters.clear"]
         </a>
         <button type="submit" class="glass-button-primary flex-1 py-2.5 text-sm font-semibold text-white">
-            Apply
+            @L["filters.apply"]
         </button>
     </div>
 </form>

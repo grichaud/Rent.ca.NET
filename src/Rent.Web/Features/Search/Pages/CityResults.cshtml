@@ -1,7 +1,11 @@
-@page "/{citySlug}"
+@page "/{culture:locale}/{citySlug}"
 @model Rent.Web.Features.Search.Pages.CityResultsModel
 @{
-    ViewData["Title"] = Model.Result.City is null ? "City not found" : $"Rentals in {Model.Result.City.Name}";
+    var culture = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+    if (culture != "en" && culture != "fr") { culture = "en"; }
+    ViewData["Title"] = Model.Result.City is null
+        ? "City not found"
+        : L["listings.rentalsIn"].Value + " " + Model.Result.City.Name;
     var view = Model.Query.View;
     var isMap = view == Rent.Web.Features.Search.SearchView.Map;
     var isList = view == Rent.Web.Features.Search.SearchView.List;
@@ -12,20 +16,20 @@
     <section class="max-w-xl mx-auto glass-card p-10 text-center">
         <h1 class="font-display text-3xl text-slate-900 dark:text-white">City not found</h1>
         <p class="text-slate-500 dark:text-white/60 mt-2">We couldn&rsquo;t find a city with that name.</p>
-        <a href="/" class="glass-button-primary inline-block mt-6">Back home</a>
+        <a href="/@culture" class="glass-button-primary inline-block mt-6">@L["common.back"]</a>
     </section>
     return;
 }
 
 <header class="mb-6">
     <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-1">
-        Rentals in
+        @L["listings.rentalsIn"]
         <span class="bg-gradient-to-r from-brand-500 to-cyan-500 dark:from-brand-400 dark:to-cyan-400 bg-clip-text text-transparent">
             @Model.Result.City.Name
         </span>
     </h1>
     <p class="text-sm text-gray-500 dark:text-white/50 mb-4">
-        Find apartments, condos, houses and more in @Model.Result.City.Name
+        @string.Format(L["listings.findIn"].Value, Model.Result.City.Name)
     </p>
     <partial name="/Features/Search/Partials/_SearchBarCompact.cshtml" model="@Model.Result.City.Name" />
 </header>
@@ -41,7 +45,7 @@
                 data-mobile-filter-open
                 class="glass-button lg:hidden inline-flex items-center justify-center gap-2 px-4 py-2 text-sm text-gray-800 dark:text-white/80 self-start">
             <icon name="sliders-horizontal" class="h-4 w-4" />
-            Filters
+            @L["filters.openFilters"]
         </button>
 
         <partial name="/Features/Search/Partials/_ResultsHeader.cshtml" model="Model" />
@@ -49,7 +53,7 @@
         @if (Model.Result.Properties.Count == 0)
         {
             <div class="glass-card p-10 text-center text-slate-600 dark:text-white/70">
-                No listings match your filters. <a href="/@Model.Query.CitySlug" class="text-brand-600 dark:text-brand-400 underline">Clear filters</a>.
+                @L["results.empty"] <a href="/@culture/@Model.Query.CitySlug" class="text-brand-600 dark:text-brand-400 underline">@L["filters.clear"]</a>.
             </div>
         }
         else

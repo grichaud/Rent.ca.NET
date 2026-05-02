@@ -41,6 +41,8 @@
     }
 
     function setStatus(text) { statusEl.textContent = text; }
+    const onlineText = (statusEl && statusEl.dataset.onlineText) || "Online";
+    const thinkingText = (statusEl && statusEl.dataset.thinkingText) || "Thinking...";
 
     function refreshEmptyState() {
         const hasMessages = messagesEl.children.length > 0;
@@ -150,7 +152,7 @@
         appendMessage("user", trimmed);
         input.value = "";
         autoresizeInput();
-        setStatus("Thinking...");
+        setStatus(thinkingText);
         sendBtn.disabled = true;
         isStreaming = true;
 
@@ -160,6 +162,7 @@
         const payload = {
             conversationId: conversationId,
             message: trimmed,
+            locale: root.dataset.locale || "en",
             context: {
                 currentPage: root.dataset.currentPage || null,
                 currentCity: root.dataset.currentCity || null,
@@ -236,7 +239,7 @@
         } finally {
             isStreaming = false;
             activeAbortController = null;
-            setStatus("Online");
+            setStatus(onlineText);
             sendBtn.disabled = false;
             input.focus();
         }

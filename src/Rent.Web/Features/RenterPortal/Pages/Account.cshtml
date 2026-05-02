@@ -1,13 +1,13 @@
-@page "/renter/account"
+@page "/{culture:locale}/renter/account"
 @model Rent.Web.Features.RenterPortal.Pages.AccountModel
 @{
-    ViewData["Title"] = "Account";
+    ViewData["Title"] = L["renter.accountTitle"].Value;
 }
 
 <div class="space-y-6 max-w-2xl">
     <header>
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Account</h1>
-        <p class="mt-1 text-sm text-slate-600 dark:text-white/70">Manage your profile and password.</p>
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">@L["renter.accountLink"]</h1>
+        <p class="mt-1 text-sm text-slate-600 dark:text-white/70">@L["renter.accountSubtitle"]</p>
     </header>
 
     @if (Model.FlashSuccess is not null)
@@ -27,63 +27,63 @@
     }
 
     <section class="glass-card p-6">
-        <h2 class="font-semibold text-slate-900 dark:text-white mb-1">Profile</h2>
-        <p class="text-sm text-slate-500 dark:text-white/60 mb-4">Email: <span class="text-slate-700 dark:text-white/80">@Model.Email</span></p>
+        <h2 class="font-semibold text-slate-900 dark:text-white mb-1">@L["renter.accountProfile"]</h2>
+        <p class="text-sm text-slate-500 dark:text-white/60 mb-4">@L["renter.accountEmail"] <span class="text-slate-700 dark:text-white/80">@Model.Email</span></p>
 
         <form method="post" asp-page-handler="Profile" class="space-y-3">
             <div asp-validation-summary="ModelOnly" class="text-sm text-red-600 dark:text-red-400"></div>
 
             <div>
-                <label asp-for="Profile.FullName" class="block text-sm text-slate-700 dark:text-white/80 mb-1">Full name</label>
+                <label asp-for="Profile.FullName" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["auth.fullName"]</label>
                 <input asp-for="Profile.FullName" class="glass-input" autocomplete="name" />
                 <span asp-validation-for="Profile.FullName" class="text-xs text-red-600 dark:text-red-400"></span>
             </div>
 
             <button type="submit" class="glass-button-primary inline-flex items-center gap-2">
                 <icon name="check" class="h-4 w-4" />
-                Save profile
+                @L["renter.accountSaveProfile"]
             </button>
         </form>
     </section>
 
     <section class="glass-card p-6">
-        <h2 class="font-semibold text-slate-900 dark:text-white mb-1">Password</h2>
+        <h2 class="font-semibold text-slate-900 dark:text-white mb-1">@L["renter.accountPassword"]</h2>
 
         @if (!Model.HasPassword)
         {
             <div class="mt-3 p-3 rounded-lg border border-blue-200 bg-blue-50 dark:border-blue-500/40 dark:bg-blue-500/10 text-sm text-blue-700 dark:text-blue-300 inline-flex items-center gap-2">
                 <icon name="info" class="h-4 w-4" />
-                Your password is managed by Google. Sign in via Google to access your account.
+                @L["renter.accountGoogleNote"]
             </div>
         }
         else
         {
-            <p class="text-sm text-slate-500 dark:text-white/60 mb-4">Choose a strong password — 8+ chars with at least one uppercase letter and one digit.</p>
+            <p class="text-sm text-slate-500 dark:text-white/60 mb-4">@L["renter.accountPasswordHint"]</p>
 
             <form method="post" asp-page-handler="Password" class="space-y-3" autocomplete="off">
                 <div asp-validation-summary="ModelOnly" class="text-sm text-red-600 dark:text-red-400"></div>
 
                 <div>
-                    <label asp-for="Password.CurrentPassword" class="block text-sm text-slate-700 dark:text-white/80 mb-1">Current password</label>
+                    <label asp-for="Password.CurrentPassword" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["renter.accountCurrentPassword"]</label>
                     <input asp-for="Password.CurrentPassword" type="password" class="glass-input" autocomplete="current-password" />
                     <span asp-validation-for="Password.CurrentPassword" class="text-xs text-red-600 dark:text-red-400"></span>
                 </div>
 
                 <div>
-                    <label asp-for="Password.NewPassword" class="block text-sm text-slate-700 dark:text-white/80 mb-1">New password</label>
+                    <label asp-for="Password.NewPassword" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["renter.accountNewPassword"]</label>
                     <input asp-for="Password.NewPassword" type="password" class="glass-input" autocomplete="new-password" />
                     <span asp-validation-for="Password.NewPassword" class="text-xs text-red-600 dark:text-red-400"></span>
                 </div>
 
                 <div>
-                    <label asp-for="Password.ConfirmPassword" class="block text-sm text-slate-700 dark:text-white/80 mb-1">Confirm new password</label>
+                    <label asp-for="Password.ConfirmPassword" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["renter.accountConfirmPassword"]</label>
                     <input asp-for="Password.ConfirmPassword" type="password" class="glass-input" autocomplete="new-password" />
                     <span asp-validation-for="Password.ConfirmPassword" class="text-xs text-red-600 dark:text-red-400"></span>
                 </div>
 
                 <button type="submit" class="glass-button-primary inline-flex items-center gap-2">
                     <icon name="lock" class="h-4 w-4" />
-                    Change password
+                    @L["renter.accountChangePassword"]
                 </button>
             </form>
         }

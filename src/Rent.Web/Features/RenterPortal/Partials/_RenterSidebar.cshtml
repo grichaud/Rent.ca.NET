@@ -1,77 +1,91 @@
 @{
     var pagePath = Context.Request.Path.Value ?? "/renter";
+    var culture = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+    if (culture != "en" && culture != "fr") { culture = "en"; }
+    var rRoot = "/" + culture + "/renter";
 
     bool IsActive(string href)
     {
-        if (href == "/renter") return string.Equals(pagePath, "/renter", StringComparison.OrdinalIgnoreCase);
+        if (href == rRoot) return string.Equals(pagePath, rRoot, StringComparison.OrdinalIgnoreCase);
         return pagePath.StartsWith(href, StringComparison.OrdinalIgnoreCase);
     }
 
     string Cls(string href, string active, string inactive) => IsActive(href) ? active : inactive;
+
+    var activeLink = "flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 bg-pink-500/20 text-pink-500 dark:text-pink-300 shadow-sm shadow-pink-500/10";
+    var inactiveLink = "flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 text-gray-600 dark:text-white/60 hover:bg-gray-100 dark:hover:bg-white/10 hover:text-gray-900 dark:hover:text-white/90";
+    var activeIcon = "h-4 w-4 shrink-0 text-pink-500 dark:text-pink-300";
+    var inactiveIcon = "h-4 w-4 shrink-0 text-gray-400 dark:text-white/40";
+
+    var dashHref = rRoot;
+    var favHref = rRoot + "/favorites";
+    var alertsHref = rRoot + "/alerts";
+    var inqHref = rRoot + "/inquiries";
+    var accHref = rRoot + "/account";
 }
 
 <nav class="flex flex-col h-full" aria-label="Renter navigation">
     <div class="px-5 py-6 border-b border-gray-200 dark:border-white/10">
-        <a href="/" class="flex items-center gap-2.5 group">
+        <a href="/@culture" class="flex items-center gap-2.5 group">
             <div class="h-8 w-8 rounded-xl bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center shadow-lg shadow-pink-500/30">
                 <icon name="heart" class="h-4 w-4 text-white" fill="currentColor" />
             </div>
             <span class="text-base font-bold text-gray-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">Rent.ca</span>
-            <span class="text-xs ml-1 mt-0.5 text-slate-500 dark:text-white/50">My Portal</span>
+            <span class="text-xs ml-1 mt-0.5 text-slate-500 dark:text-white/50">@L["common.myPortal"]</span>
         </a>
     </div>
 
     <ul class="flex flex-col gap-1 p-3 flex-1" role="list">
         <li>
-            <a href="/renter" aria-current="@(IsActive("/renter") ? "page" : null)"
-               class="@Cls("/renter", "flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 bg-pink-500/20 text-pink-500 dark:text-pink-300 shadow-sm shadow-pink-500/10", "flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 text-gray-600 dark:text-white/60 hover:bg-gray-100 dark:hover:bg-white/10 hover:text-gray-900 dark:hover:text-white/90")">
-                <icon name="layout-dashboard" class="@(IsActive("/renter") ? "h-4 w-4 shrink-0 text-pink-500 dark:text-pink-300" : "h-4 w-4 shrink-0 text-gray-400 dark:text-white/40")" />
-                <span>Dashboard</span>
-                @if (IsActive("/renter"))
+            <a href="@dashHref" aria-current="@(IsActive(dashHref) ? "page" : null)"
+               class="@Cls(dashHref, activeLink, inactiveLink)">
+                <icon name="layout-dashboard" class="@(IsActive(dashHref) ? activeIcon : inactiveIcon)" />
+                <span>@L["renter.dashboardLink"]</span>
+                @if (IsActive(dashHref))
                 {
                     <span class="ml-auto h-1.5 w-1.5 rounded-full bg-pink-500" aria-hidden="true"></span>
                 }
             </a>
         </li>
         <li>
-            <a href="/renter/favorites" aria-current="@(IsActive("/renter/favorites") ? "page" : null)"
-               class="@Cls("/renter/favorites", "flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 bg-pink-500/20 text-pink-500 dark:text-pink-300 shadow-sm shadow-pink-500/10", "flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 text-gray-600 dark:text-white/60 hover:bg-gray-100 dark:hover:bg-white/10 hover:text-gray-900 dark:hover:text-white/90")">
-                <icon name="heart" class="@(IsActive("/renter/favorites") ? "h-4 w-4 shrink-0 text-pink-500 dark:text-pink-300" : "h-4 w-4 shrink-0 text-gray-400 dark:text-white/40")" />
-                <span>Favorites</span>
-                @if (IsActive("/renter/favorites"))
+            <a href="@favHref" aria-current="@(IsActive(favHref) ? "page" : null)"
+               class="@Cls(favHref, activeLink, inactiveLink)">
+                <icon name="heart" class="@(IsActive(favHref) ? activeIcon : inactiveIcon)" />
+                <span>@L["renter.favoritesLink"]</span>
+                @if (IsActive(favHref))
                 {
                     <span class="ml-auto h-1.5 w-1.5 rounded-full bg-pink-500" aria-hidden="true"></span>
                 }
             </a>
         </li>
         <li>
-            <a href="/renter/alerts" aria-current="@(IsActive("/renter/alerts") ? "page" : null)"
-               class="@Cls("/renter/alerts", "flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 bg-pink-500/20 text-pink-500 dark:text-pink-300 shadow-sm shadow-pink-500/10", "flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 text-gray-600 dark:text-white/60 hover:bg-gray-100 dark:hover:bg-white/10 hover:text-gray-900 dark:hover:text-white/90")">
-                <icon name="bell" class="@(IsActive("/renter/alerts") ? "h-4 w-4 shrink-0 text-pink-500 dark:text-pink-300" : "h-4 w-4 shrink-0 text-gray-400 dark:text-white/40")" />
-                <span>Alerts</span>
-                @if (IsActive("/renter/alerts"))
+            <a href="@alertsHref" aria-current="@(IsActive(alertsHref) ? "page" : null)"
+               class="@Cls(alertsHref, activeLink, inactiveLink)">
+                <icon name="bell" class="@(IsActive(alertsHref) ? activeIcon : inactiveIcon)" />
+                <span>@L["renter.alertsLink"]</span>
+                @if (IsActive(alertsHref))
                 {
                     <span class="ml-auto h-1.5 w-1.5 rounded-full bg-pink-500" aria-hidden="true"></span>
                 }
             </a>
         </li>
         <li>
-            <a href="/renter/inquiries" aria-current="@(IsActive("/renter/inquiries") ? "page" : null)"
-               class="@Cls("/renter/inquiries", "flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 bg-pink-500/20 text-pink-500 dark:text-pink-300 shadow-sm shadow-pink-500/10", "flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 text-gray-600 dark:text-white/60 hover:bg-gray-100 dark:hover:bg-white/10 hover:text-gray-900 dark:hover:text-white/90")">
-                <icon name="message-square" class="@(IsActive("/renter/inquiries") ? "h-4 w-4 shrink-0 text-pink-500 dark:text-pink-300" : "h-4 w-4 shrink-0 text-gray-400 dark:text-white/40")" />
-                <span>My Inquiries</span>
-                @if (IsActive("/renter/inquiries"))
+            <a href="@inqHref" aria-current="@(IsActive(inqHref) ? "page" : null)"
+               class="@Cls(inqHref, activeLink, inactiveLink)">
+                <icon name="message-square" class="@(IsActive(inqHref) ? activeIcon : inactiveIcon)" />
+                <span>@L["renter.inquiriesLink"]</span>
+                @if (IsActive(inqHref))
                 {
                     <span class="ml-auto h-1.5 w-1.5 rounded-full bg-pink-500" aria-hidden="true"></span>
                 }
             </a>
         </li>
         <li>
-            <a href="/renter/account" aria-current="@(IsActive("/renter/account") ? "page" : null)"
-               class="@Cls("/renter/account", "flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 bg-pink-500/20 text-pink-500 dark:text-pink-300 shadow-sm shadow-pink-500/10", "flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 text-gray-600 dark:text-white/60 hover:bg-gray-100 dark:hover:bg-white/10 hover:text-gray-900 dark:hover:text-white/90")">
-                <icon name="user" class="@(IsActive("/renter/account") ? "h-4 w-4 shrink-0 text-pink-500 dark:text-pink-300" : "h-4 w-4 shrink-0 text-gray-400 dark:text-white/40")" />
-                <span>Account</span>
-                @if (IsActive("/renter/account"))
+            <a href="@accHref" aria-current="@(IsActive(accHref) ? "page" : null)"
+               class="@Cls(accHref, activeLink, inactiveLink)">
+                <icon name="user" class="@(IsActive(accHref) ? activeIcon : inactiveIcon)" />
+                <span>@L["renter.accountLink"]</span>
+                @if (IsActive(accHref))
                 {
                     <span class="ml-auto h-1.5 w-1.5 rounded-full bg-pink-500" aria-hidden="true"></span>
                 }
@@ -80,9 +94,9 @@
     </ul>
 
     <div class="p-3 border-t border-gray-200 dark:border-white/10">
-        <a href="/" class="glass-button w-full inline-flex items-center justify-center gap-2 text-sm">
+        <a href="/@culture" class="glass-button w-full inline-flex items-center justify-center gap-2 text-sm">
             <icon name="external-link" class="h-4 w-4 shrink-0" />
-            <span>Browse listings</span>
+            <span>@L["renter.browseListings"]</span>
         </a>
     </div>
 </nav>

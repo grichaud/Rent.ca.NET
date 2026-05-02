@@ -1,28 +1,37 @@
 @model Rent.Web.Features.Search.PropertyCard
 @{
+    var culture = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+    if (culture != "en" && culture != "fr") { culture = "en"; }
     var variant = ViewData["Variant"] as string ?? "grid";
     var isList = variant == "list";
+    var perMonth = L["listings.perMonth"].Value;
 
     string FormatPrice(decimal v) => "$" + v.ToString("N0");
     string PriceLabel()
     {
-        if (!Model.FromPrice.HasValue) return "Contact for pricing";
+        if (!Model.FromPrice.HasValue) return L["detail.contactLandlord"].Value;
         if (Model.ToPrice.HasValue && Model.ToPrice.Value > Model.FromPrice.Value)
-            return $"{FormatPrice(Model.FromPrice.Value)} – {FormatPrice(Model.ToPrice.Value)}/mo";
-        return $"{FormatPrice(Model.FromPrice.Value)}/mo";
+            return $"{FormatPrice(Model.FromPrice.Value)} – {FormatPrice(Model.ToPrice.Value)}{perMonth}";
+        return $"{FormatPrice(Model.FromPrice.Value)}{perMonth}";
     }
     string BedsLabel()
     {
-        if (Model.MinBedrooms == 0 && (!Model.MaxBedrooms.HasValue || Model.MaxBedrooms == 0)) return "Studio";
+        if (Model.MinBedrooms == 0 && (!Model.MaxBedrooms.HasValue || Model.MaxBedrooms == 0))
+            return L["listings.beds.studio"].Value;
         if (Model.MaxBedrooms.HasValue && Model.MaxBedrooms.Value > Model.MinBedrooms)
             return $"{Model.MinBedrooms}–{Model.MaxBedrooms} bd";
-        return $"{Model.MinBedrooms} bd";
+        return Model.MinBedrooms == 1
+            ? L["listings.beds.one"].Value
+            : string.Format(L["listings.beds.many"].Value, Model.MinBedrooms);
     }
     string BathsLabel()
     {
         var n = Model.MinBathrooms;
-        if (n <= 0) return "1 ba";
-        return n == Math.Floor(n) ? $"{(int)n} ba" : $"{n:0.0} ba";
+        if (n <= 0) return L["listings.baths.one"].Value;
+        if (n == 1m) return L["listings.baths.one"].Value;
+        return n == Math.Floor(n)
+            ? string.Format(L["listings.baths.many"].Value, (int)n)
+            : string.Format(L["listings.baths.many"].Value, n.ToString("0.0"));
     }
     string LocationLabel()
     {
@@ -32,7 +41,19 @@
         parts.Add(Model.Province);
         return string.Join(", ", parts);
     }
-    string DetailUrl() => $"/{Model.CitySlug}/{Model.Slug}";
+    string DetailUrl() => $"/{culture}/{Model.CitySlug}/{Model.Slug}";
+    string PropertyTypeLabel() => Model.PropertyType switch
+    {
+        Rent.Web.Domain.PropertyType.Apartment => L["filters.apartment"].Value,
+        Rent.Web.Domain.PropertyType.Condo => L["filters.condo"].Value,
+        Rent.Web.Domain.PropertyType.House => L["filters.house"].Value,
+        Rent.Web.Domain.PropertyType.Townhouse => L["filters.townhouse"].Value,
+        Rent.Web.Domain.PropertyType.Basement => L["filters.basement"].Value,
+        Rent.Web.Domain.PropertyType.Studio => L["filters.studio"].Value,
+        Rent.Web.Domain.PropertyType.Loft => L["filters.loft"].Value,
+        Rent.Web.Domain.PropertyType.Duplex => L["filters.duplex"].Value,
+        _ => Model.PropertyType.ToString()
+    };
 }
 
 @if (isList)
@@ -85,18 +106,18 @@
                 <span class="text-gray-300 dark:text-white/20">·</span>
                 <span class="inline-flex items-center gap-1"><icon name="bath" class="h-3.5 w-3.5" />@BathsLabel()</span>
                 <span class="text-gray-300 dark:text-white/20">·</span>
-                <span class="inline-flex items-center gap-1"><icon name="home" class="h-3.5 w-3.5" />@Model.PropertyType</span>
+                <span class="inline-flex items-center gap-1"><icon name="home" class="h-3.5 w-3.5" />@PropertyTypeLabel()</span>
             </div>
             @if (Model.PetsAllowed || Model.Furnished)
             {
                 <div class="flex flex-wrap gap-1.5 mt-auto">
                     @if (Model.PetsAllowed)
                     {
-                        <span class="glass-badge text-xs text-gray-500 dark:text-white/70 inline-flex items-center gap-1"><icon name="dog" class="h-3 w-3" />Pet-friendly</span>
+                        <span class="glass-badge text-xs text-gray-500 dark:text-white/70 inline-flex items-center gap-1"><icon name="dog" class="h-3 w-3" />@L["filters.petsAllowed"]</span>
                     }
                     @if (Model.Furnished)
                     {
-                        <span class="glass-badge text-xs text-gray-500 dark:text-white/70 inline-flex items-center gap-1"><icon name="sofa" class="h-3 w-3" />Furnished</span>
+                        <span class="glass-badge text-xs text-gray-500 dark:text-white/70 inline-flex items-center gap-1"><icon name="sofa" class="h-3 w-3" />@L["filters.furnished"]</span>
                     }
                 </div>
             }
@@ -143,7 +164,7 @@
             {
                 <span class="inline-flex items-center gap-1 bg-emerald-500/90 backdrop-blur-md text-white text-[10px] uppercase tracking-wider font-bold px-2 py-1 rounded-md">
                     <icon name="check" class="h-3 w-3" />
-                    Verified
+                    @L["detail.verified"]
                 </span>
             }
         </div>
@@ -169,7 +190,7 @@
             <span class="text-gray-300 dark:text-white/20">·</span>
             <span class="inline-flex items-center gap-1"><icon name="bath" class="h-3 w-3" />@BathsLabel()</span>
             <span class="text-gray-300 dark:text-white/20">·</span>
-            <span class="inline-flex items-center gap-1"><icon name="home" class="h-3 w-3" />@Model.PropertyType</span>
+            <span class="inline-flex items-center gap-1"><icon name="home" class="h-3 w-3" />@PropertyTypeLabel()</span>
         </div>
 
         @if (Model.PetsAllowed || Model.Furnished)
@@ -177,11 +198,11 @@
             <div class="flex flex-wrap gap-1.5 pt-1 border-t border-gray-200 dark:border-white/10">
                 @if (Model.PetsAllowed)
                 {
-                    <span class="glass-badge text-xs text-gray-500 dark:text-white/60 inline-flex items-center gap-1 py-0.5"><icon name="dog" class="h-3 w-3" />Pet-friendly</span>
+                    <span class="glass-badge text-xs text-gray-500 dark:text-white/60 inline-flex items-center gap-1 py-0.5"><icon name="dog" class="h-3 w-3" />@L["filters.petsAllowed"]</span>
                 }
                 @if (Model.Furnished)
                 {
-                    <span class="glass-badge text-xs text-gray-500 dark:text-white/60 inline-flex items-center gap-1 py-0.5"><icon name="sofa" class="h-3 w-3" />Furnished</span>
+                    <span class="glass-badge text-xs text-gray-500 dark:text-white/60 inline-flex items-center gap-1 py-0.5"><icon name="sofa" class="h-3 w-3" />@L["filters.furnished"]</span>
                 }
             </div>
         }

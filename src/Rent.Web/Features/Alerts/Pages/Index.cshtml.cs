@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Rent.Web.Domain;
 using Rent.Web.Infrastructure.Data;
 using Rent.Web.Infrastructure.Identity;
+using Rent.Web.Infrastructure.Localization;
 
 namespace Rent.Web.Features.Alerts.Pages;
 
@@ -79,7 +80,7 @@ public class IndexModel : PageModel
         await _db.SaveChangesAsync(ct);
 
         TempData["AlertSuccess"] = "Alert created.";
-        return Redirect("/renter/alerts");
+        return Redirect(this.Localized("/renter/alerts"));
     }
 
     public async Task<IActionResult> OnPostToggleAsync([FromForm] Guid id, CancellationToken ct)
@@ -95,7 +96,7 @@ public class IndexModel : PageModel
         await _db.SaveChangesAsync(ct);
 
         TempData["AlertSuccess"] = alert.IsActive ? "Alert resumed." : "Alert paused.";
-        return Redirect("/renter/alerts");
+        return Redirect(this.Localized("/renter/alerts"));
     }
 
     public async Task<IActionResult> OnPostDeleteAsync([FromForm] Guid id, CancellationToken ct)
@@ -110,7 +111,7 @@ public class IndexModel : PageModel
         await _db.SaveChangesAsync(ct);
 
         TempData["AlertSuccess"] = "Alert deleted.";
-        return Redirect("/renter/alerts");
+        return Redirect(this.Localized("/renter/alerts"));
     }
 
     private async Task LoadAsync(CancellationToken ct)

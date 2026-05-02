@@ -90,7 +90,7 @@ public class InquiriesAndAccountTests : IClassFixture<RentAppFactory>
         using var client = await TestAuth.SignInAsync(_factory, senderEmail, TestAuth.DefaultPassword);
         client.DefaultRequestHeaders.Add("Accept", "text/html");
 
-        var resp = await client.GetAsync("/renter/inquiries");
+        var resp = await client.GetAsync("/en/renter/inquiries");
         resp.StatusCode.Should().Be(HttpStatusCode.OK);
         var body = await resp.Content.ReadAsStringAsync();
         body.Should().Contain("Mine should appear");
@@ -105,7 +105,7 @@ public class InquiriesAndAccountTests : IClassFixture<RentAppFactory>
         var user = await TestAuth.CreateUserAsync(_factory, email, Roles.Renter, "Old Name");
         using var client = await TestAuth.SignInAsync(_factory, email, TestAuth.DefaultPassword);
 
-        var resp = await client.PostAsync("/renter/account?handler=Profile",
+        var resp = await client.PostAsync("/en/renter/account?handler=Profile",
             new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string, string>("Profile.FullName", "New Renter Name")
@@ -125,7 +125,7 @@ public class InquiriesAndAccountTests : IClassFixture<RentAppFactory>
         await TestAuth.CreateUserAsync(_factory, email, Roles.Renter);
         using var client = await TestAuth.SignInAsync(_factory, email, TestAuth.DefaultPassword);
 
-        var resp = await client.PostAsync("/renter/account?handler=Password",
+        var resp = await client.PostAsync("/en/renter/account?handler=Password",
             new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string, string>("Password.CurrentPassword", TestAuth.DefaultPassword),
@@ -145,7 +145,7 @@ public class InquiriesAndAccountTests : IClassFixture<RentAppFactory>
         await TestAuth.CreateUserAsync(_factory, email, Roles.Renter);
         using var client = await TestAuth.SignInAsync(_factory, email, TestAuth.DefaultPassword);
 
-        var resp = await client.PostAsync("/renter/account?handler=Password",
+        var resp = await client.PostAsync("/en/renter/account?handler=Password",
             new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string, string>("Password.CurrentPassword", "WrongCurrent1!"),
@@ -200,7 +200,7 @@ public class InquiriesAndAccountTests : IClassFixture<RentAppFactory>
             await um.RemovePasswordAsync(u!);
         }
         loggedIn.DefaultRequestHeaders.Add("Accept", "text/html");
-        var resp = await loggedIn.GetAsync("/renter/account");
+        var resp = await loggedIn.GetAsync("/en/renter/account");
         resp.StatusCode.Should().Be(HttpStatusCode.OK);
         var body = await resp.Content.ReadAsStringAsync();
         body.Should().Contain("managed by Google");

@@ -23,7 +23,7 @@ public class AlertsTests : IClassFixture<RentAppFactory>
     public async Task Alerts_Anonymous_Redirects_To_Login()
     {
         using var client = _factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
-        var resp = await client.GetAsync("/renter/alerts");
+        var resp = await client.GetAsync("/en/renter/alerts");
         resp.StatusCode.Should().Be(HttpStatusCode.Redirect);
         resp.Headers.Location!.ToString().Should().Contain("/login");
     }
@@ -32,7 +32,7 @@ public class AlertsTests : IClassFixture<RentAppFactory>
     public async Task Alerts_Create_RequiresCity()
     {
         using var client = await TestAuth.CreateAndSignInAsync(_factory, Roles.Renter, "alert-no-city");
-        var resp = await client.PostAsync("/renter/alerts?handler=Create",
+        var resp = await client.PostAsync("/en/renter/alerts?handler=Create",
             new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string, string>("Input.City", ""),
@@ -51,7 +51,7 @@ public class AlertsTests : IClassFixture<RentAppFactory>
         var user = await TestAuth.CreateUserAsync(_factory, email, Roles.Renter);
         using var client = await TestAuth.SignInAsync(_factory, email, TestAuth.DefaultPassword);
 
-        var create = await client.PostAsync("/renter/alerts?handler=Create",
+        var create = await client.PostAsync("/en/renter/alerts?handler=Create",
             new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string, string>("Input.City", "Toronto"),
@@ -102,7 +102,7 @@ public class AlertsTests : IClassFixture<RentAppFactory>
         }
 
         using var client = await TestAuth.SignInAsync(_factory, email, TestAuth.DefaultPassword);
-        var resp = await client.PostAsync("/renter/alerts?handler=Toggle",
+        var resp = await client.PostAsync("/en/renter/alerts?handler=Toggle",
             new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string, string>("id", alertId.ToString())
@@ -139,7 +139,7 @@ public class AlertsTests : IClassFixture<RentAppFactory>
         }
 
         using var client = await TestAuth.SignInAsync(_factory, email, TestAuth.DefaultPassword);
-        var resp = await client.PostAsync("/renter/alerts?handler=Delete",
+        var resp = await client.PostAsync("/en/renter/alerts?handler=Delete",
             new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string, string>("id", alertId.ToString())
@@ -171,7 +171,7 @@ public class AlertsTests : IClassFixture<RentAppFactory>
         using var bob = await TestAuth.CreateAndSignInAsync(_factory, Roles.Renter, "alert-bob");
         bob.DefaultRequestHeaders.Add("Accept", "text/html");
 
-        var resp = await bob.GetAsync("/renter/alerts");
+        var resp = await bob.GetAsync("/en/renter/alerts");
         resp.StatusCode.Should().Be(HttpStatusCode.OK);
         var body = await resp.Content.ReadAsStringAsync();
         body.Should().Contain("No alerts set up");

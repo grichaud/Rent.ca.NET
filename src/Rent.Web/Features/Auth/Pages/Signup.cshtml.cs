@@ -8,6 +8,7 @@ using Rent.Web.Domain;
 using Rent.Web.Features.Email;
 using Rent.Web.Infrastructure.Data;
 using Rent.Web.Infrastructure.Identity;
+using Rent.Web.Infrastructure.Localization;
 
 namespace Rent.Web.Features.Auth.Pages;
 
@@ -96,18 +97,19 @@ public class SignupModel : PageModel
             _ => "/"
         };
 
+        var localizedPortal = this.Localized(portalPath);
         try
         {
             var origin = $"{Request.Scheme}://{Request.Host}";
             await _emailSender.SendWelcomeAsync(
-                new WelcomeEmail(user.Email!, user.FullName ?? string.Empty, Input.Role, $"{origin}{portalPath}"), ct);
+                new WelcomeEmail(user.Email!, user.FullName ?? string.Empty, Input.Role, $"{origin}{localizedPortal}", this.CurrentCulture()), ct);
         }
         catch (Exception ex)
         {
             _logger.LogWarning(ex, "Failed to send welcome email to {Email}", user.Email);
         }
 
-        return Redirect(portalPath);
+        return Redirect(localizedPortal);
     }
 
     public IActionResult OnPostExternalLogin(string provider, string? returnUrl = null)

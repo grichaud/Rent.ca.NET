@@ -24,4 +24,13 @@
     <PackageReference Include="Serilog.AspNetCore" Version="8.0.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\SharedResource.resx">
+      <LogicalName>Rent.Web.Resources.SharedResource.resources</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\SharedResource.fr.resx">
+      <LogicalName>Rent.Web.Resources.SharedResource.fr.resources</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>

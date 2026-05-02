@@ -7,6 +7,7 @@ using Rent.Web.Domain;
 using Rent.Web.Features.Shared.Services;
 using Rent.Web.Infrastructure.Data;
 using Rent.Web.Infrastructure.Identity;
+using Rent.Web.Infrastructure.Localization;
 using Rent.Web.Infrastructure.Storage;
 
 namespace Rent.Web.Features.LandlordManage.Pages.Listings;
@@ -115,6 +116,6 @@ public class CreateModel : PageModel
         _logger.LogInformation("Landlord {LandlordId} created property {PropertyId} ({Slug})", landlordId, property.Id, property.Slug);
 
         TempData["ListingSuccess"] = $"&#10003; \"{property.Title}\" is live.";
-        return Redirect("/landlord/listings");
+        return Redirect(this.Localized("/landlord/listings"));
     }
 }

@@ -7,6 +7,7 @@ using Rent.Web.Domain;
 using Rent.Web.Features.Email;
 using Rent.Web.Infrastructure.Data;
 using Rent.Web.Infrastructure.Identity;
+using Rent.Web.Infrastructure.Localization;
 
 namespace Rent.Web.Features.Auth.Pages;
 
@@ -51,7 +52,7 @@ public class ExternalLoginConfirmModel : PageModel
         if (info is null)
         {
             TempData["LoginError"] = SessionExpiredMessage;
-            return Redirect("/login");
+            return Redirect(this.Localized("/login"));
         }
 
         Email = info.GetEmail() ?? string.Empty;
@@ -67,7 +68,7 @@ public class ExternalLoginConfirmModel : PageModel
         {
             _logger.LogWarning("ExternalLoginConfirm POST: external cookie missing/expired before user submitted.");
             TempData["LoginError"] = SessionExpiredMessage;
-            return Redirect("/login");
+            return Redirect(this.Localized("/login"));
         }
 
         Email = info.GetEmail() ?? string.Empty;
@@ -135,18 +136,19 @@ public class ExternalLoginConfirmModel : PageModel
             _ => "/"
         };
 
+        var localizedPortal = this.Localized(portalPath);
         try
         {
             var origin = $"{Request.Scheme}://{Request.Host}";
             await _emailSender.SendWelcomeAsync(
-                new WelcomeEmail(user.Email!, user.FullName ?? string.Empty, Input.Role, $"{origin}{portalPath}"), ct);
+                new WelcomeEmail(user.Email!, user.FullName ?? string.Empty, Input.Role, $"{origin}{localizedPortal}", this.CurrentCulture()), ct);
         }
         catch (Exception ex)
         {
             _logger.LogWarning(ex, "Failed to send welcome email to {Email}", user.Email);
         }
 
-        return Redirect(portalPath);
+        return Redirect(localizedPortal);
     }
 
     public class InputModel

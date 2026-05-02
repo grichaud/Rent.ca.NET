@@ -1,9 +1,25 @@
-@page "/renter/alerts"
+@page "/{culture:locale}/renter/alerts"
 @using Rent.Web.Domain
 @model Rent.Web.Features.Alerts.Pages.IndexModel
 @{
-    ViewData["Title"] = "Search alerts";
+    ViewData["Title"] = L["renter.alertsTitle"].Value;
+    var culture = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+    if (culture != "en" && culture != "fr") { culture = "en"; }
     string FormatPrice(decimal? p) => p.HasValue ? "$" + p.Value.ToString("N0") : "—";
+
+    string TypeLabel(Rent.Web.Domain.PropertyType t) => t switch
+    {
+        Rent.Web.Domain.PropertyType.Apartment => L["filters.apartment"].Value,
+        Rent.Web.Domain.PropertyType.Condo => L["filters.condo"].Value,
+        Rent.Web.Domain.PropertyType.House => L["filters.house"].Value,
+        Rent.Web.Domain.PropertyType.Townhouse => L["filters.townhouse"].Value,
+        Rent.Web.Domain.PropertyType.Basement => L["filters.basement"].Value,
+        Rent.Web.Domain.PropertyType.Studio => L["filters.studio"].Value,
+        Rent.Web.Domain.PropertyType.Loft => L["filters.loft"].Value,
+        Rent.Web.Domain.PropertyType.Duplex => L["filters.duplex"].Value,
+        _ => t.ToString()
+    };
+
     string Summarize(Rent.Web.Domain.Alert a)
     {
         var parts = new List<string>();
@@ -12,22 +28,22 @@
             parts.Add(string.Format("{0}–{1}", FormatPrice(a.PriceMin), FormatPrice(a.PriceMax)));
         }
         if (a.BedroomsMin.HasValue) parts.Add($"{a.BedroomsMin}+ bd");
-        if (a.PropertyType.HasValue) parts.Add(a.PropertyType.Value.ToString());
-        if (a.PetsAllowed == true) parts.Add("Pet friendly");
-        return parts.Count == 0 ? "Any property" : string.Join(" • ", parts);
+        if (a.PropertyType.HasValue) parts.Add(TypeLabel(a.PropertyType.Value));
+        if (a.PetsAllowed == true) parts.Add(L["renter.alertsPetFriendly"].Value);
+        return parts.Count == 0 ? L["renter.alertsAnyProperty"].Value : string.Join(" • ", parts);
     }
 }
 
 <div class="space-y-6">
     <div class="flex items-center justify-between gap-3 flex-wrap">
         <div>
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Search Alerts</h1>
-            <p class="mt-1 text-sm text-slate-600 dark:text-white/70">Get notified when new listings match your criteria.</p>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">@L["renter.alertsTitle"]</h1>
+            <p class="mt-1 text-sm text-slate-600 dark:text-white/70">@L["renter.alertsSubtitle"]</p>
         </div>
-        <a href="@(Model.ShowForm ? "/renter/alerts" : "/renter/alerts?showForm=true")"
+        <a href="@(Model.ShowForm ? $"/{culture}/renter/alerts" : $"/{culture}/renter/alerts?showForm=true")"
            class="glass-button-primary inline-flex items-center gap-2 text-sm">
             <icon name="@(Model.ShowForm ? "x" : "plus")" class="h-4 w-4" />
-            @(Model.ShowForm ? "Cancel" : "New Alert")
+            @(Model.ShowForm ? L["renter.alertsCancel"].Value : L["renter.alertsNewAlert"].Value)
         </a>
     </div>
 
@@ -42,14 +58,14 @@
     @if (Model.ShowForm || !ModelState.IsValid)
     {
         <section class="glass-card p-6">
-            <h2 class="font-semibold text-slate-900 dark:text-white mb-4">Create a new alert</h2>
+            <h2 class="font-semibold text-slate-900 dark:text-white mb-4">@L["renter.alertsCreateSection"]</h2>
             <form method="post" asp-page-handler="Create" class="grid gap-4 sm:grid-cols-2">
                 <div asp-validation-summary="ModelOnly" class="text-sm text-red-600 dark:text-red-400 sm:col-span-2"></div>
 
                 <div>
-                    <label asp-for="Input.City" class="block text-sm text-slate-700 dark:text-white/80 mb-1">City</label>
+                    <label asp-for="Input.City" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["renter.alertsCity"]</label>
                     <select asp-for="Input.City" class="glass-input">
-                        <option value="">Select a city…</option>
+                        <option value="">@L["renter.alertsSelectCity"]</option>
                         @foreach (var city in Model.Cities)
                         {
                             <option value="@city.Name">@city.Name, @city.Province</option>
@@ -59,51 +75,51 @@
                 </div>
 
                 <div>
-                    <label asp-for="Input.PropertyType" class="block text-sm text-slate-700 dark:text-white/80 mb-1">Property type</label>
+                    <label asp-for="Input.PropertyType" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["filters.propertyType"]</label>
                     <select asp-for="Input.PropertyType" class="glass-input">
-                        <option value="">Any</option>
+                        <option value="">@L["renter.alertsTypeAny"]</option>
                         @foreach (var t in Enum.GetValues<PropertyType>())
                         {
-                            <option value="@t">@t</option>
+                            <option value="@t">@TypeLabel(t)</option>
                         }
                     </select>
                     <span asp-validation-for="Input.PropertyType" class="text-xs text-red-600 dark:text-red-400"></span>
                 </div>
 
                 <div>
-                    <label asp-for="Input.PriceMin" class="block text-sm text-slate-700 dark:text-white/80 mb-1">Min price ($/mo)</label>
-                    <input asp-for="Input.PriceMin" type="number" step="50" min="0" class="glass-input" placeholder="No min" />
+                    <label asp-for="Input.PriceMin" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["renter.alertsMinPrice"]</label>
+                    <input asp-for="Input.PriceMin" type="number" step="50" min="0" class="glass-input" placeholder="@L["renter.alertsNoMin"]" />
                     <span asp-validation-for="Input.PriceMin" class="text-xs text-red-600 dark:text-red-400"></span>
                 </div>
 
                 <div>
-                    <label asp-for="Input.PriceMax" class="block text-sm text-slate-700 dark:text-white/80 mb-1">Max price ($/mo)</label>
-                    <input asp-for="Input.PriceMax" type="number" step="50" min="0" class="glass-input" placeholder="No max" />
+                    <label asp-for="Input.PriceMax" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["renter.alertsMaxPrice"]</label>
+                    <input asp-for="Input.PriceMax" type="number" step="50" min="0" class="glass-input" placeholder="@L["renter.alertsNoMax"]" />
                     <span asp-validation-for="Input.PriceMax" class="text-xs text-red-600 dark:text-red-400"></span>
                 </div>
 
                 <div>
-                    <label asp-for="Input.BedroomsMin" class="block text-sm text-slate-700 dark:text-white/80 mb-1">Min bedrooms</label>
-                    <input asp-for="Input.BedroomsMin" type="number" step="1" min="0" max="10" class="glass-input" placeholder="Any" />
+                    <label asp-for="Input.BedroomsMin" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["renter.alertsBedroomsLabel"]</label>
+                    <input asp-for="Input.BedroomsMin" type="number" step="1" min="0" max="10" class="glass-input" placeholder="@L["renter.alertsTypeAny"]" />
                     <span asp-validation-for="Input.BedroomsMin" class="text-xs text-red-600 dark:text-red-400"></span>
                 </div>
 
                 <div>
-                    <label asp-for="Input.PetsAllowed" class="block text-sm text-slate-700 dark:text-white/80 mb-1">Pets allowed</label>
+                    <label asp-for="Input.PetsAllowed" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["renter.alertsPetsAllowed"]</label>
                     <select asp-for="Input.PetsAllowed" class="glass-input">
-                        <option value="">Any</option>
-                        <option value="true">Yes — pet friendly</option>
-                        <option value="false">No</option>
+                        <option value="">@L["renter.alertsTypeAny"]</option>
+                        <option value="true">@L["renter.alertsPetsYes"]</option>
+                        <option value="false">@L["renter.alertsPetsNo"]</option>
                     </select>
                     <span asp-validation-for="Input.PetsAllowed" class="text-xs text-red-600 dark:text-red-400"></span>
                 </div>
 
                 <div class="sm:col-span-2">
-                    <label asp-for="Input.Frequency" class="block text-sm text-slate-700 dark:text-white/80 mb-1">Notification frequency</label>
+                    <label asp-for="Input.Frequency" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["renter.alertsFreqLabel"]</label>
                     <select asp-for="Input.Frequency" class="glass-input">
-                        <option value="@AlertFrequency.Instant">Instant</option>
-                        <option value="@AlertFrequency.Daily">Daily digest</option>
-                        <option value="@AlertFrequency.Weekly">Weekly digest</option>
+                        <option value="@AlertFrequency.Instant">@L["renter.alertsFreqInstant"]</option>
+                        <option value="@AlertFrequency.Daily">@L["renter.alertsFreqDaily"]</option>
+                        <option value="@AlertFrequency.Weekly">@L["renter.alertsFreqWeekly"]</option>
                     </select>
                     <span asp-validation-for="Input.Frequency" class="text-xs text-red-600 dark:text-red-400"></span>
                 </div>
@@ -111,10 +127,10 @@
                 <div class="sm:col-span-2 flex items-center gap-3">
                     <button type="submit" class="glass-button-primary inline-flex items-center gap-2">
                         <icon name="check" class="h-4 w-4" />
-                        Create alert
+                        @L["renter.alertsCreate2"]
                     </button>
-                    <a href="/renter/alerts" class="glass-button inline-flex items-center gap-2">
-                        Cancel
+                    <a href="/@culture/renter/alerts" class="glass-button inline-flex items-center gap-2">
+                        @L["renter.alertsCancel"]
                     </a>
                 </div>
             </form>
@@ -127,11 +143,11 @@
             <div class="inline-flex h-16 w-16 rounded-2xl bg-brand-500/10 items-center justify-center mb-4">
                 <icon name="bell" class="h-7 w-7 text-brand-500 dark:text-brand-300" />
             </div>
-            <h2 class="font-display text-2xl text-slate-900 dark:text-white">No alerts set up</h2>
-            <p class="text-slate-500 dark:text-white/60 mt-2 max-w-sm mx-auto">Create an alert to get notified when new properties matching your criteria become available.</p>
-            <a href="/renter/alerts?showForm=true" class="glass-button-primary inline-flex items-center gap-2 mt-6">
+            <h2 class="font-display text-2xl text-slate-900 dark:text-white">@L["renter.alertsEmpty"]</h2>
+            <p class="text-slate-500 dark:text-white/60 mt-2 max-w-sm mx-auto">@L["renter.alertsEmptyDesc"]</p>
+            <a href="/@culture/renter/alerts?showForm=true" class="glass-button-primary inline-flex items-center gap-2 mt-6">
                 <icon name="plus" class="h-4 w-4" />
-                Create alert
+                @L["renter.alertsCreate2"]
             </a>
         </div>
     }
@@ -146,16 +162,16 @@
                     </div>
                     <div class="flex-1 min-w-0">
                         <div class="flex items-center gap-2 flex-wrap">
-                            <span class="font-semibold text-slate-900 dark:text-white truncate">@(a.City ?? "Any city")</span>
+                            <span class="font-semibold text-slate-900 dark:text-white truncate">@(a.City ?? L["renter.alertsAnyCity"].Value)</span>
                             @if (a.IsActive)
                             {
-                                <span class="text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-700 dark:text-emerald-300">Active</span>
+                                <span class="text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-700 dark:text-emerald-300">@L["renter.alertsActive"]</span>
                             }
                             else
                             {
-                                <span class="text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-md bg-slate-500/20 text-slate-600 dark:text-slate-300">Paused</span>
+                                <span class="text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-md bg-slate-500/20 text-slate-600 dark:text-slate-300">@L["renter.alertsPaused"]</span>
                             }
-                            <span class="text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-md bg-cyan-500/15 text-cyan-700 dark:text-cyan-300">@a.Frequency</span>
+                            <span class="text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-md bg-cyan-500/15 text-cyan-700 dark:text-cyan-300">@(a.Frequency switch { AlertFrequency.Instant => L["renter.alertsFreqInstant"].Value, AlertFrequency.Daily => L["renter.alertsFreqDaily"].Value, AlertFrequency.Weekly => L["renter.alertsFreqWeekly"].Value, _ => a.Frequency.ToString() })</span>
                         </div>
                         <p class="text-sm text-slate-500 dark:text-white/60 mt-1 truncate">@Summarize(a)</p>
                     </div>
@@ -163,14 +179,14 @@
                         <form method="post" asp-page-handler="Toggle">
                             @Html.AntiForgeryToken()
                             <input type="hidden" name="id" value="@a.Id" />
-                            <button type="submit" class="h-9 w-9 inline-flex items-center justify-center rounded-lg text-slate-600 dark:text-white/70 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors" title="@(a.IsActive ? "Pause" : "Resume")" aria-label="@(a.IsActive ? "Pause" : "Resume")">
+                            <button type="submit" class="h-9 w-9 inline-flex items-center justify-center rounded-lg text-slate-600 dark:text-white/70 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors" title="@(a.IsActive ? L["renter.alertsPause"].Value : L["renter.alertsResume"].Value)" aria-label="@(a.IsActive ? L["renter.alertsPause"].Value : L["renter.alertsResume"].Value)">
                                 <icon name="@(a.IsActive ? "bell-off" : "bell")" class="h-4 w-4" />
                             </button>
                         </form>
-                        <form method="post" asp-page-handler="Delete" onsubmit="return confirm('Delete this alert?');">
+                        <form method="post" asp-page-handler="Delete" onsubmit="return confirm('@L["renter.alertsDeleteConfirm"]');">
                             @Html.AntiForgeryToken()
                             <input type="hidden" name="id" value="@a.Id" />
-                            <button type="submit" class="h-9 w-9 inline-flex items-center justify-center rounded-lg text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-colors" title="Delete" aria-label="Delete">
+                            <button type="submit" class="h-9 w-9 inline-flex items-center justify-center rounded-lg text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-colors" title="@L["renter.alertsDelete"]" aria-label="@L["renter.alertsDelete"]">
                                 <icon name="trash-2" class="h-4 w-4" />
                             </button>
                         </form>

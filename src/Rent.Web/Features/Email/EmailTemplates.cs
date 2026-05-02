@@ -38,37 +38,57 @@ public static class EmailTemplates
 
     public static (string Subject, string Html) Welcome(WelcomeEmail data)
     {
-        var subject = "Welcome to Rent.ca";
-        var greeting = string.IsNullOrWhiteSpace(data.ToName) ? "Hi there" : $"Hi {Encode(data.ToName)}";
+        var fr = data.Locale == "fr";
+        var subject = fr ? "Bienvenue sur Rent.ca" : "Welcome to Rent.ca";
+        var greeting = string.IsNullOrWhiteSpace(data.ToName)
+            ? (fr ? "Bonjour" : "Hi there")
+            : (fr ? $"Bonjour {Encode(data.ToName)}" : $"Hi {Encode(data.ToName)}");
         var roleCopy = data.Role == "Landlord"
-            ? "Your landlord dashboard is ready. Post your first listing and start receiving leads."
-            : "Browse listings, save your favourites, and message landlords directly.";
-        var ctaText = data.Role == "Landlord" ? "Open landlord dashboard" : "Start browsing";
+            ? (fr
+                ? "Votre tableau de bord propriétaire est prêt. Publiez votre première annonce et commencez à recevoir des demandes."
+                : "Your landlord dashboard is ready. Post your first listing and start receiving leads.")
+            : (fr
+                ? "Parcourez les annonces, enregistrez vos favoris et communiquez directement avec les propriétaires."
+                : "Browse listings, save your favourites, and message landlords directly.");
+        var ctaText = data.Role == "Landlord"
+            ? (fr ? "Ouvrir le tableau de bord" : "Open landlord dashboard")
+            : (fr ? "Commencer à parcourir" : "Start browsing");
+        var welcomeLine = fr ? "Bienvenue sur Rent.ca." : "Welcome to Rent.ca.";
 
         var body = new StringBuilder();
         body.Append($"<p style='font-size:16px;color:{BodyText};margin:0 0 12px;'>{greeting},</p>");
-        body.Append($"<p style='font-size:16px;color:{BodyText};margin:0 0 24px;'>Welcome to Rent.ca. {roleCopy}</p>");
+        body.Append($"<p style='font-size:16px;color:{BodyText};margin:0 0 24px;'>{welcomeLine} {roleCopy}</p>");
         body.Append(Buttons((ctaText, data.PortalUrl, true)));
 
-        return (subject, Wrap(subject, body.ToString()));
+        return (subject, Wrap(subject, body.ToString(), data.Locale));
     }
 
     public static (string Subject, string Html) PasswordReset(PasswordResetEmail data)
     {
-        var subject = "Reset your Rent.ca password";
-        var greeting = string.IsNullOrWhiteSpace(data.ToName) ? "Hi there" : $"Hi {Encode(data.ToName)}";
+        var fr = data.Locale == "fr";
+        var subject = fr ? "Réinitialisez votre mot de passe Rent.ca" : "Reset your Rent.ca password";
+        var greeting = string.IsNullOrWhiteSpace(data.ToName)
+            ? (fr ? "Bonjour" : "Hi there")
+            : (fr ? $"Bonjour {Encode(data.ToName)}" : $"Hi {Encode(data.ToName)}");
+        var instruction = fr
+            ? "Touchez le bouton ci-dessous pour choisir un nouveau mot de passe. Le lien expire dans quelques heures."
+            : "Tap the button below to choose a new password. The link expires in a few hours.";
+        var buttonText = fr ? "Réinitialiser le mot de passe" : "Reset password";
+        var disclaimer = fr
+            ? "Si vous n&rsquo;avez pas fait cette demande, vous pouvez ignorer ce courriel."
+            : "If you didn&rsquo;t request this, you can safely ignore this email.";
 
         var body = new StringBuilder();
         body.Append($"<p style='font-size:16px;color:{BodyText};margin:0 0 12px;'>{greeting},</p>");
-        body.Append($"<p style='font-size:16px;color:{BodyText};margin:0 0 12px;'>Tap the button below to choose a new password. The link expires in a few hours.</p>");
-        body.Append(Buttons(("Reset password", data.ResetUrl, true)));
-        body.Append($"<p style='font-size:13px;color:{MutedText};margin:24px 0 0;'>If you didn&rsquo;t request this, you can safely ignore this email.</p>");
+        body.Append($"<p style='font-size:16px;color:{BodyText};margin:0 0 12px;'>{instruction}</p>");
+        body.Append(Buttons((buttonText, data.ResetUrl, true)));
+        body.Append($"<p style='font-size:13px;color:{MutedText};margin:24px 0 0;'>{disclaimer}</p>");
 
-        return (subject, Wrap(subject, body.ToString()));
+        return (subject, Wrap(subject, body.ToString(), data.Locale));
     }
 
-    private static string Wrap(string title, string innerHtml) => $@"<!doctype html>
-<html lang=""en"">
+    private static string Wrap(string title, string innerHtml, string locale = "en") => $@"<!doctype html>
+<html lang=""{locale}"">
 <head>
 <meta charset=""utf-8""/>
 <meta name=""viewport"" content=""width=device-width,initial-scale=1""/>

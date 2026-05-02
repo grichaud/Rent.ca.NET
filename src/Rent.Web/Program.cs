@@ -1,9 +1,13 @@
 using FluentValidation;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Localization.Routing;
 using Microsoft.EntityFrameworkCore;
 using Rent.Web.Domain;
 using Rent.Web.Infrastructure.Data;
 using Rent.Web.Infrastructure.Data.Seed;
+using Rent.Web.Infrastructure.Localization;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -42,6 +46,19 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = "/login";
     options.ExpireTimeSpan = TimeSpan.FromDays(14);
     options.SlidingExpiration = true;
+    options.Events.OnRedirectToLogin = context =>
+    {
+        var culture = PageModelLocalizationExtensions.ResolveCulture(context.HttpContext);
+        var redirectUri = "/" + culture + "/login?returnUrl=" + Uri.EscapeDataString(context.Request.Path + context.Request.QueryString);
+        context.Response.Redirect(redirectUri);
+        return Task.CompletedTask;
+    };
+    options.Events.OnRedirectToAccessDenied = context =>
+    {
+        var culture = PageModelLocalizationExtensions.ResolveCulture(context.HttpContext);
+        context.Response.Redirect("/" + culture + "/login");
+        return Task.CompletedTask;
+    };
 });
 
 var googleClientId = builder.Configuration["Authentication:Google:ClientId"];
@@ -159,6 +176,26 @@ else
 
 builder.Services.AddHealthChecks();
 
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    options.SetDefaultCulture(LocalizationConfig.DefaultCulture);
+    options.SupportedCultures = LocalizationConfig.SupportedCultureInfos;
+    options.SupportedUICultures = LocalizationConfig.SupportedCultureInfos;
+    options.RequestCultureProviders.Insert(0, new RouteDataRequestCultureProvider
+    {
+        RouteDataStringKey = "culture",
+        UIRouteDataStringKey = "culture",
+        Options = options
+    });
+});
+
+builder.Services.Configure<RouteOptions>(options =>
+{
+    options.ConstraintMap["locale"] = typeof(LocaleRouteConstraint);
+});
+
 var razorBuilder = builder.Services.AddRazorPages(options =>
 {
     options.RootDirectory = "/Features";
@@ -182,7 +219,9 @@ if (!app.Environment.IsEnvironment("Testing"))
     app.UseHttpsRedirection();
 }
 app.UseSerilogRequestLogging();
+app.UseMiddleware<PathLocaleRedirectMiddleware>();
 app.UseRouting();
+app.UseRequestLocalization();
 app.UseAuthentication();
 app.UseAuthorization();
 

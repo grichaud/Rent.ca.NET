@@ -88,7 +88,8 @@ public class AiChatService : IAiChatService
         var systemPrompt = AiSystemPrompt.Build(new ChatContext(
             request.Context?.CurrentPage,
             request.Context?.CurrentCity,
-            request.Context?.CurrentPropertyId));
+            request.Context?.CurrentPropertyId,
+            request.Locale));
 
         var messages = new List<ChatCompletionMessage>
         {

@@ -99,7 +99,7 @@ public class FavoritesTests : IClassFixture<RentAppFactory>
         using var client = await TestAuth.SignInAsync(_factory, ownerEmail, TestAuth.DefaultPassword);
         client.DefaultRequestHeaders.Add("Accept", "text/html");
 
-        var resp = await client.GetAsync("/renter/favorites");
+        var resp = await client.GetAsync("/en/renter/favorites");
         resp.StatusCode.Should().Be(HttpStatusCode.OK);
         var body = await resp.Content.ReadAsStringAsync();
         body.Should().Contain("My Favorites");
@@ -108,7 +108,7 @@ public class FavoritesTests : IClassFixture<RentAppFactory>
         // A different renter sees empty state
         using var other = await TestAuth.CreateAndSignInAsync(_factory, Roles.Renter, "fav-other");
         other.DefaultRequestHeaders.Add("Accept", "text/html");
-        var otherResp = await other.GetAsync("/renter/favorites");
+        var otherResp = await other.GetAsync("/en/renter/favorites");
         otherResp.StatusCode.Should().Be(HttpStatusCode.OK);
         var otherBody = await otherResp.Content.ReadAsStringAsync();
         otherBody.Should().Contain("No favorites yet");

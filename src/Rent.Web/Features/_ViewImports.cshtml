@@ -1,6 +1,8 @@
 @using Rent.Web
 @using Rent.Web.Domain
 @using Rent.Web.Infrastructure.Identity
+@using Microsoft.Extensions.Localization
 @namespace Rent.Web.Features
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @addTagHelper *, Rent.Web
+@inject IStringLocalizer<SharedResource> L

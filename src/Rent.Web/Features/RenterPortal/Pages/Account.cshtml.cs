@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Rent.Web.Domain;
 using Rent.Web.Infrastructure.Identity;
+using Rent.Web.Infrastructure.Localization;
 
 namespace Rent.Web.Features.RenterPortal.Pages;
 
@@ -83,7 +84,7 @@ public class AccountModel : PageModel
         }
 
         TempData["AccountSuccess"] = "Profile updated.";
-        return Redirect("/renter/account");
+        return Redirect(this.Localized("/renter/account"));
     }
 
     public async Task<IActionResult> OnPostPasswordAsync(CancellationToken ct)
@@ -99,7 +100,7 @@ public class AccountModel : PageModel
         {
             // Google OAuth user — no local password to change.
             TempData["AccountError"] = "Your password is managed by Google.";
-            return Redirect("/renter/account");
+            return Redirect(this.Localized("/renter/account"));
         }
 
         var validation = await _passwordValidator.ValidateAsync(Password, ct);
@@ -121,7 +122,7 @@ public class AccountModel : PageModel
         await _signInManager.RefreshSignInAsync(user);
         _logger.LogInformation("User {UserId} changed password.", user.Id);
         TempData["AccountSuccess"] = "Password changed.";
-        return Redirect("/renter/account");
+        return Redirect(this.Localized("/renter/account"));
     }
 
     public class ProfileInput

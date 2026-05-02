@@ -25,9 +25,11 @@ public record WelcomeEmail(
     string ToEmail,
     string ToName,
     string Role,
-    string PortalUrl);
+    string PortalUrl,
+    string Locale = "en");
 
 public record PasswordResetEmail(
     string ToEmail,
     string ToName,
-    string ResetUrl);
+    string ResetUrl,
+    string Locale = "en");

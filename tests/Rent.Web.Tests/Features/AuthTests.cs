@@ -67,7 +67,7 @@ public class AuthTests : IClassFixture<RentAppFactory>
         {
             AllowAutoRedirect = false
         });
-        var response = await client.GetAsync("/landlord");
+        var response = await client.GetAsync("/en/landlord");
 
         response.StatusCode.Should().Be(HttpStatusCode.Redirect);
         response.Headers.Location!.ToString().Should().Contain("/login");

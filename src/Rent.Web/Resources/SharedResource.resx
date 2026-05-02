@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="common.search" xml:space="preserve"><value>Search</value></data>
+  <data name="common.signIn" xml:space="preserve"><value>Sign In</value></data>
+  <data name="common.signUp" xml:space="preserve"><value>Sign Up</value></data>
+  <data name="common.rent" xml:space="preserve"><value>Rent</value></data>
+  <data name="common.landlords" xml:space="preserve"><value>Landlords</value></data>
+  <data name="common.about" xml:space="preserve"><value>About</value></data>
+  <data name="common.viewAll" xml:space="preserve"><value>View All</value></data>
+  <data name="common.contact" xml:space="preserve"><value>Contact</value></data>
+  <data name="common.logout" xml:space="preserve"><value>Logout</value></data>
+  <data name="common.dashboard" xml:space="preserve"><value>Dashboard</value></data>
+  <data name="common.myPortal" xml:space="preserve"><value>My Portal</value></data>
+  <data name="common.cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="common.save" xml:space="preserve"><value>Save</value></data>
+  <data name="common.delete" xml:space="preserve"><value>Delete</value></data>
+  <data name="common.edit" xml:space="preserve"><value>Edit</value></data>
+  <data name="common.back" xml:space="preserve"><value>Back</value></data>
+  <data name="common.loading" xml:space="preserve"><value>Loading...</value></data>
+  <data name="common.error" xml:space="preserve"><value>Something went wrong.</value></data>
+  <data name="common.languageEn" xml:space="preserve"><value>English</value></data>
+  <data name="common.languageFr" xml:space="preserve"><value>French</value></data>
+  <data name="common.languageSwitcherTitle" xml:space="preserve"><value>Choose language</value></data>
+  <data name="common.themeToggleTitle" xml:space="preserve"><value>Toggle theme</value></data>
+  <data name="hero.badge" xml:space="preserve"><value>Canada's Rental Marketplace</value></data>
+  <data name="hero.title" xml:space="preserve"><value>Find Your</value></data>
+  <data name="hero.titleHighlight" xml:space="preserve"><value>Next Home</value></data>
+  <data name="hero.subtitle" xml:space="preserve"><value>Discover thousands of apartments, condos, and houses for rent across Canada</value></data>
+  <data name="hero.searchPlaceholder" xml:space="preserve"><value>Search by city, neighbourhood...</value></data>
+  <data name="hero.aiCta" xml:space="preserve"><value>Can't find what you need? Ask our AI</value></data>
+  <data name="cities.sectionLabel" xml:space="preserve"><value>Explore Canada</value></data>
+  <data name="cities.sectionTitle" xml:space="preserve"><value>Popular Cities</value></data>
+  <data name="cities.available" xml:space="preserve"><value>{0} cities available</value></data>
+  <data name="cities.browseIn" xml:space="preserve"><value>Browse rentals in {0}, {1}</value></data>
+  <data name="listings.justAdded" xml:space="preserve"><value>Just Added</value></data>
+  <data name="listings.newListings" xml:space="preserve"><value>New Listings</value></data>
+  <data name="listings.rentalsIn" xml:space="preserve"><value>Rentals in</value></data>
+  <data name="listings.findIn" xml:space="preserve"><value>Find apartments, condos, houses and more in {0}</value></data>
+  <data name="listings.resultsCount" xml:space="preserve"><value>{0} rentals in</value></data>
+  <data name="listings.beds.studio" xml:space="preserve"><value>Studio</value></data>
+  <data name="listings.beds.one" xml:space="preserve"><value>1 Bed</value></data>
+  <data name="listings.beds.many" xml:space="preserve"><value>{0} Beds</value></data>
+  <data name="listings.baths.one" xml:space="preserve"><value>1 Bath</value></data>
+  <data name="listings.baths.many" xml:space="preserve"><value>{0} Baths</value></data>
+  <data name="listings.perMonth" xml:space="preserve"><value>/mo</value></data>
+  <data name="filters.title" xml:space="preserve"><value>Filters</value></data>
+  <data name="filters.propertyType" xml:space="preserve"><value>Property Type</value></data>
+  <data name="filters.priceRange" xml:space="preserve"><value>Price Range</value></data>
+  <data name="filters.bedrooms" xml:space="preserve"><value>Bedrooms</value></data>
+  <data name="filters.bathrooms" xml:space="preserve"><value>Bathrooms</value></data>
+  <data name="filters.moreFilters" xml:space="preserve"><value>More Filters</value></data>
+  <data name="filters.clear" xml:space="preserve"><value>Clear</value></data>
+  <data name="filters.apply" xml:space="preserve"><value>Apply</value></data>
+  <data name="filters.any" xml:space="preserve"><value>Any</value></data>
+  <data name="filters.apartment" xml:space="preserve"><value>Apartment</value></data>
+  <data name="filters.condo" xml:space="preserve"><value>Condo</value></data>
+  <data name="filters.house" xml:space="preserve"><value>House</value></data>
+  <data name="filters.townhouse" xml:space="preserve"><value>Townhouse</value></data>
+  <data name="filters.basement" xml:space="preserve"><value>Basement</value></data>
+  <data name="filters.studio" xml:space="preserve"><value>Studio</value></data>
+  <data name="filters.loft" xml:space="preserve"><value>Loft</value></data>
+  <data name="filters.duplex" xml:space="preserve"><value>Duplex</value></data>
+  <data name="filters.petsAllowed" xml:space="preserve"><value>Pet-friendly</value></data>
+  <data name="filters.furnished" xml:space="preserve"><value>Furnished</value></data>
+  <data name="filters.parking" xml:space="preserve"><value>Parking</value></data>
+  <data name="filters.minPrice" xml:space="preserve"><value>Min</value></data>
+  <data name="filters.maxPrice" xml:space="preserve"><value>Max</value></data>
+  <data name="filters.viewGrid" xml:space="preserve"><value>Grid</value></data>
+  <data name="filters.viewList" xml:space="preserve"><value>List</value></data>
+  <data name="filters.viewMap" xml:space="preserve"><value>Map</value></data>
+  <data name="filters.sortBy" xml:space="preserve"><value>Sort by</value></data>
+  <data name="filters.openFilters" xml:space="preserve"><value>Filters</value></data>
+  <data name="filters.closeFilters" xml:space="preserve"><value>Close filters</value></data>
+  <data name="sort.newest" xml:space="preserve"><value>Newest</value></data>
+  <data name="sort.priceAsc" xml:space="preserve"><value>Price: Low to High</value></data>
+  <data name="sort.priceDesc" xml:space="preserve"><value>Price: High to Low</value></data>
+  <data name="sort.popular" xml:space="preserve"><value>Most Popular</value></data>
+  <data name="detail.floorPlans" xml:space="preserve"><value>Floor Plans</value></data>
+  <data name="detail.amenities" xml:space="preserve"><value>Amenities</value></data>
+  <data name="detail.aboutProperty" xml:space="preserve"><value>About</value></data>
+  <data name="detail.contactLandlord" xml:space="preserve"><value>Contact Landlord</value></data>
+  <data name="detail.sendMessage" xml:space="preserve"><value>Send Message</value></data>
+  <data name="detail.askAi" xml:space="preserve"><value>Ask AI About This Listing</value></data>
+  <data name="detail.managedBy" xml:space="preserve"><value>Managed By</value></data>
+  <data name="detail.setAlert" xml:space="preserve"><value>Set Up an Alert</value></data>
+  <data name="detail.getNotified" xml:space="preserve"><value>Get notified</value></data>
+  <data name="detail.viewAllIn" xml:space="preserve"><value>View all properties in {0}</value></data>
+  <data name="detail.similarRentals" xml:space="preserve"><value>Similar Rentals</value></data>
+  <data name="detail.youMayAlsoLike" xml:space="preserve"><value>You May Also Like</value></data>
+  <data name="detail.verified" xml:space="preserve"><value>Verified</value></data>
+  <data name="detail.featured" xml:space="preserve"><value>Featured</value></data>
+  <data name="detail.promoted" xml:space="preserve"><value>Promoted</value></data>
+  <data name="detail.special" xml:space="preserve"><value>Special</value></data>
+  <data name="detail.petFriendly" xml:space="preserve"><value>Pet Friendly</value></data>
+  <data name="detail.furnishedLabel" xml:space="preserve"><value>Furnished</value></data>
+  <data name="detail.available" xml:space="preserve"><value>Available</value></data>
+  <data name="detail.unitAvailable.one" xml:space="preserve"><value>1 unit</value></data>
+  <data name="detail.unitAvailable.many" xml:space="preserve"><value>{0} units</value></data>
+  <data name="detail.fromPrice" xml:space="preserve"><value>From {0}/mo</value></data>
+  <data name="detail.formName" xml:space="preserve"><value>Your name</value></data>
+  <data name="detail.formEmail" xml:space="preserve"><value>Your email</value></data>
+  <data name="detail.formMessage" xml:space="preserve"><value>Message</value></data>
+  <data name="detail.formMessagePlaceholder" xml:space="preserve"><value>Hi, I'm interested in this rental...</value></data>
+  <data name="detail.formPhone" xml:space="preserve"><value>Phone (optional)</value></data>
+  <data name="detail.formMoveIn" xml:space="preserve"><value>Move-in date</value></data>
+  <data name="detail.sendInquiry" xml:space="preserve"><value>Send inquiry</value></data>
+  <data name="detail.availableUnits" xml:space="preserve"><value>Available units</value></data>
+  <data name="detail.unitPlan" xml:space="preserve"><value>Plan</value></data>
+  <data name="detail.unitBeds" xml:space="preserve"><value>Beds</value></data>
+  <data name="detail.unitBaths" xml:space="preserve"><value>Baths</value></data>
+  <data name="detail.unitSqFt" xml:space="preserve"><value>Sq ft</value></data>
+  <data name="detail.unitPrice" xml:space="preserve"><value>Price</value></data>
+  <data name="detail.unitAvailability" xml:space="preserve"><value>Available</value></data>
+  <data name="detail.now" xml:space="preserve"><value>Now</value></data>
+  <data name="detail.locationLabel" xml:space="preserve"><value>Location</value></data>
+  <data name="detail.locationApprox" xml:space="preserve"><value>Approximate location based on the address provided by the landlord.</value></data>
+  <data name="detail.aboutListing" xml:space="preserve"><value>About this listing</value></data>
+  <data name="detail.fromLabel" xml:space="preserve"><value>From</value></data>
+  <data name="detail.notFound" xml:space="preserve"><value>Listing not found</value></data>
+  <data name="detail.notFoundDesc" xml:space="preserve"><value>This listing is no longer available.</value></data>
+  <data name="detail.contactLandlordTitle" xml:space="preserve"><value>Contact the landlord</value></data>
+  <data name="detail.saveToFavorites" xml:space="preserve"><value>Save to favorites</value></data>
+  <data name="detail.removeFromFavorites" xml:space="preserve"><value>Remove from favorites</value></data>
+  <data name="detail.loginToSave" xml:space="preserve"><value>Log in to save</value></data>
+  <data name="detail.inquirySent" xml:space="preserve"><value>Your message has been sent. The landlord will reply by email.</value></data>
+  <data name="aiChat.title" xml:space="preserve"><value>Rent.ca Assistant</value></data>
+  <data name="aiChat.online" xml:space="preserve"><value>Online</value></data>
+  <data name="aiChat.thinking" xml:space="preserve"><value>Thinking...</value></data>
+  <data name="aiChat.greeting" xml:space="preserve"><value>How can I help you find your next home?</value></data>
+  <data name="aiChat.greetingSub" xml:space="preserve"><value>Ask about listings, rent prices, or tenant rights.</value></data>
+  <data name="aiChat.tryAsking" xml:space="preserve"><value>Try asking:</value></data>
+  <data name="aiChat.inputPlaceholder" xml:space="preserve"><value>Ask about rentals in Canada...</value></data>
+  <data name="aiChat.cantFind" xml:space="preserve"><value>Can't find what you're looking for?</value></data>
+  <data name="aiChat.cantFindDesc" xml:space="preserve"><value>Our AI assistant can help you search using natural language, set up alerts, and answer questions about renting in Canada.</value></data>
+  <data name="aiChat.chatButton" xml:space="preserve"><value>Chat with our AI Assistant</value></data>
+  <data name="aiChat.freeToUse" xml:space="preserve"><value>Free to use</value></data>
+  <data name="aiChat.noSignup" xml:space="preserve"><value>No sign-up required</value></data>
+  <data name="aiChat.available247" xml:space="preserve"><value>Available 24/7</value></data>
+  <data name="aiChat.suggestion1" xml:space="preserve"><value>Show me apartments in Toronto under $2500</value></data>
+  <data name="aiChat.suggestion2" xml:space="preserve"><value>What are tenant rights in Ontario?</value></data>
+  <data name="aiChat.suggestion3" xml:space="preserve"><value>Help me set up an alert for Vancouver</value></data>
+  <data name="aiChat.send" xml:space="preserve"><value>Send</value></data>
+  <data name="aiChat.clearChat" xml:space="preserve"><value>Clear chat</value></data>
+  <data name="aiChat.close" xml:space="preserve"><value>Close</value></data>
+  <data name="stats.title" xml:space="preserve"><value>Rent.ca by the numbers</value></data>
+  <data name="stats.activeListings" xml:space="preserve"><value>Active Listings</value></data>
+  <data name="stats.activeListingsDesc" xml:space="preserve"><value>Verified rental properties across Canada</value></data>
+  <data name="stats.citiesCovered" xml:space="preserve"><value>Cities Covered</value></data>
+  <data name="stats.citiesCoveredDesc" xml:space="preserve"><value>Communities from coast to coast</value></data>
+  <data name="stats.happyRenters" xml:space="preserve"><value>Happy Renters</value></data>
+  <data name="stats.happyRentersDesc" xml:space="preserve"><value>Canadians found their home with us</value></data>
+  <data name="landlordPage.badge" xml:space="preserve"><value>For Property Managers</value></data>
+  <data name="landlordPage.title" xml:space="preserve"><value>Reach Thousands of</value></data>
+  <data name="landlordPage.titleHighlight" xml:space="preserve"><value>Qualified Renters</value></data>
+  <data name="landlordPage.subtitle" xml:space="preserve"><value>List your rental on Canada's fastest-growing rental marketplace</value></data>
+  <data name="landlordPage.getStarted" xml:space="preserve"><value>Get Started Free</value></data>
+  <data name="landlordPage.learnMore" xml:space="preserve"><value>Learn More</value></data>
+  <data name="landlordPage.haveAccount" xml:space="preserve"><value>I already have an account</value></data>
+  <data name="landlordPage.feature1Title" xml:space="preserve"><value>Post in minutes</value></data>
+  <data name="landlordPage.feature1Desc" xml:space="preserve"><value>Add photos, units, and amenities through a guided form. No upload limits, no setup calls.</value></data>
+  <data name="landlordPage.feature2Title" xml:space="preserve"><value>Inquiries in one inbox</value></data>
+  <data name="landlordPage.feature2Desc" xml:space="preserve"><value>Renter messages land in a single inbox with read/unread tracking and lead counts per listing.</value></data>
+  <data name="landlordPage.feature3Title" xml:space="preserve"><value>Promote when you need it</value></data>
+  <data name="landlordPage.feature3Desc" xml:space="preserve"><value>Boost a listing to the top of search results during slow weeks. Pay-as-you-go, no subscription.</value></data>
+  <data name="footer.about" xml:space="preserve"><value>About</value></data>
+  <data name="footer.tagline" xml:space="preserve"><value>Find your next home in Canada.</value></data>
+  <data name="footer.verified" xml:space="preserve"><value>Thousands of verified listings across all major cities.</value></data>
+  <data name="footer.quickLinks" xml:space="preserve"><value>Quick Links</value></data>
+  <data name="footer.forLandlords" xml:space="preserve"><value>For Landlords</value></data>
+  <data name="footer.listProperty" xml:space="preserve"><value>List Your Property</value></data>
+  <data name="footer.pricing" xml:space="preserve"><value>Pricing</value></data>
+  <data name="footer.dashboard" xml:space="preserve"><value>Landlord Dashboard</value></data>
+  <data name="footer.contact" xml:space="preserve"><value>Contact</value></data>
+  <data name="footer.faq" xml:space="preserve"><value>FAQ</value></data>
+  <data name="footer.terms" xml:space="preserve"><value>Terms</value></data>
+  <data name="footer.privacy" xml:space="preserve"><value>Privacy</value></data>
+  <data name="footer.copyright" xml:space="preserve"><value>© 2026 Rent.ca. All rights reserved.</value></data>
+  <data name="footer.builtWith" xml:space="preserve"><value>Built with care for renters across Canada.</value></data>
+  <data name="auth.welcomeBack" xml:space="preserve"><value>Welcome back</value></data>
+  <data name="auth.signInDesc" xml:space="preserve"><value>Log in to your Rent.ca account.</value></data>
+  <data name="auth.createAccount" xml:space="preserve"><value>Create your account</value></data>
+  <data name="auth.signUpDesc" xml:space="preserve"><value>Join Canada's rental marketplace</value></data>
+  <data name="auth.email" xml:space="preserve"><value>Email</value></data>
+  <data name="auth.password" xml:space="preserve"><value>Password</value></data>
+  <data name="auth.confirmPassword" xml:space="preserve"><value>Confirm password</value></data>
+  <data name="auth.fullName" xml:space="preserve"><value>Full name</value></data>
+  <data name="auth.noAccount" xml:space="preserve"><value>Don't have an account?</value></data>
+  <data name="auth.hasAccount" xml:space="preserve"><value>Already have an account?</value></data>
+  <data name="auth.rememberMe" xml:space="preserve"><value>Remember me</value></data>
+  <data name="auth.forgotPassword" xml:space="preserve"><value>Forgot your password?</value></data>
+  <data name="auth.continueWithGoogle" xml:space="preserve"><value>Continue with Google</value></data>
+  <data name="auth.orContinueWith" xml:space="preserve"><value>Or continue with email</value></data>
+  <data name="auth.iAmA" xml:space="preserve"><value>I am a...</value></data>
+  <data name="auth.renterRole" xml:space="preserve"><value>Renter</value></data>
+  <data name="auth.landlordRole" xml:space="preserve"><value>Landlord</value></data>
+  <data name="auth.signInButton" xml:space="preserve"><value>Sign in</value></data>
+  <data name="auth.signUpButton" xml:space="preserve"><value>Create account</value></data>
+  <data name="auth.forgotTitle" xml:space="preserve"><value>Reset your password</value></data>
+  <data name="auth.forgotDesc" xml:space="preserve"><value>Enter your email and we'll send you a reset link.</value></data>
+  <data name="auth.forgotSubmit" xml:space="preserve"><value>Send reset link</value></data>
+  <data name="auth.forgotSent" xml:space="preserve"><value>If an account with that email exists, we've sent reset instructions.</value></data>
+  <data name="auth.resetTitle" xml:space="preserve"><value>Choose a new password</value></data>
+  <data name="auth.resetDesc" xml:space="preserve"><value>Enter your new password below.</value></data>
+  <data name="auth.resetSubmit" xml:space="preserve"><value>Update password</value></data>
+  <data name="auth.resetSuccess" xml:space="preserve"><value>Password updated. You can now sign in.</value></data>
+  <data name="auth.externalConfirmTitle" xml:space="preserve"><value>Almost there</value></data>
+  <data name="auth.externalConfirmDesc" xml:space="preserve"><value>Choose how you plan to use Rent.ca.</value></data>
+  <data name="auth.externalContinue" xml:space="preserve"><value>Continue</value></data>
+  <data name="auth.signupQuick" xml:space="preserve"><value>Takes less than a minute.</value></data>
+  <data name="auth.passwordHint" xml:space="preserve"><value>At least 8 characters, one uppercase, one digit.</value></data>
+  <data name="auth.renterCardLooking" xml:space="preserve"><value>Looking for a place.</value></data>
+  <data name="auth.landlordCardPosting" xml:space="preserve"><value>Posting properties.</value></data>
+  <data name="auth.backToLogin" xml:space="preserve"><value>Back to login</value></data>
+  <data name="auth.resetForEmail" xml:space="preserve"><value>For</value></data>
+  <data name="auth.externalConfirmTitle2" xml:space="preserve"><value>Almost there</value></data>
+  <data name="auth.externalConfirmDesc2" xml:space="preserve"><value>Tell us how you'll use Rent.ca and we'll finish creating your account.</value></data>
+  <data name="auth.externalConfirmVerifiedBy" xml:space="preserve"><value>Verified by {0}.</value></data>
+  <data name="auth.externalConfirmFinish" xml:space="preserve"><value>Finish sign-up</value></data>
+  <data name="footer.privacyTitle" xml:space="preserve"><value>Privacy</value></data>
+  <data name="footer.privacyText" xml:space="preserve"><value>Rent.ca.NET is a portfolio project by Giovanni Richaud. No personal data is shared with third parties. For questions, please see the</value></data>
+  <data name="footer.privacyRepo" xml:space="preserve"><value>repo</value></data>
+  <data name="renter.role" xml:space="preserve"><value>Renter</value></data>
+  <data name="renter.dashboardLink" xml:space="preserve"><value>Dashboard</value></data>
+  <data name="renter.favoritesLink" xml:space="preserve"><value>Favorites</value></data>
+  <data name="renter.alertsLink" xml:space="preserve"><value>Alerts</value></data>
+  <data name="renter.inquiriesLink" xml:space="preserve"><value>My Inquiries</value></data>
+  <data name="renter.accountLink" xml:space="preserve"><value>Account</value></data>
+  <data name="renter.dashboardTitle" xml:space="preserve"><value>Your Renter Portal</value></data>
+  <data name="renter.dashboardWelcome" xml:space="preserve"><value>Hi, {0}</value></data>
+  <data name="renter.savedProperties" xml:space="preserve"><value>Saved Properties</value></data>
+  <data name="renter.activeAlerts" xml:space="preserve"><value>Active Alerts</value></data>
+  <data name="renter.inquiriesSent" xml:space="preserve"><value>Inquiries Sent</value></data>
+  <data name="renter.viewFavorites" xml:space="preserve"><value>View favorites</value></data>
+  <data name="renter.manageAlerts" xml:space="preserve"><value>Manage alerts</value></data>
+  <data name="renter.dashboardSubtitle" xml:space="preserve"><value>Here's an overview of your rental search activity.</value></data>
+  <data name="renter.quickActions" xml:space="preserve"><value>Quick Actions</value></data>
+  <data name="renter.browseListings" xml:space="preserve"><value>Browse Listings</value></data>
+  <data name="renter.findYourNextHome" xml:space="preserve"><value>Find your next home</value></data>
+  <data name="renter.getNotifiedNew" xml:space="preserve"><value>Get notified of new listings</value></data>
+  <data name="renter.favoritesSubtitle" xml:space="preserve"><value>Properties you've saved for later.</value></data>
+  <data name="renter.removeFavorite" xml:space="preserve"><value>Remove</value></data>
+  <data name="renter.alertsSubtitle" xml:space="preserve"><value>Get notified when new listings match your criteria.</value></data>
+  <data name="renter.alertsCreateSection" xml:space="preserve"><value>Create a new alert</value></data>
+  <data name="renter.alertsNewAlert" xml:space="preserve"><value>New Alert</value></data>
+  <data name="renter.alertsCancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="renter.alertsSelectCity" xml:space="preserve"><value>Select a city...</value></data>
+  <data name="renter.alertsTypeAny" xml:space="preserve"><value>Any</value></data>
+  <data name="renter.alertsMinPrice" xml:space="preserve"><value>Min price ($/mo)</value></data>
+  <data name="renter.alertsMaxPrice" xml:space="preserve"><value>Max price ($/mo)</value></data>
+  <data name="renter.alertsNoMin" xml:space="preserve"><value>No min</value></data>
+  <data name="renter.alertsNoMax" xml:space="preserve"><value>No max</value></data>
+  <data name="renter.alertsBedroomsLabel" xml:space="preserve"><value>Min bedrooms</value></data>
+  <data name="renter.alertsPetsYes" xml:space="preserve"><value>Yes — pet friendly</value></data>
+  <data name="renter.alertsPetsNo" xml:space="preserve"><value>No</value></data>
+  <data name="renter.alertsFreqLabel" xml:space="preserve"><value>Notification frequency</value></data>
+  <data name="renter.alertsFreqInstant" xml:space="preserve"><value>Instant</value></data>
+  <data name="renter.alertsFreqDaily" xml:space="preserve"><value>Daily digest</value></data>
+  <data name="renter.alertsFreqWeekly" xml:space="preserve"><value>Weekly digest</value></data>
+  <data name="renter.alertsCreate2" xml:space="preserve"><value>Create alert</value></data>
+  <data name="renter.alertsEmptyDesc" xml:space="preserve"><value>Create an alert to get notified when new properties matching your criteria become available.</value></data>
+  <data name="renter.alertsAnyCity" xml:space="preserve"><value>Any city</value></data>
+  <data name="renter.alertsAnyProperty" xml:space="preserve"><value>Any property</value></data>
+  <data name="renter.alertsActive" xml:space="preserve"><value>Active</value></data>
+  <data name="renter.alertsPaused" xml:space="preserve"><value>Paused</value></data>
+  <data name="renter.alertsPause" xml:space="preserve"><value>Pause</value></data>
+  <data name="renter.alertsResume" xml:space="preserve"><value>Resume</value></data>
+  <data name="renter.alertsDelete" xml:space="preserve"><value>Delete</value></data>
+  <data name="renter.alertsDeleteConfirm" xml:space="preserve"><value>Delete this alert?</value></data>
+  <data name="renter.alertsPetFriendly" xml:space="preserve"><value>Pet friendly</value></data>
+  <data name="renter.inquiriesSubtitle" xml:space="preserve"><value>Messages you've sent to landlords.</value></data>
+  <data name="renter.inquiriesEmptyDesc" xml:space="preserve"><value>When you contact a landlord from a listing page, your message will show up here.</value></data>
+  <data name="renter.inquiriesSentLabel" xml:space="preserve"><value>Sent {0}</value></data>
+  <data name="renter.inquiriesNoneSent" xml:space="preserve"><value>No inquiries sent</value></data>
+  <data name="renter.inquiriesMoveIn" xml:space="preserve"><value>Move-in: {0}</value></data>
+  <data name="renter.accountSubtitle" xml:space="preserve"><value>Manage your profile and password.</value></data>
+  <data name="renter.accountEmail" xml:space="preserve"><value>Email:</value></data>
+  <data name="renter.accountSaveProfile" xml:space="preserve"><value>Save profile</value></data>
+  <data name="renter.accountGoogleNote" xml:space="preserve"><value>Your password is managed by Google. Sign in via Google to access your account.</value></data>
+  <data name="renter.accountPasswordHint" xml:space="preserve"><value>Choose a strong password — 8+ chars with at least one uppercase letter and one digit.</value></data>
+  <data name="renter.favoritesTitle" xml:space="preserve"><value>My Favorites</value></data>
+  <data name="renter.favoritesEmpty" xml:space="preserve"><value>No favorites yet</value></data>
+  <data name="renter.favoritesEmptyDesc" xml:space="preserve"><value>Tap the heart on any listing to save it here.</value></data>
+  <data name="renter.alertsTitle" xml:space="preserve"><value>My Alerts</value></data>
+  <data name="renter.alertsEmpty" xml:space="preserve"><value>No alerts set up</value></data>
+  <data name="renter.alertsCreate" xml:space="preserve"><value>New alert</value></data>
+  <data name="renter.alertsCity" xml:space="preserve"><value>City</value></data>
+  <data name="renter.alertsCityRequired" xml:space="preserve"><value>City is required</value></data>
+  <data name="renter.alertsPriceMax" xml:space="preserve"><value>Max price</value></data>
+  <data name="renter.alertsBedroomsMin" xml:space="preserve"><value>Min bedrooms</value></data>
+  <data name="renter.alertsPetsAllowed" xml:space="preserve"><value>Pets allowed</value></data>
+  <data name="renter.alertsFrequency" xml:space="preserve"><value>Frequency</value></data>
+  <data name="renter.alertsCreateButton" xml:space="preserve"><value>Create alert</value></data>
+  <data name="renter.alertsToggle" xml:space="preserve"><value>Toggle</value></data>
+  <data name="renter.inquiriesTitle" xml:space="preserve"><value>My Inquiries</value></data>
+  <data name="renter.inquiriesEmpty" xml:space="preserve"><value>No inquiries sent yet</value></data>
+  <data name="renter.accountTitle" xml:space="preserve"><value>Account Settings</value></data>
+  <data name="renter.accountProfile" xml:space="preserve"><value>Profile</value></data>
+  <data name="renter.accountPassword" xml:space="preserve"><value>Password</value></data>
+  <data name="renter.accountCurrentPassword" xml:space="preserve"><value>Current password</value></data>
+  <data name="renter.accountNewPassword" xml:space="preserve"><value>New password</value></data>
+  <data name="renter.accountConfirmPassword" xml:space="preserve"><value>Confirm new password</value></data>
+  <data name="renter.accountChangePassword" xml:space="preserve"><value>Change password</value></data>
+  <data name="renter.accountUpdateProfile" xml:space="preserve"><value>Update profile</value></data>
+  <data name="renter.accountGoogle" xml:space="preserve"><value>Password is managed by Google</value></data>
+  <data name="renter.accountIncorrectCurrent" xml:space="preserve"><value>Incorrect current password</value></data>
+  <data name="landlord.dashboardTitle" xml:space="preserve"><value>Landlord Dashboard</value></data>
+  <data name="landlord.dashboardWelcome" xml:space="preserve"><value>Welcome back, {0}</value></data>
+  <data name="landlord.totalListings" xml:space="preserve"><value>Total listings</value></data>
+  <data name="landlord.activeListings" xml:space="preserve"><value>Active</value></data>
+  <data name="landlord.totalLeads" xml:space="preserve"><value>Total leads</value></data>
+  <data name="landlord.unreadLeads" xml:space="preserve"><value>Unread</value></data>
+  <data name="landlord.viewListings" xml:space="preserve"><value>View listings</value></data>
+  <data name="landlord.viewInbox" xml:space="preserve"><value>View inbox</value></data>
+  <data name="landlord.listingsTitle" xml:space="preserve"><value>My Listings</value></data>
+  <data name="landlord.listingsEmpty" xml:space="preserve"><value>No listings yet</value></data>
+  <data name="landlord.listingsCreate" xml:space="preserve"><value>New listing</value></data>
+  <data name="landlord.listingsEdit" xml:space="preserve"><value>Edit listing</value></data>
+  <data name="landlord.listingsDelete" xml:space="preserve"><value>Delete listing</value></data>
+  <data name="landlord.listingsDeleteConfirm" xml:space="preserve"><value>Are you sure? This cannot be undone.</value></data>
+  <data name="landlord.formTitle" xml:space="preserve"><value>Title</value></data>
+  <data name="landlord.formType" xml:space="preserve"><value>Property type</value></data>
+  <data name="landlord.formAddress" xml:space="preserve"><value>Street address</value></data>
+  <data name="landlord.formCity" xml:space="preserve"><value>City</value></data>
+  <data name="landlord.formProvince" xml:space="preserve"><value>Province</value></data>
+  <data name="landlord.formPostalCode" xml:space="preserve"><value>Postal code</value></data>
+  <data name="landlord.formDescription" xml:space="preserve"><value>Description</value></data>
+  <data name="landlord.formPhotos" xml:space="preserve"><value>Photos</value></data>
+  <data name="landlord.formStatus" xml:space="preserve"><value>Status</value></data>
+  <data name="landlord.formSave" xml:space="preserve"><value>Save listing</value></data>
+  <data name="landlord.inboxTitle" xml:space="preserve"><value>Inquiries</value></data>
+  <data name="landlord.inboxEmpty" xml:space="preserve"><value>No inquiries yet</value></data>
+  <data name="landlord.inboxMarkRead" xml:space="preserve"><value>Mark read</value></data>
+  <data name="landlord.inboxMarkUnread" xml:space="preserve"><value>Mark unread</value></data>
+  <data name="landlord.inboxFromAnonymous" xml:space="preserve"><value>From anonymous visitor</value></data>
+  <data name="validation.email.required" xml:space="preserve"><value>Email is required.</value></data>
+  <data name="validation.email.invalid" xml:space="preserve"><value>Enter a valid email address.</value></data>
+  <data name="validation.password.required" xml:space="preserve"><value>Password is required.</value></data>
+  <data name="validation.password.minLength" xml:space="preserve"><value>Password must be at least 8 characters.</value></data>
+  <data name="validation.password.upperRequired" xml:space="preserve"><value>Password must contain an uppercase letter.</value></data>
+  <data name="validation.password.digitRequired" xml:space="preserve"><value>Password must contain a digit.</value></data>
+  <data name="validation.password.confirmMismatch" xml:space="preserve"><value>Passwords do not match.</value></data>
+  <data name="validation.fullName.required" xml:space="preserve"><value>Full name is required.</value></data>
+  <data name="validation.role.required" xml:space="preserve"><value>Choose a role.</value></data>
+  <data name="validation.city.required" xml:space="preserve"><value>City is required</value></data>
+  <data name="validation.priceMin.invalid" xml:space="preserve"><value>Min price must be 0 or greater.</value></data>
+  <data name="validation.priceMax.invalid" xml:space="preserve"><value>Max price must be greater than 0.</value></data>
+  <data name="validation.bedrooms.range" xml:space="preserve"><value>Bedrooms must be between 0 and 10.</value></data>
+  <data name="validation.frequency.invalid" xml:space="preserve"><value>Choose a valid frequency.</value></data>
+  <data name="validation.message.required" xml:space="preserve"><value>Message is required.</value></data>
+  <data name="validation.message.maxLength" xml:space="preserve"><value>Message is too long.</value></data>
+  <data name="navbar.searchHint" xml:space="preserve"><value>Search rentals</value></data>
+  <data name="navbar.menu" xml:space="preserve"><value>Menu</value></data>
+  <data name="navbar.close" xml:space="preserve"><value>Close menu</value></data>
+  <data name="results.headerCountSingular" xml:space="preserve"><value>1 rental in {0}</value></data>
+  <data name="results.headerCountPlural" xml:space="preserve"><value>{0} rentals in {1}</value></data>
+  <data name="results.empty" xml:space="preserve"><value>No rentals match your filters yet.</value></data>
+  <data name="results.emptyDesc" xml:space="preserve"><value>Try widening your search or removing a filter.</value></data>
+  <data name="map.couldNotLoad" xml:space="preserve"><value>Map could not be loaded.</value></data>
+</root>

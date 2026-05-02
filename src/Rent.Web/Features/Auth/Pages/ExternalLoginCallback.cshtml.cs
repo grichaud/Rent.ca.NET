@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Rent.Web.Domain;
 using Rent.Web.Infrastructure.Identity;
+using Rent.Web.Infrastructure.Localization;
 
 namespace Rent.Web.Features.Auth.Pages;
 
@@ -30,7 +31,7 @@ public class ExternalLoginCallbackModel : PageModel
         {
             _logger.LogWarning("External provider returned error: {Error}", remoteError);
             TempData["LoginError"] = $"Google sign-in failed: {remoteError}";
-            return Redirect("/login");
+            return Redirect(this.Localized("/login"));
         }
 
         var info = await _signInManager.GetExternalLoginInfoAsync();
@@ -38,7 +39,7 @@ public class ExternalLoginCallbackModel : PageModel
         {
             _logger.LogWarning("ExternalLoginCallback: external cookie missing/expired immediately after provider redirect.");
             TempData["LoginError"] = "Could not retrieve external login info. Please click \"Continue with Google\" again.";
-            return Redirect("/login");
+            return Redirect(this.Localized("/login"));
         }
 
         var signIn = await _signInManager.ExternalLoginSignInAsync(
@@ -72,7 +73,7 @@ public class ExternalLoginCallbackModel : PageModel
         }
 
         TempData["ExternalLoginReturnUrl"] = returnUrl;
-        return Redirect("/external-login-confirm");
+        return Redirect(this.Localized("/external-login-confirm"));
     }
 
     private async Task<IActionResult> RedirectAfterSignInAsync(string? email, string? returnUrl)
@@ -84,9 +85,11 @@ public class ExternalLoginCallbackModel : PageModel
         {
             var user = await _userManager.FindByEmailAsync(email);
             if (user is not null && await _userManager.IsInRoleAsync(user, Roles.Landlord))
-                return Redirect("/landlord");
+                return Redirect(this.Localized("/landlord"));
+            if (user is not null && await _userManager.IsInRoleAsync(user, Roles.Renter))
+                return Redirect(this.Localized("/renter"));
         }
 
-        return Redirect("/");
+        return Redirect(this.Localized("/"));
     }
 }

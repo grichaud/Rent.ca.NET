@@ -1,7 +1,9 @@
-@page "/signup"
+@page "/{culture:locale}/signup"
 @model Rent.Web.Features.Auth.Pages.SignupModel
 @{
-    ViewData["Title"] = "Create your account";
+    ViewData["Title"] = L["auth.createAccount"].Value;
+    var culture = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+    if (culture != "en" && culture != "fr") { culture = "en"; }
 }
 
 <section class="max-w-md mx-auto">
@@ -11,8 +13,8 @@
                 <icon name="user-plus" class="h-6 w-6" />
             </div>
         </div>
-        <h1 class="font-display text-3xl text-slate-900 dark:text-white text-center">Create your account</h1>
-        <p class="text-slate-500 dark:text-white/60 text-center mt-2">Takes less than a minute.</p>
+        <h1 class="font-display text-3xl text-slate-900 dark:text-white text-center">@L["auth.createAccount"]</h1>
+        <p class="text-slate-500 dark:text-white/60 text-center mt-2">@L["auth.signupQuick"]</p>
 
         @if (Model.ExternalLogins.Any())
         {
@@ -21,7 +23,7 @@
                 {
                     <form method="post" asp-page-handler="ExternalLogin">
                         <input type="hidden" name="provider" value="@scheme.Name" />
-                        <button type="submit" class="glass-button w-full inline-flex items-center justify-center gap-3" title="Continue with @scheme.DisplayName">
+                        <button type="submit" class="glass-button w-full inline-flex items-center justify-center gap-3" title="@L["auth.continueWithGoogle"]">
                             @if (scheme.Name == "Google")
                             {
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" class="h-5 w-5" aria-hidden="true">
@@ -31,7 +33,7 @@
                                     <path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303c-.792 2.237-2.231 4.166-4.087 5.571.001-.001.002-.001.003-.002l6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/>
                                 </svg>
                             }
-                            <span class="font-medium">Continue with @scheme.DisplayName</span>
+                            <span class="font-medium">@L["auth.continueWithGoogle"]</span>
                         </button>
                     </form>
                 }
@@ -39,7 +41,7 @@
 
             <div class="my-6 flex items-center gap-3 text-xs uppercase tracking-wider text-slate-400 dark:text-white/40">
                 <span class="flex-1 h-px bg-slate-200 dark:bg-white/10"></span>
-                <span>or</span>
+                <span>@L["auth.orContinueWith"]</span>
                 <span class="flex-1 h-px bg-slate-200 dark:bg-white/10"></span>
             </div>
         }
@@ -48,38 +50,38 @@
             <div asp-validation-summary="ModelOnly" class="text-sm text-red-600 dark:text-red-400"></div>
 
             <div>
-                <label asp-for="Input.FullName" class="block text-sm text-slate-700 dark:text-white/80 mb-1">Full name</label>
+                <label asp-for="Input.FullName" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["auth.fullName"]</label>
                 <input asp-for="Input.FullName" class="glass-input" autocomplete="name" />
                 <span asp-validation-for="Input.FullName" class="text-xs text-red-600 dark:text-red-400"></span>
             </div>
 
             <div>
-                <label asp-for="Input.Email" class="block text-sm text-slate-700 dark:text-white/80 mb-1">Email</label>
+                <label asp-for="Input.Email" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["auth.email"]</label>
                 <input asp-for="Input.Email" type="email" class="glass-input" autocomplete="email" />
                 <span asp-validation-for="Input.Email" class="text-xs text-red-600 dark:text-red-400"></span>
             </div>
 
             <div>
-                <label asp-for="Input.Password" class="block text-sm text-slate-700 dark:text-white/80 mb-1">Password</label>
+                <label asp-for="Input.Password" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["auth.password"]</label>
                 <input asp-for="Input.Password" type="password" class="glass-input" autocomplete="new-password" />
                 <span asp-validation-for="Input.Password" class="text-xs text-red-600 dark:text-red-400"></span>
-                <p class="text-xs text-slate-500 dark:text-white/50 mt-1">At least 8 characters, one uppercase, one digit.</p>
+                <p class="text-xs text-slate-500 dark:text-white/50 mt-1">@L["auth.passwordHint"]</p>
             </div>
 
             <fieldset class="pt-2">
-                <legend class="block text-sm text-slate-700 dark:text-white/80 mb-2">I am a&hellip;</legend>
+                <legend class="block text-sm text-slate-700 dark:text-white/80 mb-2">@L["auth.iAmA"]</legend>
                 <div class="grid grid-cols-2 gap-3">
                     <label class="glass-base p-4 flex flex-col items-start cursor-pointer has-[:checked]:border-brand-500 has-[:checked]:bg-brand-50 dark:has-[:checked]:bg-brand-500/20 transition-colors">
                         <input type="radio" asp-for="Input.Role" value="Renter" class="sr-only" />
                         <icon name="user" class="h-5 w-5 text-brand-500 mb-2" />
-                        <span class="font-semibold text-slate-900 dark:text-white">Renter</span>
-                        <span class="text-xs text-slate-500 dark:text-white/60 mt-1">Looking for a place.</span>
+                        <span class="font-semibold text-slate-900 dark:text-white">@L["auth.renterRole"]</span>
+                        <span class="text-xs text-slate-500 dark:text-white/60 mt-1">@L["auth.renterCardLooking"]</span>
                     </label>
                     <label class="glass-base p-4 flex flex-col items-start cursor-pointer has-[:checked]:border-brand-500 has-[:checked]:bg-brand-50 dark:has-[:checked]:bg-brand-500/20 transition-colors">
                         <input type="radio" asp-for="Input.Role" value="Landlord" class="sr-only" />
                         <icon name="building" class="h-5 w-5 text-brand-500 mb-2" />
-                        <span class="font-semibold text-slate-900 dark:text-white">Landlord</span>
-                        <span class="text-xs text-slate-500 dark:text-white/60 mt-1">Posting properties.</span>
+                        <span class="font-semibold text-slate-900 dark:text-white">@L["auth.landlordRole"]</span>
+                        <span class="text-xs text-slate-500 dark:text-white/60 mt-1">@L["auth.landlordCardPosting"]</span>
                     </label>
                 </div>
                 <span asp-validation-for="Input.Role" class="text-xs text-red-600 dark:text-red-400"></span>
@@ -87,12 +89,12 @@
 
             <button type="submit" class="glass-button-primary w-full mt-2 inline-flex items-center justify-center gap-2">
                 <icon name="user-plus" class="h-4 w-4" />
-                Create account
+                @L["auth.signUpButton"]
             </button>
         </form>
 
         <p class="text-center text-sm text-slate-500 dark:text-white/60 mt-6">
-            Already have an account? <a href="/login" class="text-brand-600 dark:text-brand-400 font-medium hover:underline">Log in</a>
+            @L["auth.hasAccount"] <a href="/@culture/login" class="text-brand-600 dark:text-brand-400 font-medium hover:underline">@L["common.signIn"]</a>
         </p>
     </div>
 </section>

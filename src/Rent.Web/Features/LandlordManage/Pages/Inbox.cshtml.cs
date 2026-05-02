@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Rent.Web.Domain;
 using Rent.Web.Infrastructure.Data;
 using Rent.Web.Infrastructure.Identity;
+using Rent.Web.Infrastructure.Localization;
 
 namespace Rent.Web.Features.LandlordManage.Pages;
 
@@ -75,7 +76,7 @@ public class InboxModel : PageModel
         }
 
         var q = string.IsNullOrEmpty(filter) ? "" : $"?filter={filter}";
-        return Redirect($"/landlord/inbox{q}");
+        return Redirect(this.Localized("/landlord/inbox") + q);
     }
 
     public class InquiryRow

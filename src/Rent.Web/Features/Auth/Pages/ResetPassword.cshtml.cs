@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Rent.Web.Domain;
+using Rent.Web.Infrastructure.Localization;
 
 namespace Rent.Web.Features.Auth.Pages;
 
@@ -32,7 +33,7 @@ public class ResetPasswordModel : PageModel
     public IActionResult OnGet(string? email, string? token)
     {
         if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(token))
-            return Redirect("/login");
+            return Redirect(this.Localized("/login"));
 
         Input.Email = email;
         Input.Token = token;
@@ -54,7 +55,7 @@ public class ResetPasswordModel : PageModel
         {
             // Same generic outcome whether or not the user exists.
             TempData["LoginSuccess"] = "Password updated. You can now log in.";
-            return Redirect("/login");
+            return Redirect(this.Localized("/login"));
         }
 
         string decodedToken;
@@ -78,7 +79,7 @@ public class ResetPasswordModel : PageModel
 
         _logger.LogInformation("Password reset for {Email}.", user.Email);
         TempData["LoginSuccess"] = "Password updated. You can now log in.";
-        return Redirect("/login");
+        return Redirect(this.Localized("/login"));
     }
 
     public class InputModel

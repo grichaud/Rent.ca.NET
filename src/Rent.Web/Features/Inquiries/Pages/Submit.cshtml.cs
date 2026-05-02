@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Rent.Web.Domain;
 using Rent.Web.Features.Email;
 using Rent.Web.Infrastructure.Data;
+using Rent.Web.Infrastructure.Localization;
 
 namespace Rent.Web.Features.Inquiries.Pages;
 
@@ -119,7 +120,7 @@ public class SubmitModel : PageModel
     private IActionResult RedirectBackToListing(InquiryRequest req)
     {
         if (!string.IsNullOrEmpty(req.ReturnCitySlug) && !string.IsNullOrEmpty(req.ReturnPropertySlug))
-            return Redirect($"/{req.ReturnCitySlug}/{req.ReturnPropertySlug}");
-        return Redirect("/");
+            return Redirect(this.Localized($"/{req.ReturnCitySlug}/{req.ReturnPropertySlug}"));
+        return Redirect(this.Localized("/"));
     }
 }

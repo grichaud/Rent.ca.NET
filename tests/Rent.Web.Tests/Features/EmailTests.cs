@@ -28,7 +28,7 @@ public class EmailTests : IClassFixture<RentAppFactory>
         _factory.EmailSender.Reset();
 
         using var client = _factory.CreateClient();
-        var response = await client.PostAsync("/forgot-password",
+        var response = await client.PostAsync("/en/forgot-password",
             new FormUrlEncodedContent(new Dictionary<string, string>
             {
                 ["Input.Email"] = "nobody-" + Guid.NewGuid().ToString("N") + "@example.com"
@@ -58,7 +58,7 @@ public class EmailTests : IClassFixture<RentAppFactory>
         (await userManager.CreateAsync(user, "Original1!")).Succeeded.Should().BeTrue();
 
         using var client = _factory.CreateClient();
-        var response = await client.PostAsync("/forgot-password",
+        var response = await client.PostAsync("/en/forgot-password",
             new FormUrlEncodedContent(new Dictionary<string, string> { ["Input.Email"] = email }));
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -87,7 +87,7 @@ public class EmailTests : IClassFixture<RentAppFactory>
         var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(rawToken));
 
         using var client = _factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
-        var response = await client.PostAsync("/reset-password",
+        var response = await client.PostAsync("/en/reset-password",
             new FormUrlEncodedContent(new Dictionary<string, string>
             {
                 ["Input.Email"] = email,
