@@ -1,13 +1,17 @@
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Options
 @using Rent.Web.Domain
+@using Rent.Web.Features.Maps
 @using Rent.Web.Infrastructure.Identity
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
+@inject IOptions<MapsOptions> MapsOpts
 @{
     var themeCookie = Context.Request.Cookies["rentca-theme"];
     var htmlClass = themeCookie == "dark" ? "h-full dark" : "h-full";
     var isLandlord = SignInManager.IsSignedIn(User) && User.IsInRole(Roles.Landlord);
     var isRenter = SignInManager.IsSignedIn(User) && User.IsInRole(Roles.Renter);
+    var mapsKey = MapsOpts.Value.GoogleApiKey;
 }
 <!DOCTYPE html>
 <html lang="en" class="@htmlClass">
@@ -20,10 +24,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="icon" href="/favicon.ico" />
+    @if (!string.IsNullOrWhiteSpace(mapsKey))
+    {
+        <meta name="rentca-maps-key" content="@mapsKey" />
+    }
     <script src="~/js/theme-toggle.js" asp-append-version="true"></script>
     <script src="~/js/mobile-menu.js" asp-append-version="true" defer></script>
     <script src="~/js/favorite-toggle.js" asp-append-version="true" defer></script>
     <script src="~/js/ai-chat.js" asp-append-version="true" defer></script>
+    <script src="~/js/maps.js" asp-append-version="true" defer></script>
+    <script src="~/js/search-filters.js" asp-append-version="true" defer></script>
 </head>
 <body class="h-full font-sans text-slate-800 dark:text-white/90 antialiased mesh-background">
 

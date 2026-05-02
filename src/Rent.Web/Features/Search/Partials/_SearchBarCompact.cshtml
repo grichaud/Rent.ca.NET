@@ -1,0 +1,24 @@
+@model string
+@*
+    Compact search bar for the city/results page header.
+    Submits via GET to "/" handler which redirects to the matching city.
+*@
+<form action="/search" method="get" role="search" class="relative w-full max-w-lg" data-search-bar>
+    <div class="glass-base flex items-center gap-2 px-5 py-3 transition-all duration-300 focus-within:border-brand-500 dark:focus-within:border-white/40 shadow-xl shadow-black/5 dark:shadow-black/20">
+        <icon name="search" class="h-4 w-4 shrink-0 text-gray-400 dark:text-white/40" />
+        <input type="search"
+               name="q"
+               value="@Model"
+               placeholder="Search by city..."
+               aria-label="Search by city"
+               autocomplete="off"
+               class="flex-1 border-0 bg-transparent outline-none text-sm px-4 py-0.5 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-white/40"
+               data-search-input />
+        <button type="button"
+                aria-label="Clear search"
+                class="shrink-0 hidden text-gray-400 dark:text-white/40 hover:text-gray-600 dark:hover:text-white/70 transition-colors"
+                data-search-clear>
+            <icon name="x" class="h-3.5 w-3.5" />
+        </button>
+    </div>
+</form>

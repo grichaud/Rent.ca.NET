@@ -97,6 +97,23 @@
             <p class="text-slate-700 dark:text-white/80 whitespace-pre-line">@p.Description</p>
         </section>
 
+        @if (p.Latitude.HasValue && p.Longitude.HasValue)
+        {
+            <section class="glass-card p-6">
+                <h2 class="font-semibold text-slate-900 dark:text-white mb-3 inline-flex items-center gap-2">
+                    <icon name="map-pin" class="h-4 w-4 text-brand-500" />
+                    Location
+                </h2>
+                <div id="rentca-detail-map"
+                     class="h-[320px] w-full rounded-xl overflow-hidden bg-gray-100 dark:bg-slate-800/40"
+                     data-lat="@p.Latitude.Value.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+                     data-lng="@p.Longitude.Value.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+                     data-title="@p.Title">
+                </div>
+                <p class="text-xs text-slate-500 dark:text-white/50 mt-2">Approximate location based on the address provided by the landlord.</p>
+            </section>
+        }
+
         <partial name="/Features/ListingDetail/Partials/_UnitsTable.cshtml" model="p.Units" />
 
         @if (amenityGroups.Any())

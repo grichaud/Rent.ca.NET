@@ -41,42 +41,87 @@ public class SearchHandler
             q = q.Where(p => p.Units.Any(u => u.Price <= query.MaxPrice));
         if (query.Bedrooms.HasValue)
             q = q.Where(p => p.Units.Any(u => u.Bedrooms >= query.Bedrooms));
-        if (query.Type.HasValue)
-            q = q.Where(p => p.PropertyType == query.Type);
-        if (query.PetsAllowed)
-            q = q.Where(p => p.PetsAllowed);
+        if (query.Bathrooms.HasValue)
+            q = q.Where(p => p.Units.Any(u => u.Bathrooms >= query.Bathrooms));
+
+        var types = query.EffectiveTypes();
+        if (types.Length > 0)
+            q = q.Where(p => types.Contains(p.PropertyType));
+
+        if (query.PetsAllowed) q = q.Where(p => p.PetsAllowed);
+        if (query.Furnished)   q = q.Where(p => p.Furnished);
+        if (query.HasParking)  q = q.Where(p => p.ParkingType != null);
 
         var total = await q.CountAsync(ct);
 
-        var items = await q
-            .OrderByDescending(p => p.Tier)
-            .ThenByDescending(p => p.IsVerified)
-            .ThenBy(p => p.Title)
-            .Skip((query.Page - 1) * query.PageSize)
-            .Take(query.PageSize)
-            .Select(p => new PropertyCard
+        // Pull a window of candidates ordered by SQLite-friendly columns,
+        // then sort by price/recency in memory because SQLite cannot ORDER BY decimal aggregates
+        // or DateTimeOffset (test fixture gotcha documented in slices 1.5/4/5).
+        var raw = await q
+            .Select(p => new
             {
-                Id = p.Id,
-                Title = p.Title,
-                Slug = p.Slug,
-                City = p.City,
-                CitySlug = city.Slug,
-                Neighbourhood = p.Neighbourhood,
+                p.Id,
+                p.Title,
+                p.Slug,
+                p.City,
+                p.Province,
+                p.Neighbourhood,
+                p.PropertyType,
+                p.Tier,
+                p.IsVerified,
+                p.PetsAllowed,
+                p.Furnished,
+                p.CreatedAt,
                 PrimaryImageUrl = p.Images
                     .OrderByDescending(i => i.IsPrimary)
                     .ThenBy(i => i.DisplayOrder)
                     .Select(i => i.Url)
                     .FirstOrDefault(),
-                FromPrice = p.Units.Min(u => (decimal?)u.Price),
-                MinBedrooms = p.Units.Min(u => (int?)u.Bedrooms) ?? 0,
-                MinBathrooms = p.Units.Min(u => (decimal?)u.Bathrooms) ?? 0m,
-                PropertyType = p.PropertyType,
-                Tier = p.Tier,
-                IsVerified = p.IsVerified,
-                PetsAllowed = p.PetsAllowed,
-                Furnished = p.Furnished
+                Units = p.Units.Select(u => new { u.Price, u.Bedrooms, u.Bathrooms }).ToList()
             })
             .ToListAsync(ct);
+
+        var projected = raw.Select(p => new PropertyCard
+        {
+            Id = p.Id,
+            Title = p.Title,
+            Slug = p.Slug,
+            City = p.City,
+            CitySlug = city.Slug,
+            Province = p.Province,
+            Neighbourhood = p.Neighbourhood,
+            PrimaryImageUrl = p.PrimaryImageUrl,
+            FromPrice = p.Units.Count == 0 ? null : p.Units.Min(u => (decimal?)u.Price),
+            ToPrice   = p.Units.Count == 0 ? null : p.Units.Max(u => (decimal?)u.Price),
+            MinBedrooms = p.Units.Count == 0 ? 0 : p.Units.Min(u => u.Bedrooms),
+            MaxBedrooms = p.Units.Count == 0 ? null : p.Units.Max(u => (int?)u.Bedrooms),
+            MinBathrooms = p.Units.Count == 0 ? 0m : p.Units.Min(u => u.Bathrooms),
+            PropertyType = p.PropertyType,
+            Tier = p.Tier,
+            IsVerified = p.IsVerified,
+            PetsAllowed = p.PetsAllowed,
+            Furnished = p.Furnished,
+            CreatedAt = p.CreatedAt
+        }).ToList();
+
+        IEnumerable<PropertyCard> ordered = query.Sort switch
+        {
+            SearchSort.PriceAsc  => projected.OrderBy(p => p.FromPrice ?? decimal.MaxValue),
+            SearchSort.PriceDesc => projected.OrderByDescending(p => p.FromPrice ?? decimal.MinValue),
+            SearchSort.Popular   => projected
+                                    .OrderByDescending(p => p.Tier)
+                                    .ThenByDescending(p => p.IsVerified)
+                                    .ThenBy(p => p.Title),
+            _ /* Newest */       => projected
+                                    .OrderByDescending(p => p.Tier)
+                                    .ThenByDescending(p => p.CreatedAt)
+                                    .ThenBy(p => p.Title)
+        };
+
+        var items = ordered
+            .Skip((query.Page - 1) * query.PageSize)
+            .Take(query.PageSize)
+            .ToList();
 
         if (currentUserId is Guid uid)
         {

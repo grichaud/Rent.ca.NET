@@ -2,6 +2,9 @@
 @model Rent.Web.Features.Search.Pages.CityResultsModel
 @{
     ViewData["Title"] = Model.Result.City is null ? "City not found" : $"Rentals in {Model.Result.City.Name}";
+    var view = Model.Query.View;
+    var isMap = view == Rent.Web.Features.Search.SearchView.Map;
+    var isList = view == Rent.Web.Features.Search.SearchView.List;
 }
 
 @if (Model.Result.City is null)
@@ -14,70 +17,35 @@
     return;
 }
 
-<section class="mb-8">
-    <nav class="text-sm text-slate-500 dark:text-white/50 mb-3 inline-flex items-center gap-2">
-        <a href="/" class="hover:text-brand-600 dark:hover:text-brand-400">Home</a>
-        <span class="opacity-50">/</span>
-        <span class="text-slate-700 dark:text-white/80">@Model.Result.City.Name</span>
-    </nav>
-    <h1 class="font-display text-4xl sm:text-5xl text-slate-900 dark:text-white inline-flex items-center gap-3">
-        <icon name="map-pin" class="h-8 w-8 text-brand-500" />
-        @Model.Result.City.Name, @Model.Result.City.Province
+<header class="mb-6">
+    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-1">
+        Rentals in
+        <span class="bg-gradient-to-r from-brand-500 to-cyan-500 dark:from-brand-400 dark:to-cyan-400 bg-clip-text text-transparent">
+            @Model.Result.City.Name
+        </span>
     </h1>
-    <p class="text-slate-600 dark:text-white/60 mt-2">@Model.Result.TotalCount rentals available.</p>
-</section>
+    <p class="text-sm text-gray-500 dark:text-white/50 mb-4">
+        Find apartments, condos, houses and more in @Model.Result.City.Name
+    </p>
+    <partial name="/Features/Search/Partials/_SearchBarCompact.cshtml" model="@Model.Result.City.Name" />
+</header>
 
-<section class="grid lg:grid-cols-[280px_1fr] gap-8">
-    <aside class="glass-sidebar p-6 h-fit lg:sticky lg:top-24">
-        <h2 class="font-semibold text-slate-900 dark:text-white mb-4 inline-flex items-center gap-2">
-            <icon name="tag" class="h-4 w-4 text-brand-500" />
-            Filters
-        </h2>
-        <form method="get" class="space-y-4 text-sm">
-            <div class="grid grid-cols-2 gap-2">
-                <div>
-                    <label asp-for="Query.MinPrice" class="block text-xs text-slate-500 dark:text-white/50 mb-1">Min price</label>
-                    <input asp-for="Query.MinPrice" type="number" min="0" class="glass-input !py-2 !text-sm" />
-                </div>
-                <div>
-                    <label asp-for="Query.MaxPrice" class="block text-xs text-slate-500 dark:text-white/50 mb-1">Max price</label>
-                    <input asp-for="Query.MaxPrice" type="number" min="0" class="glass-input !py-2 !text-sm" />
-                </div>
-            </div>
-            <div>
-                <label asp-for="Query.Bedrooms" class="block text-xs text-slate-500 dark:text-white/50 mb-1">Min bedrooms</label>
-                <select asp-for="Query.Bedrooms" class="glass-input !py-2 !text-sm">
-                    <option value="">Any</option>
-                    <option value="0">Studio</option>
-                    <option value="1">1+</option>
-                    <option value="2">2+</option>
-                    <option value="3">3+</option>
-                </select>
-            </div>
-            <div>
-                <label asp-for="Query.Type" class="block text-xs text-slate-500 dark:text-white/50 mb-1">Property type</label>
-                <select asp-for="Query.Type" class="glass-input !py-2 !text-sm">
-                    <option value="">Any</option>
-                    @foreach (var t in Enum.GetValues<Rent.Web.Domain.PropertyType>())
-                    {
-                        <option value="@t">@t</option>
-                    }
-                </select>
-            </div>
-            <label class="flex items-center gap-2 text-slate-700 dark:text-white/80">
-                <input asp-for="Query.PetsAllowed" type="checkbox" class="rounded border-gray-300 dark:border-white/20 text-brand-500 focus:ring-brand-500" />
-                <icon name="dog" class="h-4 w-4 text-slate-500 dark:text-white/60" />
-                Pet friendly
-            </label>
-            <button type="submit" class="glass-button-primary w-full inline-flex items-center justify-center gap-2">
-                <icon name="search" class="h-4 w-4" />
-                Apply filters
-            </button>
-            <a href="/@Model.Query.CitySlug" class="block text-center text-xs text-slate-500 dark:text-white/50 hover:underline">Clear filters</a>
-        </form>
+<div class="lg:grid lg:grid-cols-[288px_1fr] lg:gap-6 items-start">
+    <aside class="hidden lg:block">
+        <partial name="/Features/Search/Partials/_SidebarFilters.cshtml" model="Model.Query" />
     </aside>
 
-    <div>
+    <div class="flex flex-col gap-4 min-w-0">
+        @* Mobile filter trigger *@
+        <button type="button"
+                data-mobile-filter-open
+                class="glass-button lg:hidden inline-flex items-center justify-center gap-2 px-4 py-2 text-sm text-gray-800 dark:text-white/80 self-start">
+            <icon name="sliders-horizontal" class="h-4 w-4" />
+            Filters
+        </button>
+
+        <partial name="/Features/Search/Partials/_ResultsHeader.cshtml" model="Model" />
+
         @if (Model.Result.Properties.Count == 0)
         {
             <div class="glass-card p-10 text-center text-slate-600 dark:text-white/70">
@@ -86,12 +54,31 @@
         }
         else
         {
-            <div class="grid sm:grid-cols-2 xl:grid-cols-3 gap-5">
+            @* Grid / List view container; hidden when Map view is active *@
+            <div id="rentca-results-list"
+                 class="@(isMap ? "hidden " : "")@(isList ? "grid grid-cols-1 gap-4" : "grid sm:grid-cols-2 xl:grid-cols-3 gap-5")">
                 @foreach (var p in Model.Result.Properties)
                 {
-                    <partial name="/Features/Search/Partials/_PropertyCard.cshtml" model="p" />
+                    <partial name="/Features/Search/Partials/_PropertyCard.cshtml" model="p" view-data='new ViewDataDictionary(ViewData) { ["Variant"] = (isList ? "list" : "grid") }' />
                 }
+            </div>
+
+            <div id="rentca-search-map"
+                 class="@(isMap ? "" : "hidden ")glass-card overflow-hidden p-0 h-[600px] w-full"
+                 data-city-slug="@Model.Query.CitySlug"
+                 data-city-lat="@(Model.Result.City.Latitude?.ToString(System.Globalization.CultureInfo.InvariantCulture))"
+                 data-city-lng="@(Model.Result.City.Longitude?.ToString(System.Globalization.CultureInfo.InvariantCulture))">
             </div>
         }
     </div>
-</section>
+</div>
+
+@* Mobile filter drawer overlay (hidden on desktop) *@
+<div id="rentca-mobile-filters" class="lg:hidden fixed inset-0 z-50 pointer-events-none" aria-hidden="true">
+    <div data-mobile-filter-overlay class="absolute inset-0 bg-slate-900/40 dark:bg-black/60 backdrop-blur-sm opacity-0 transition-opacity duration-300"></div>
+    <aside class="absolute top-0 left-0 bottom-0 w-80 max-w-[90vw] translate-x-[-100%] transition-transform duration-300 ease-out overflow-y-auto" data-mobile-filter-panel>
+        <div class="p-3">
+            <partial name="/Features/Search/Partials/_SidebarFilters.cshtml" model="Model.Query" />
+        </div>
+    </aside>
+</div>

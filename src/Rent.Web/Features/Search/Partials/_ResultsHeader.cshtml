@@ -1,0 +1,57 @@
+@model Rent.Web.Features.Search.Pages.CityResultsModel
+@{
+    var totalCount = Model.Result.TotalCount;
+    var cityName = Model.Result.City?.Name ?? Model.Query.CitySlug;
+
+    var sortOptions = new (Rent.Web.Features.Search.SearchSort Value, string Label)[]
+    {
+        (Rent.Web.Features.Search.SearchSort.Newest,   "Newest"),
+        (Rent.Web.Features.Search.SearchSort.PriceAsc, "Price: Low to High"),
+        (Rent.Web.Features.Search.SearchSort.PriceDesc,"Price: High to Low"),
+        (Rent.Web.Features.Search.SearchSort.Popular,  "Most Popular"),
+    };
+
+    var viewOptions = new (Rent.Web.Features.Search.SearchView Value, string Icon, string Label)[]
+    {
+        (Rent.Web.Features.Search.SearchView.Grid, "grid-3x3", "Grid view"),
+        (Rent.Web.Features.Search.SearchView.List, "list",     "List view"),
+        (Rent.Web.Features.Search.SearchView.Map,  "map",      "Map view"),
+    };
+}
+
+<div class="glass-base flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 py-3"
+     aria-label="Search results controls"
+     data-results-header
+     data-base-url="/@Model.Query.CitySlug">
+
+    <p class="text-sm text-gray-600 dark:text-white/70">
+        <span class="text-gray-900 dark:text-white font-semibold text-base">@totalCount.ToString("N0")</span>
+        <span>rental@(totalCount == 1 ? "" : "s") in </span>
+        <span class="text-gray-900 dark:text-white font-medium">@cityName</span>
+    </p>
+
+    <div class="flex items-center gap-2 flex-shrink-0">
+        <select data-sort-select
+                aria-label="Sort listings"
+                class="glass-button h-9 min-w-[160px] text-sm text-gray-700 dark:text-white/80 border-gray-200 dark:border-white/20 cursor-pointer pr-8">
+            @foreach (var opt in sortOptions)
+            {
+                <option value="@opt.Value" selected="@(opt.Value == Model.Query.Sort)">@opt.Label</option>
+            }
+        </select>
+
+        <div class="glass-base flex items-center p-1 gap-0.5" role="group" aria-label="Switch view mode">
+            @foreach (var v in viewOptions)
+            {
+                var isActive = Model.Query.View == v.Value;
+                <button type="button"
+                        data-view-btn="@v.Value"
+                        aria-label="@v.Label"
+                        aria-pressed="@(isActive ? "true" : "false")"
+                        class="h-7 w-7 rounded-lg flex items-center justify-center transition-all duration-200 @(isActive ? "bg-brand-500/20 dark:bg-brand-500/30 text-brand-700 dark:text-brand-300 shadow-sm shadow-brand-500/10 dark:shadow-brand-500/30 border border-brand-500/30" : "text-gray-600 dark:text-white/50 hover:text-gray-800 dark:hover:text-white/80 hover:bg-gray-200 dark:hover:bg-white/10")">
+                    <icon name="@v.Icon" class="h-3.5 w-3.5" />
+                </button>
+            }
+        </div>
+    </div>
+</div>

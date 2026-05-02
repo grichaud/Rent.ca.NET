@@ -116,3 +116,47 @@ html {
     @apply absolute rounded-full blur-3xl opacity-40 dark:opacity-60 pointer-events-none animate-pulse-slow;
   }
 }
+
+/* Dual-range slider thumbs (used by the price filter) */
+.rentca-range {
+  height: 100%;
+}
+.rentca-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  pointer-events: auto;
+  width: 16px;
+  height: 16px;
+  border-radius: 9999px;
+  background: rgb(51 141 255);
+  border: 2px solid white;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  cursor: pointer;
+  margin-top: 0;
+}
+.dark .rentca-range::-webkit-slider-thumb {
+  background: white;
+  border-color: rgb(96 165 250);
+}
+.rentca-range::-moz-range-thumb {
+  pointer-events: auto;
+  width: 16px;
+  height: 16px;
+  border-radius: 9999px;
+  background: rgb(51 141 255);
+  border: 2px solid white;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  cursor: pointer;
+}
+.dark .rentca-range::-moz-range-thumb {
+  background: white;
+  border-color: rgb(96 165 250);
+}
+.rentca-range::-webkit-slider-runnable-track {
+  background: transparent;
+  height: 100%;
+}
+.rentca-range::-moz-range-track {
+  background: transparent;
+  height: 100%;
+}

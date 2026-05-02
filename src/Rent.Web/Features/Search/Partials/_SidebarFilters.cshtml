@@ -1,0 +1,228 @@
+@model Rent.Web.Features.Search.SearchQuery
+@using Rent.Web.Domain
+@{
+    var typeOptions = new (PropertyType Value, string Label)[]
+    {
+        (PropertyType.Apartment, "Apartment"),
+        (PropertyType.Condo,     "Condo"),
+        (PropertyType.House,     "House"),
+        (PropertyType.Townhouse, "Townhouse"),
+        (PropertyType.Basement,  "Basement"),
+        (PropertyType.Studio,    "Studio"),
+        (PropertyType.Loft,      "Loft"),
+        (PropertyType.Duplex,    "Duplex"),
+    };
+    var bedroomOptions = new (int Value, string Label)[]
+    {
+        (0, "Any"), (1, "1"), (2, "2"), (3, "3"), (4, "4+"),
+    };
+    var bathroomOptions = new (int Value, string Label)[]
+    {
+        (0, "Any"), (1, "1"), (2, "2"), (3, "3+"),
+    };
+
+    var selectedTypes = (Model.EffectiveTypes() ?? Array.Empty<PropertyType>()).ToHashSet();
+    var bedroomsValue = Model.Bedrooms ?? 0;
+    var bathroomsValue = Model.Bathrooms ?? 0;
+
+    var minPrice = Model.MinPrice.HasValue ? (int)Model.MinPrice.Value : 0;
+    var maxPrice = Model.MaxPrice.HasValue ? (int)Model.MaxPrice.Value : 5000;
+
+    var activeCount = 0;
+    if (selectedTypes.Count > 0) activeCount++;
+    if (Model.MinPrice.HasValue && Model.MinPrice > 0) activeCount++;
+    if (Model.MaxPrice.HasValue && Model.MaxPrice < 5000) activeCount++;
+    if (bedroomsValue > 0) activeCount++;
+    if (bathroomsValue > 0) activeCount++;
+    if (Model.PetsAllowed) activeCount++;
+    if (Model.Furnished) activeCount++;
+    if (Model.HasParking) activeCount++;
+}
+
+<form method="get"
+      action="/@Model.CitySlug"
+      class="glass-sidebar p-5 flex flex-col gap-4 lg:sticky lg:top-4 lg:max-h-[calc(100vh-2rem)] lg:overflow-y-auto"
+      data-filters-form>
+
+    @* Preserve sort + view across filter submissions *@
+    <input type="hidden" name="Sort" value="@Model.Sort" />
+    <input type="hidden" name="View" value="@Model.View" />
+
+    <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+            <icon name="sliders-horizontal" class="h-4 w-4 text-gray-500 dark:text-white/60" />
+            <h2 class="text-sm font-semibold text-gray-900 dark:text-white">Filters</h2>
+            @if (activeCount > 0)
+            {
+                <span class="h-5 min-w-5 px-1.5 rounded-full bg-brand-500 dark:bg-brand-500/40 border border-brand-600 dark:border-brand-400/30 text-white dark:text-brand-300 text-xs font-semibold flex items-center justify-center">
+                    @activeCount
+                </span>
+            }
+        </div>
+        @if (activeCount > 0)
+        {
+            <a href="/@Model.CitySlug?Sort=@Model.Sort&View=@Model.View"
+               class="text-xs text-gray-500 dark:text-white/50 hover:text-gray-700 dark:hover:text-white/80 transition-colors">
+                Clear all
+            </a>
+        }
+    </div>
+
+    <div class="flex-1 flex flex-col gap-4">
+        @* Property Type pills *@
+        <section>
+            <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-white/50 mb-3">Property Type</p>
+            <div class="flex flex-wrap gap-1.5" role="group" aria-label="Property type">
+                @foreach (var opt in typeOptions)
+                {
+                    var checkedAttr = selectedTypes.Contains(opt.Value);
+                    <label class="cursor-pointer">
+                        <input type="checkbox" name="Types" value="@opt.Value" class="sr-only peer" @(checkedAttr ? "checked" : null) data-pill-input />
+                        <span class="px-3 py-1.5 text-sm rounded-xl border transition-all duration-200 inline-block
+                                     bg-gray-100 dark:bg-white/5 border-gray-200 dark:border-white/10 text-gray-700 dark:text-white/60
+                                     hover:bg-gray-200 dark:hover:bg-white/10 hover:text-gray-900 dark:hover:text-white/80
+                                     peer-checked:bg-brand-500/20 dark:peer-checked:bg-brand-500/30
+                                     peer-checked:border-brand-500/40 dark:peer-checked:border-brand-400/40
+                                     peer-checked:text-brand-700 dark:peer-checked:text-brand-300
+                                     peer-checked:shadow-sm peer-checked:shadow-brand-500/10 dark:peer-checked:shadow-brand-500/20">
+                            @opt.Label
+                        </span>
+                    </label>
+                }
+            </div>
+        </section>
+
+        <hr class="border-gray-200 dark:border-white/10" />
+
+        @* Price Range with dual slider *@
+        <section data-price-slider data-price-min="@minPrice" data-price-max="@maxPrice" data-price-step="50" data-price-cap="5000">
+            <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-white/50 mb-3">Price Range</p>
+            <div class="space-y-3">
+                <div class="flex items-center justify-between text-sm">
+                    <span class="text-gray-900 dark:text-white font-medium" data-price-label-min>$@minPrice.ToString("N0")</span>
+                    <span class="text-gray-900 dark:text-white font-medium" data-price-label-max>@(maxPrice >= 5000 ? "$5,000+" : "$" + maxPrice.ToString("N0"))</span>
+                </div>
+                <div class="relative h-1.5">
+                    <div class="absolute inset-x-0 top-1/2 -translate-y-1/2 h-1.5 rounded-full bg-gray-200 dark:bg-white/10"></div>
+                    <div class="absolute top-1/2 -translate-y-1/2 h-1.5 rounded-full bg-brand-500" data-price-track></div>
+                    <input type="range" min="0" max="5000" step="50" value="@minPrice"
+                           class="rentca-range absolute inset-0 w-full pointer-events-none appearance-none bg-transparent"
+                           name="MinPrice" aria-label="Minimum price" data-price-input-min />
+                    <input type="range" min="0" max="5000" step="50" value="@(maxPrice >= 5000 ? 5000 : maxPrice)"
+                           class="rentca-range absolute inset-0 w-full pointer-events-none appearance-none bg-transparent"
+                           name="MaxPriceRaw" aria-label="Maximum price" data-price-input-max />
+                    @* Hidden field that the JS rewrites to undefined when MaxPrice == 5000 (sentinel for "no max") *@
+                    <input type="hidden" name="MaxPrice" value="@(maxPrice >= 5000 ? "" : maxPrice.ToString())" data-price-hidden-max />
+                </div>
+                <p class="text-xs text-gray-400 dark:text-white/40 text-center" data-price-summary>
+                    $@minPrice.ToString("N0") – @(maxPrice >= 5000 ? "$5,000+" : "$" + maxPrice.ToString("N0")) per month
+                </p>
+            </div>
+        </section>
+
+        <hr class="border-gray-200 dark:border-white/10" />
+
+        @* Bedrooms pills (radio group) *@
+        <section>
+            <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-white/50 mb-3">Bedrooms</p>
+            <div class="flex flex-wrap gap-1.5" role="radiogroup" aria-label="Bedrooms">
+                @foreach (var opt in bedroomOptions)
+                {
+                    var isActive = bedroomsValue == opt.Value;
+                    <label class="cursor-pointer">
+                        <input type="radio" name="Bedrooms" value="@(opt.Value == 0 ? "" : opt.Value.ToString())" class="sr-only peer" @(isActive ? "checked" : null) data-pill-input />
+                        <span class="px-3 py-1.5 text-sm rounded-xl border transition-all duration-200 inline-block min-w-[44px] text-center
+                                     bg-gray-100 dark:bg-white/5 border-gray-200 dark:border-white/10 text-gray-700 dark:text-white/60
+                                     hover:bg-gray-200 dark:hover:bg-white/10
+                                     peer-checked:bg-brand-500/20 dark:peer-checked:bg-brand-500/30
+                                     peer-checked:border-brand-500/40 dark:peer-checked:border-brand-400/40
+                                     peer-checked:text-brand-700 dark:peer-checked:text-brand-300
+                                     peer-checked:shadow-sm peer-checked:shadow-brand-500/10 dark:peer-checked:shadow-brand-500/20">
+                            @opt.Label
+                        </span>
+                    </label>
+                }
+            </div>
+        </section>
+
+        <hr class="border-gray-200 dark:border-white/10" />
+
+        @* Bathrooms pills (radio group) *@
+        <section>
+            <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-white/50 mb-3">Bathrooms</p>
+            <div class="flex flex-wrap gap-1.5" role="radiogroup" aria-label="Bathrooms">
+                @foreach (var opt in bathroomOptions)
+                {
+                    var isActive = bathroomsValue == opt.Value;
+                    <label class="cursor-pointer">
+                        <input type="radio" name="Bathrooms" value="@(opt.Value == 0 ? "" : opt.Value.ToString())" class="sr-only peer" @(isActive ? "checked" : null) data-pill-input />
+                        <span class="px-3 py-1.5 text-sm rounded-xl border transition-all duration-200 inline-block min-w-[44px] text-center
+                                     bg-gray-100 dark:bg-white/5 border-gray-200 dark:border-white/10 text-gray-700 dark:text-white/60
+                                     hover:bg-gray-200 dark:hover:bg-white/10
+                                     peer-checked:bg-brand-500/20 dark:peer-checked:bg-brand-500/30
+                                     peer-checked:border-brand-500/40 dark:peer-checked:border-brand-400/40
+                                     peer-checked:text-brand-700 dark:peer-checked:text-brand-300
+                                     peer-checked:shadow-sm peer-checked:shadow-brand-500/10 dark:peer-checked:shadow-brand-500/20">
+                            @opt.Label
+                        </span>
+                    </label>
+                }
+            </div>
+        </section>
+
+        <hr class="border-gray-200 dark:border-white/10" />
+
+        @* More Filters - collapsible *@
+        <section data-more-filters @(Model.PetsAllowed || Model.Furnished || Model.HasParking ? "data-open=\"true\"" : "data-open=\"false\"")>
+            <button type="button"
+                    data-more-toggle
+                    class="flex items-center justify-between w-full text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-white/50 hover:text-gray-700 dark:hover:text-white/70 transition-colors mb-3">
+                More Filters
+                <icon name="chevron-down" class="h-4 w-4 transition-transform duration-200" />
+            </button>
+            <div class="space-y-2" data-more-content>
+                <label class="flex items-center justify-between px-3 py-2.5 rounded-xl border cursor-pointer transition-all
+                              bg-gray-100 dark:bg-white/5 border-gray-200 dark:border-white/10 text-gray-700 dark:text-white/60
+                              has-[:checked]:bg-brand-500/15 has-[:checked]:border-brand-500/30 has-[:checked]:text-brand-700 dark:has-[:checked]:text-brand-300">
+                    <span class="flex items-center gap-2 text-sm font-medium">
+                        <icon name="dog" class="h-4 w-4" />
+                        Pets Allowed
+                    </span>
+                    <input type="checkbox" name="PetsAllowed" value="true" class="sr-only" @(Model.PetsAllowed ? "checked" : null) />
+                    <span class="h-5 w-9 rounded-full border bg-gray-200 dark:bg-white/10 border-gray-300 dark:border-white/20 relative
+                                 has-[:checked]:bg-brand-500/50">
+                    </span>
+                </label>
+                <label class="flex items-center justify-between px-3 py-2.5 rounded-xl border cursor-pointer transition-all
+                              bg-gray-100 dark:bg-white/5 border-gray-200 dark:border-white/10 text-gray-700 dark:text-white/60
+                              has-[:checked]:bg-brand-500/15 has-[:checked]:border-brand-500/30 has-[:checked]:text-brand-700 dark:has-[:checked]:text-brand-300">
+                    <span class="flex items-center gap-2 text-sm font-medium">
+                        <icon name="sofa" class="h-4 w-4" />
+                        Furnished
+                    </span>
+                    <input type="checkbox" name="Furnished" value="true" class="sr-only" @(Model.Furnished ? "checked" : null) />
+                </label>
+                <label class="flex items-center justify-between px-3 py-2.5 rounded-xl border cursor-pointer transition-all
+                              bg-gray-100 dark:bg-white/5 border-gray-200 dark:border-white/10 text-gray-700 dark:text-white/60
+                              has-[:checked]:bg-brand-500/15 has-[:checked]:border-brand-500/30 has-[:checked]:text-brand-700 dark:has-[:checked]:text-brand-300">
+                    <span class="flex items-center gap-2 text-sm font-medium">
+                        <icon name="car" class="h-4 w-4" />
+                        Parking Included
+                    </span>
+                    <input type="checkbox" name="HasParking" value="true" class="sr-only" @(Model.HasParking ? "checked" : null) />
+                </label>
+            </div>
+        </section>
+    </div>
+
+    @* Footer actions *@
+    <div class="pt-4 border-t border-gray-200 dark:border-white/10 flex gap-2">
+        <a href="/@Model.CitySlug?Sort=@Model.Sort&View=@Model.View"
+           class="glass-button flex-1 py-2.5 text-sm font-medium text-center text-gray-700 dark:text-white/70">
+            Clear
+        </a>
+        <button type="submit" class="glass-button-primary flex-1 py-2.5 text-sm font-semibold text-white">
+            Apply
+        </button>
+    </div>
+</form>

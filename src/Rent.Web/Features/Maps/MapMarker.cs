@@ -1,0 +1,18 @@
+using Rent.Web.Domain;
+
+namespace Rent.Web.Features.Maps;
+
+public class MapMarker
+{
+    public Guid Id { get; set; }
+    public string Title { get; set; } = string.Empty;
+    public string Slug { get; set; } = string.Empty;
+    public string CitySlug { get; set; } = string.Empty;
+    public double Lat { get; set; }
+    public double Lng { get; set; }
+    public decimal? FromPrice { get; set; }
+    public int MinBedrooms { get; set; }
+    public PropertyType PropertyType { get; set; }
+    public ListingTier Tier { get; set; }
+    public string? PrimaryImageUrl { get; set; }
+}
