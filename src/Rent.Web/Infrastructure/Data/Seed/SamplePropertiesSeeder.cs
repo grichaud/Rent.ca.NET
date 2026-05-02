@@ -10,27 +10,34 @@ public static class SamplePropertiesSeeder
     private const string DemoLandlordEmail = "demo.landlord@rentca.net";
     private const string DemoLandlordPassword = "DemoLandlord1!";
 
+    // Bump this when changing the sample data so prod re-seeds itself.
+    // The version string is stored in the demo landlord's Description field. If it
+    // does not match, all demo-landlord properties are wiped and re-inserted.
+    private const string SeedVersion = "v3-2026-05-02-curated-unsplash";
+
     public static async Task SeedAsync(
         AppDbContext db,
         UserManager<ApplicationUser> userManager,
         CancellationToken ct = default)
     {
-        var landlordId = await EnsureDemoLandlordAsync(db, userManager);
+        var (landlordId, profile) = await EnsureDemoLandlordAsync(db, userManager);
 
-        // Auto-upgrade prod databases that were seeded with the legacy Picsum image set.
-        // Wipe the demo-landlord properties so the new sample list (with real-estate stock
-        // photos and more cities) gets inserted on the next deploy. Property cascade handles
-        // Units, Images, Inquiries, Favorites, and the PropertyAmenities junction.
-        var hasLegacy = await db.Properties.AnyAsync(p =>
-            p.LandlordProfileId == landlordId &&
-            p.Images.Any(i => i.Url.Contains("picsum.photos")), ct);
-
-        if (hasLegacy)
+        // Auto-upgrade prod databases whose seed predates this version. The signal is
+        // the LandlordProfile.Description sentinel; on mismatch we wipe the demo-landlord
+        // properties (Property cascade handles Units, Images, Inquiries, Favorites and the
+        // PropertyAmenities junction) and re-insert the canonical catalog below.
+        var seedTag = $"[seed:{SeedVersion}]";
+        if (profile.Description is null || !profile.Description.Contains(seedTag))
         {
             var legacy = await db.Properties
                 .Where(p => p.LandlordProfileId == landlordId)
                 .ToListAsync(ct);
-            db.Properties.RemoveRange(legacy);
+            if (legacy.Count > 0)
+            {
+                db.Properties.RemoveRange(legacy);
+                await db.SaveChangesAsync(ct);
+            }
+            profile.Description = $"Sample listings populated by the seeder for portfolio demo purposes. {seedTag}";
             await db.SaveChangesAsync(ct);
         }
 
@@ -50,10 +57,14 @@ public static class SamplePropertiesSeeder
         await db.SaveChangesAsync(ct);
     }
 
-    private static async Task<Guid> EnsureDemoLandlordAsync(AppDbContext db, UserManager<ApplicationUser> userManager)
+    private static async Task<(Guid id, LandlordProfile profile)> EnsureDemoLandlordAsync(AppDbContext db, UserManager<ApplicationUser> userManager)
     {
         var existing = await userManager.FindByEmailAsync(DemoLandlordEmail);
-        if (existing is not null) return existing.Id;
+        if (existing is not null)
+        {
+            var existingProfile = await db.LandlordProfiles.FirstAsync(p => p.Id == existing.Id);
+            return (existing.Id, existingProfile);
+        }
 
         var user = new ApplicationUser
         {
@@ -69,49 +80,54 @@ public static class SamplePropertiesSeeder
 
         await userManager.AddToRoleAsync(user, Roles.Landlord);
 
-        db.LandlordProfiles.Add(new LandlordProfile
+        var profile = new LandlordProfile
         {
             Id = user.Id,
             CompanyName = "Demo Properties Inc.",
             Description = "Sample listings populated by the seeder for portfolio demo purposes.",
             IsVerified = true,
             Tier = ListingTier.Featured,
-            LogoUrl = Photo.Carousel[0]
-        });
-
-        return user.Id;
+            LogoUrl = Photo.ApartmentBuilding
+        };
+        db.LandlordProfiles.Add(profile);
+        await db.SaveChangesAsync();
+        return (user.Id, profile);
     }
 
     /// <summary>
-    /// Real-estate stock photos lifted from the Next.js source (`new-listings-carousel.tsx`)
-    /// + the city skylines from `cities.ts`. All verified-existing Unsplash assets so the
-    /// portfolio demo never falls back to broken/random images.
+    /// Real-estate stock photos. Each ID was pulled from a Unsplash topic search
+    /// (`modern-apartment-interior`, `condo-building`, `modern-house-exterior`, `loft-apartment`)
+    /// and visually verified to be a residential property. Do NOT swap an ID without
+    /// loading it in a browser first.
     /// </summary>
     private static class Photo
     {
         private static string U(string id, int w = 1200, int h = 800) =>
             $"https://images.unsplash.com/photo-{id}?w={w}&h={h}&fit=crop&q=80";
 
-        // Carousel photos: a mix of apartment exteriors, modern interiors, condos, and houses.
-        public static readonly string[] Carousel =
-        {
-            U("1545324418-cc1a3fa10c00"),  // modern apartment exterior
-            U("1486406146926-c627a92ad1ab"),  // bedroom (luxury condo)
-            U("1564013799919-ab600027ffc6"),  // semi-detached house
-            U("1502672260266-1c1ef2d93688"),  // modern living room (loft)
-            U("1600596542815-ffad4c1539a9"),  // townhouse with backyard
-            U("1600607687939-ce8a6c25118c"),  // executive condo interior
-            U("1560518883-ce09059eeffa"),     // landlord hero (modern home)
-            U("1517935706615-2717063c2225"),  // Toronto skyline
-        };
+        // Apartment / condo interiors (living rooms, kitchens, dining areas).
+        public static readonly string ApartmentInterior1 = U("1603072845032-7b5bd641a82a"); // modern living room with a yellow cabinet and city view
+        public static readonly string ApartmentInterior2 = U("1738168279272-c08d6dd22002"); // living room with couch, table and chairs
+        public static readonly string ApartmentInterior3 = U("1647082550285-119acfd169f2"); // living room with a large painting on the wall
+        public static readonly string ApartmentInterior4 = U("1666282167632-c613fbeb163c"); // living room with a couch and a coffee table
+        public static readonly string ApartmentInterior5 = U("1737233459465-8eaf6c7d8856"); // living room with furniture and dining table
+        public static readonly string ApartmentInterior6 = U("1738168246881-40f35f8aba0a"); // living room with a large green couch
 
-        public static readonly string ApartmentExterior = Carousel[0];
-        public static readonly string ApartmentInterior = Carousel[1];
-        public static readonly string House           = Carousel[2];
-        public static readonly string LoftInterior    = Carousel[3];
-        public static readonly string TownhouseExt    = Carousel[4];
-        public static readonly string CondoInterior   = Carousel[5];
-        public static readonly string ModernHome      = Carousel[6];
+        // Apartment / condo building exteriors.
+        public static readonly string ApartmentBuilding  = U("1573921470445-8d99c48c879f"); // high-rise condo under a blue sky (verified)
+        public static readonly string ApartmentBuilding2 = U("1770962282626-61b2f4931bf7"); // modern apartment building, dark grey accents
+        public static readonly string ApartmentBuilding3 = U("1773558061377-fd3fa0cc2447"); // modern apartment balconies under blue sky
+        public static readonly string ApartmentBuilding4 = U("1766761562522-5a0a12bd2a27"); // tall apartment buildings with balconies
+
+        // Detached / semi-detached / townhouse exteriors.
+        public static readonly string House1 = U("1721815693498-cc28507c0ba2"); // modern 2-storey house with windows + balconies (verified)
+        public static readonly string House2 = U("1706808849777-96e0d7be3bb7"); // modern house with a large front yard
+        public static readonly string House3 = U("1706808849780-7a04fbac83ef"); // modern house with a pool and lounge chairs
+        public static readonly string House4 = U("1513584684374-8bab748fbf90"); // landscape photo of a 2-storey house
+
+        // Loft + bedroom for variety.
+        public static readonly string LoftInterior = U("1505873242700-f289a29e1e0f"); // black leather couch with throw pillow (loft style)
+        public static readonly string Bedroom      = U("1662454419716-c4c504728811"); // bed in a sunlit room
     }
 
     private static IEnumerable<(Property property, string[] amenities)> BuildSamples(Guid landlordId)
@@ -134,9 +150,9 @@ public static class SamplePropertiesSeeder
             images:
             [
                 Photo.LoftInterior,
-                Photo.ApartmentInterior,
-                Photo.CondoInterior,
-                Photo.ApartmentExterior,
+                Photo.ApartmentInterior4,
+                Photo.ApartmentBuilding3,
+                Photo.Bedroom,
             ]),
             ["Elevator", "Gym", "In-Suite Laundry", "Hardwood Floors", "Balcony", "Underground Parking", "24/7 Security", "Pet Friendly"]);
 
@@ -150,7 +166,7 @@ public static class SamplePropertiesSeeder
             tier: ListingTier.Promoted,
             description: "Spacious two-bedroom with parquet floors, a sun-drenched living room, and a shared rooftop garden. Steps from the subway.",
             units: [ new Unit { Bedrooms = 2, Bathrooms = 1, SqFt = 780, Price = 2800, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(20)) } ],
-            images: [ Photo.ApartmentInterior, Photo.ApartmentExterior, Photo.LoftInterior ]),
+            images: [ Photo.ApartmentInterior2, Photo.ApartmentBuilding2, Photo.Bedroom ]),
             ["Hardwood Floors", "In-Suite Laundry", "Cats Allowed", "Heat Included"]);
 
         yield return (Make(landlordId,
@@ -163,7 +179,7 @@ public static class SamplePropertiesSeeder
             tier: ListingTier.Limited,
             description: "Pet-friendly second-floor flat with a huge backyard deck. Walk to Sorauren Park, the TTC, and coffee shops.",
             units: [ new Unit { Bedrooms = 2, Bathrooms = 1, SqFt = 880, Price = 2600, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(35)) } ],
-            images: [ Photo.House, Photo.ApartmentInterior, Photo.TownhouseExt ]),
+            images: [ Photo.House2, Photo.ApartmentInterior5, Photo.Bedroom ]),
             ["Pet Friendly", "Dogs Allowed", "Cats Allowed", "Hardwood Floors", "Storage Locker"]);
 
         yield return (Make(landlordId,
@@ -180,7 +196,7 @@ public static class SamplePropertiesSeeder
                 new Unit { Bedrooms = 1, Bathrooms = 1, SqFt = 540, Price = 2350, AvailableUnits = 4, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(7)) },
                 new Unit { Bedrooms = 2, Bathrooms = 2, SqFt = 870, Price = 3300, AvailableUnits = 2, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(14)) }
             ],
-            images: [ Photo.CondoInterior, Photo.ApartmentExterior, Photo.ApartmentInterior ]),
+            images: [ Photo.ApartmentBuilding, Photo.ApartmentInterior1, Photo.ApartmentInterior3 ]),
             ["Gym", "Pool", "Concierge", "Elevator", "In-Suite Laundry", "Smart Access", "Underground Parking"]);
 
         // ---- Montreal (3) ----
@@ -194,7 +210,7 @@ public static class SamplePropertiesSeeder
             tier: ListingTier.Promoted,
             description: "Classic Montreal triplex with original mouldings, wide plank floors, and a sun-filled kitchen. Steps from Mont-Royal Avenue.",
             units: [ new Unit { Bedrooms = 3, Bathrooms = 1.5m, SqFt = 1100, Price = 2300, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(45)) } ],
-            images: [ Photo.House, Photo.TownhouseExt, Photo.ApartmentInterior ]),
+            images: [ Photo.House4, Photo.ApartmentInterior5, Photo.Bedroom ]),
             ["Hardwood Floors", "Balcony", "Pet Friendly", "Fireplace"]);
 
         yield return (Make(landlordId,
@@ -207,7 +223,7 @@ public static class SamplePropertiesSeeder
             tier: ListingTier.Featured,
             description: "Restored 19th-century warehouse with cast-iron columns, exposed brick, and a private terrace overlooking the cobblestones.",
             units: [ new Unit { Bedrooms = 1, Bathrooms = 1, SqFt = 950, Price = 2750, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(20)) } ],
-            images: [ Photo.LoftInterior, Photo.CondoInterior, Photo.ApartmentExterior ]),
+            images: [ Photo.LoftInterior, Photo.ApartmentInterior6, Photo.Bedroom ]),
             ["Hardwood Floors", "Elevator", "Balcony", "In-Suite Laundry", "Air Conditioning"]);
 
         yield return (Make(landlordId,
@@ -220,7 +236,7 @@ public static class SamplePropertiesSeeder
             tier: ListingTier.Limited,
             description: "Cozy studio in the heart of Mile End. Bagels, coffee, and the metro all within a 5-minute walk. Utilities included.",
             units: [ new Unit { Bedrooms = 0, Bathrooms = 1, SqFt = 380, Price = 1395, AvailableUnits = 2, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(30)) } ],
-            images: [ Photo.ApartmentInterior, Photo.LoftInterior ]),
+            images: [ Photo.ApartmentInterior4, Photo.Bedroom ]),
             ["Heat Included", "Water Included", "Hardwood Floors", "Cats Allowed"]);
 
         // ---- Vancouver (3) ----
@@ -238,7 +254,7 @@ public static class SamplePropertiesSeeder
                 new Unit { Bedrooms = 1, Bathrooms = 1, SqFt = 580, Price = 2650, AvailableUnits = 3, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(10)) },
                 new Unit { Bedrooms = 2, Bathrooms = 2, SqFt = 880, Price = 3950, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(25)) }
             ],
-            images: [ Photo.CondoInterior, Photo.ApartmentExterior, Photo.ApartmentInterior, Photo.LoftInterior ]),
+            images: [ Photo.ApartmentBuilding, Photo.ApartmentInterior1, Photo.ApartmentInterior3, Photo.Bedroom ]),
             ["Gym", "Pool", "Concierge", "Elevator", "In-Suite Laundry", "Smart Access", "Underground Parking"]);
 
         yield return (Make(landlordId,
@@ -251,7 +267,7 @@ public static class SamplePropertiesSeeder
             tier: ListingTier.Limited,
             description: "Detached 3-bedroom with a sun deck, garden, and a short walk to Kits Beach. Perfect for families.",
             units: [ new Unit { Bedrooms = 3, Bathrooms = 2, SqFt = 1650, Price = 4750, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(60)) } ],
-            images: [ Photo.House, Photo.ModernHome ]),
+            images: [ Photo.House3, Photo.House2, Photo.ApartmentInterior2 ]),
             ["Fireplace", "Dogs Allowed", "Outdoor Parking"]);
 
         yield return (Make(landlordId,
@@ -264,7 +280,7 @@ public static class SamplePropertiesSeeder
             tier: ListingTier.Featured,
             description: "High-floor two-bedroom with wrap-around views, spa-inspired bathroom, and full concierge service.",
             units: [ new Unit { Bedrooms = 2, Bathrooms = 2, SqFt = 1120, Price = 5200, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(30)) } ],
-            images: [ Photo.CondoInterior, Photo.ApartmentExterior, Photo.LoftInterior, Photo.ApartmentInterior ]),
+            images: [ Photo.ApartmentBuilding4, Photo.ApartmentInterior1, Photo.ApartmentInterior6, Photo.Bedroom ]),
             ["Concierge", "Pool", "Sauna", "Gym", "Elevator", "24/7 Security", "Underground Parking", "In-Suite Laundry"]);
 
         // ---- Calgary (2) ----
@@ -278,7 +294,7 @@ public static class SamplePropertiesSeeder
             tier: ListingTier.Limited,
             description: "Cozy studio in the heart of the Beltline. Walking distance to 17th Ave shops and restaurants. Utilities included.",
             units: [ new Unit { Bedrooms = 0, Bathrooms = 1, SqFt = 420, Price = 1395, AvailableUnits = 4, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow) } ],
-            images: [ Photo.ApartmentInterior, Photo.LoftInterior ]),
+            images: [ Photo.ApartmentInterior3, Photo.Bedroom ]),
             ["Heat Included", "Water Included", "Elevator", "Gym"]);
 
         yield return (Make(landlordId,
@@ -291,7 +307,7 @@ public static class SamplePropertiesSeeder
             tier: ListingTier.Promoted,
             description: "Two-storey loft in a converted warehouse. Polished concrete floors, mezzanine bedroom, and a private rooftop deck.",
             units: [ new Unit { Bedrooms = 1, Bathrooms = 1.5m, SqFt = 1050, Price = 2150, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(21)) } ],
-            images: [ Photo.LoftInterior, Photo.CondoInterior, Photo.ApartmentExterior ]),
+            images: [ Photo.LoftInterior, Photo.ApartmentInterior6, Photo.ApartmentBuilding3 ]),
             ["Hardwood Floors", "Balcony", "Underground Parking", "Pet Friendly", "Air Conditioning"]);
 
         // ---- Ottawa (2) ----
@@ -305,7 +321,7 @@ public static class SamplePropertiesSeeder
             tier: ListingTier.Promoted,
             description: "Three-level townhouse with private garage and rooftop patio. Steps from Parliament, restaurants, and the market.",
             units: [ new Unit { Bedrooms = 3, Bathrooms = 2.5m, SqFt = 1480, Price = 3200, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(30)) } ],
-            images: [ Photo.TownhouseExt, Photo.House, Photo.ModernHome ]),
+            images: [ Photo.House2, Photo.House4, Photo.ApartmentInterior5 ]),
             ["Fireplace", "Balcony", "EV Charging", "Air Conditioning", "In-Suite Laundry"]);
 
         yield return (Make(landlordId,
@@ -318,7 +334,7 @@ public static class SamplePropertiesSeeder
             tier: ListingTier.Limited,
             description: "Top-floor unit in a 1920s heritage building. Original tin ceilings, refinished hardwood, and a quiet tree-lined street.",
             units: [ new Unit { Bedrooms = 2, Bathrooms = 1, SqFt = 740, Price = 1950, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(40)) } ],
-            images: [ Photo.ApartmentInterior, Photo.ApartmentExterior, Photo.LoftInterior ]),
+            images: [ Photo.ApartmentInterior3, Photo.ApartmentBuilding2, Photo.Bedroom ]),
             ["Hardwood Floors", "Heat Included", "Cats Allowed"]);
 
         // ---- Edmonton (2) ----
@@ -332,7 +348,7 @@ public static class SamplePropertiesSeeder
             tier: ListingTier.Limited,
             description: "Modern one-bedroom in downtown Edmonton with a balcony, in-suite laundry, and access to a shared fitness room.",
             units: [ new Unit { Bedrooms = 1, Bathrooms = 1, SqFt = 540, Price = 1450, AvailableUnits = 2, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(14)) } ],
-            images: [ Photo.ApartmentInterior, Photo.ApartmentExterior ]),
+            images: [ Photo.ApartmentInterior2, Photo.ApartmentBuilding ]),
             ["Gym", "Elevator", "In-Suite Laundry", "Air Conditioning", "Heat Included"]);
 
         yield return (Make(landlordId,
@@ -345,7 +361,7 @@ public static class SamplePropertiesSeeder
             tier: ListingTier.Promoted,
             description: "Bright studio above a bookstore on Whyte Ave. Steps from cafes, music venues, and the Saturday farmers market.",
             units: [ new Unit { Bedrooms = 0, Bathrooms = 1, SqFt = 360, Price = 1150, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(7)) } ],
-            images: [ Photo.LoftInterior, Photo.ApartmentInterior ]),
+            images: [ Photo.ApartmentInterior6, Photo.Bedroom ]),
             ["Heat Included", "Water Included", "Hardwood Floors"]);
     }
 
