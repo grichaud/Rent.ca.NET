@@ -5,6 +5,7 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Rent.Web.Features.AiChat.Services;
 using Rent.Web.Features.Email;
 using Rent.Web.Infrastructure.Data;
 using Rent.Web.Infrastructure.Data.Seed;
@@ -18,6 +19,7 @@ public class RentAppFactory : WebApplicationFactory<Program>
     private readonly SqliteConnection _connection;
 
     public FakeEmailSender EmailSender { get; } = new();
+    public FakeOpenRouterClient OpenRouter { get; } = new();
 
     static RentAppFactory()
     {
@@ -57,6 +59,9 @@ public class RentAppFactory : WebApplicationFactory<Program>
 
             services.RemoveAll<IEmailSender>();
             services.AddSingleton<IEmailSender>(EmailSender);
+
+            services.RemoveAll<IOpenRouterClient>();
+            services.AddSingleton<IOpenRouterClient>(OpenRouter);
 
             services.RemoveAll<IAntiforgery>();
             services.AddSingleton<IAntiforgery, NoOpAntiforgery>();

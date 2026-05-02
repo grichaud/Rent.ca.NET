@@ -18,6 +18,8 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid
     public DbSet<ContactInquiry> ContactInquiries => Set<ContactInquiry>();
     public DbSet<Favorite> Favorites => Set<Favorite>();
     public DbSet<Alert> Alerts => Set<Alert>();
+    public DbSet<AiConversation> AiConversations => Set<AiConversation>();
+    public DbSet<AiMessage> AiMessages => Set<AiMessage>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -176,6 +178,39 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid
             e.HasOne(x => x.User)
              .WithMany()
              .HasForeignKey(x => x.UserId)
+             .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        builder.Entity<AiConversation>(e =>
+        {
+            e.ToTable("AiConversations");
+            e.HasKey(x => x.Id);
+
+            e.Property(x => x.Title).HasMaxLength(200);
+
+            e.HasIndex(x => new { x.UserId, x.UpdatedAt });
+            e.HasIndex(x => new { x.SessionId, x.UpdatedAt });
+
+            e.HasOne(x => x.User)
+             .WithMany()
+             .HasForeignKey(x => x.UserId)
+             .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        builder.Entity<AiMessage>(e =>
+        {
+            e.ToTable("AiMessages");
+            e.HasKey(x => x.Id);
+
+            e.Property(x => x.Role).HasConversion<string>().HasMaxLength(20);
+            e.Property(x => x.Content).IsRequired();
+            e.Property(x => x.ToolName).HasMaxLength(50);
+
+            e.HasIndex(x => new { x.ConversationId, x.CreatedAt });
+
+            e.HasOne(x => x.Conversation)
+             .WithMany(x => x.Messages)
+             .HasForeignKey(x => x.ConversationId)
              .OnDelete(DeleteBehavior.Cascade);
         });
     }

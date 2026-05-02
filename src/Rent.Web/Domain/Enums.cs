@@ -43,3 +43,11 @@ public enum AlertFrequency
     Daily,
     Weekly
 }
+
+public enum AiMessageRole
+{
+    User,
+    Assistant,
+    System,
+    Tool
+}

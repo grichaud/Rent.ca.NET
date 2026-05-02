@@ -93,6 +93,51 @@ else
     builder.Services.AddSingleton<Rent.Web.Features.Email.IEmailSender, Rent.Web.Features.Email.NoOpEmailSender>();
 }
 
+builder.Services.Configure<Rent.Web.Features.AiChat.AiOptions>(
+    builder.Configuration.GetSection(Rent.Web.Features.AiChat.AiOptions.SectionName));
+
+var aiApiKey = builder.Configuration[$"{Rent.Web.Features.AiChat.AiOptions.SectionName}:OpenRouterApiKey"];
+var aiConfigured = !string.IsNullOrWhiteSpace(aiApiKey);
+
+if (aiConfigured)
+{
+    builder.Services.AddHttpClient<Rent.Web.Features.AiChat.Services.OpenRouterClient>(client =>
+    {
+        var baseUrl = builder.Configuration[$"{Rent.Web.Features.AiChat.AiOptions.SectionName}:BaseUrl"];
+        var timeoutSeconds = builder.Configuration.GetValue<int?>(
+            $"{Rent.Web.Features.AiChat.AiOptions.SectionName}:RequestTimeoutSeconds") ?? 60;
+        client.BaseAddress = new Uri(string.IsNullOrWhiteSpace(baseUrl)
+            ? "https://openrouter.ai/api/v1/"
+            : baseUrl.TrimEnd('/') + "/");
+        client.Timeout = TimeSpan.FromSeconds(timeoutSeconds);
+    });
+    builder.Services.AddScoped<Rent.Web.Features.AiChat.Services.IOpenRouterClient>(sp =>
+        sp.GetRequiredService<Rent.Web.Features.AiChat.Services.OpenRouterClient>());
+}
+else
+{
+    builder.Services.AddSingleton<Rent.Web.Features.AiChat.Services.IOpenRouterClient,
+        Rent.Web.Features.AiChat.Services.NoOpOpenRouterClient>();
+}
+
+builder.Services.AddScoped<Rent.Web.Features.AiChat.Tools.SearchPropertiesTool>();
+builder.Services.AddScoped<Rent.Web.Features.AiChat.Tools.CreateAlertTool>();
+builder.Services.AddScoped<Rent.Web.Features.AiChat.Tools.GetCityInfoTool>();
+builder.Services.AddScoped<Rent.Web.Features.AiChat.Tools.GetPropertyDetailsTool>();
+builder.Services.AddScoped<Rent.Web.Features.AiChat.Tools.IAiTool>(sp =>
+    sp.GetRequiredService<Rent.Web.Features.AiChat.Tools.SearchPropertiesTool>());
+builder.Services.AddScoped<Rent.Web.Features.AiChat.Tools.IAiTool>(sp =>
+    sp.GetRequiredService<Rent.Web.Features.AiChat.Tools.CreateAlertTool>());
+builder.Services.AddScoped<Rent.Web.Features.AiChat.Tools.IAiTool>(sp =>
+    sp.GetRequiredService<Rent.Web.Features.AiChat.Tools.GetCityInfoTool>());
+builder.Services.AddScoped<Rent.Web.Features.AiChat.Tools.IAiTool>(sp =>
+    sp.GetRequiredService<Rent.Web.Features.AiChat.Tools.GetPropertyDetailsTool>());
+builder.Services.AddScoped<Rent.Web.Features.AiChat.Tools.ToolRegistry>();
+builder.Services.AddSingleton<Rent.Web.Features.AiChat.Services.IRateLimiter,
+    Rent.Web.Features.AiChat.Services.InMemoryRateLimiter>();
+builder.Services.AddScoped<Rent.Web.Features.AiChat.Services.IAiChatService,
+    Rent.Web.Features.AiChat.Services.AiChatService>();
+
 builder.Services.Configure<Rent.Web.Infrastructure.Storage.StorageOptions>(
     builder.Configuration.GetSection("ImageStorage"));
 
@@ -151,6 +196,12 @@ if (!emailConfigured)
 {
     app.Logger.LogWarning(
         "Email not configured (missing Email:ApiKey). Falling back to NoOpEmailSender.");
+}
+
+if (!aiConfigured)
+{
+    app.Logger.LogWarning(
+        "AI assistant not configured (missing Ai:OpenRouterApiKey). Falling back to NoOpOpenRouterClient.");
 }
 
 if (!app.Environment.IsEnvironment("Testing"))
