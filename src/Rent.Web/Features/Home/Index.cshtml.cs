@@ -31,7 +31,16 @@ public class IndexModel : PageModel
             .OrderBy(c => c.Name)
             .ToListAsync(ct);
 
-        FeaturedCities = AllCities.Where(c => c.IsFeatured).ToList();
+        var featuredOrder = new[]
+        {
+            "toronto", "vancouver", "montreal", "calgary", "edmonton", "ottawa",
+            "winnipeg", "quebec-city", "hamilton", "saskatoon", "london", "halifax"
+        };
+        var featuredBySlug = AllCities.Where(c => c.IsFeatured).ToDictionary(c => c.Slug);
+        FeaturedCities = featuredOrder
+            .Where(featuredBySlug.ContainsKey)
+            .Select(slug => featuredBySlug[slug])
+            .ToList();
 
         var citySlugByName = AllCities.ToDictionary(c => c.Name, c => c.Slug);
 
