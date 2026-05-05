@@ -84,6 +84,7 @@ public class FavoriteService : IFavoriteService
                 PropertyType = f.Property.PropertyType,
                 IsVerified = f.Property.IsVerified,
                 Tier = f.Property.Tier,
+                TierExpiresAt = f.Property.TierExpiresAt,
                 PetsAllowed = f.Property.PetsAllowed,
                 Furnished = f.Property.Furnished,
                 CitySlug = _db.Cities
@@ -117,6 +118,7 @@ public class FavoriteService : IFavoriteService
                 MinBathrooms = r.Units.Count == 0 ? 0m : r.Units.Min(u => u.Bathrooms),
                 PropertyType = r.PropertyType,
                 Tier = r.Tier,
+                TierExpiresAt = r.TierExpiresAt,
                 IsVerified = r.IsVerified,
                 PetsAllowed = r.PetsAllowed,
                 Furnished = r.Furnished,
@@ -153,6 +155,8 @@ public class FavoriteCard
     public decimal MinBathrooms { get; set; }
     public PropertyType PropertyType { get; set; }
     public ListingTier Tier { get; set; }
+    public DateTimeOffset? TierExpiresAt { get; set; }
+    public ListingTier EffectiveTier => ListingTierExtensions.Resolve(Tier, TierExpiresAt);
     public bool IsVerified { get; set; }
     public bool PetsAllowed { get; set; }
     public bool Furnished { get; set; }

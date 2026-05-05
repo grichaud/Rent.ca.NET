@@ -14,5 +14,7 @@ public class MapMarker
     public int MinBedrooms { get; set; }
     public PropertyType PropertyType { get; set; }
     public ListingTier Tier { get; set; }
+    public DateTimeOffset? TierExpiresAt { get; set; }
+    public ListingTier EffectiveTier => ListingTierExtensions.Resolve(Tier, TierExpiresAt);
     public string? PrimaryImageUrl { get; set; }
 }

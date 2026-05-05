@@ -1,0 +1,98 @@
+@{
+    var pagePath = Context.Request.Path.Value ?? "/admin";
+    var culture = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+    if (culture != "en" && culture != "fr") { culture = "en"; }
+    var aRoot = "/" + culture + "/admin";
+
+    bool IsActive(string href)
+    {
+        if (href == aRoot) return string.Equals(pagePath, aRoot, StringComparison.OrdinalIgnoreCase);
+        return pagePath.StartsWith(href, StringComparison.OrdinalIgnoreCase);
+    }
+
+    string Cls(string href, string active, string inactive) => IsActive(href) ? active : inactive;
+
+    var activeLink = "flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 bg-amber-500/20 text-amber-600 dark:text-amber-300 shadow-sm shadow-amber-500/10";
+    var inactiveLink = "flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 text-gray-600 dark:text-white/60 hover:bg-gray-100 dark:hover:bg-white/10 hover:text-gray-900 dark:hover:text-white/90";
+    var activeIcon = "h-4 w-4 shrink-0 text-amber-500 dark:text-amber-300";
+    var inactiveIcon = "h-4 w-4 shrink-0 text-gray-400 dark:text-white/40";
+
+    var dashHref = aRoot;
+    var propsHref = aRoot + "/properties";
+    var landlordsHref = aRoot + "/landlords";
+    var specialsHref = aRoot + "/specials";
+    var searchesHref = aRoot + "/searches";
+    var aiHref = aRoot + "/ai";
+    var usersHref = aRoot + "/users";
+}
+
+<nav class="flex flex-col h-full" aria-label="Admin navigation">
+    <div class="px-5 py-6 border-b border-gray-200 dark:border-white/10">
+        <a href="/@culture" class="flex items-center gap-2.5 group">
+            <div class="h-8 w-8 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg shadow-amber-500/30">
+                <icon name="sparkles" class="h-4 w-4 text-white" />
+            </div>
+            <span class="text-base font-bold text-gray-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">Rent.ca</span>
+            <span class="text-xs ml-1 mt-0.5 text-slate-500 dark:text-white/50">@L["admin.title"]</span>
+        </a>
+    </div>
+
+    <ul class="flex flex-col gap-1 p-3 flex-1" role="list">
+        <li>
+            <a href="@dashHref" aria-current="@(IsActive(dashHref) ? "page" : null)"
+               class="@Cls(dashHref, activeLink, inactiveLink)">
+                <icon name="layout-dashboard" class="@(IsActive(dashHref) ? activeIcon : inactiveIcon)" />
+                <span>@L["admin.navDashboard"]</span>
+            </a>
+        </li>
+        <li>
+            <a href="@propsHref" aria-current="@(IsActive(propsHref) ? "page" : null)"
+               class="@Cls(propsHref, activeLink, inactiveLink)">
+                <icon name="building" class="@(IsActive(propsHref) ? activeIcon : inactiveIcon)" />
+                <span>@L["admin.navProperties"]</span>
+            </a>
+        </li>
+        <li>
+            <a href="@landlordsHref" aria-current="@(IsActive(landlordsHref) ? "page" : null)"
+               class="@Cls(landlordsHref, activeLink, inactiveLink)">
+                <icon name="user" class="@(IsActive(landlordsHref) ? activeIcon : inactiveIcon)" />
+                <span>@L["admin.navLandlords"]</span>
+            </a>
+        </li>
+        <li>
+            <a href="@specialsHref" aria-current="@(IsActive(specialsHref) ? "page" : null)"
+               class="@Cls(specialsHref, activeLink, inactiveLink)">
+                <icon name="sparkles" class="@(IsActive(specialsHref) ? activeIcon : inactiveIcon)" />
+                <span>@L["admin.navSpecials"]</span>
+            </a>
+        </li>
+        <li>
+            <a href="@searchesHref" aria-current="@(IsActive(searchesHref) ? "page" : null)"
+               class="@Cls(searchesHref, activeLink, inactiveLink)">
+                <icon name="search" class="@(IsActive(searchesHref) ? activeIcon : inactiveIcon)" />
+                <span>@L["admin.navSearches"]</span>
+            </a>
+        </li>
+        <li>
+            <a href="@aiHref" aria-current="@(IsActive(aiHref) ? "page" : null)"
+               class="@Cls(aiHref, activeLink, inactiveLink)">
+                <icon name="message-square" class="@(IsActive(aiHref) ? activeIcon : inactiveIcon)" />
+                <span>@L["admin.navAi"]</span>
+            </a>
+        </li>
+        <li>
+            <a href="@usersHref" aria-current="@(IsActive(usersHref) ? "page" : null)"
+               class="@Cls(usersHref, activeLink, inactiveLink)">
+                <icon name="user-plus" class="@(IsActive(usersHref) ? activeIcon : inactiveIcon)" />
+                <span>@L["admin.navUsers"]</span>
+            </a>
+        </li>
+    </ul>
+
+    <div class="p-3 border-t border-gray-200 dark:border-white/10">
+        <a href="/@culture" class="glass-button w-full inline-flex items-center justify-center gap-2 text-sm">
+            <icon name="external-link" class="h-4 w-4 shrink-0" />
+            <span>@L["admin.backToSite"]</span>
+        </a>
+    </div>
+</nav>

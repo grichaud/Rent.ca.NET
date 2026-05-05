@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Rent.Web.Domain;
+using Rent.Web.Features.Admin.Services;
 using Rent.Web.Features.Favorites;
 using Rent.Web.Infrastructure.Data;
 
@@ -9,11 +10,13 @@ public class SearchHandler
 {
     private readonly AppDbContext _db;
     private readonly IFavoriteService _favorites;
+    private readonly IPopularSearchTracker _searchTracker;
 
-    public SearchHandler(AppDbContext db, IFavoriteService favorites)
+    public SearchHandler(AppDbContext db, IFavoriteService favorites, IPopularSearchTracker searchTracker)
     {
         _db = db;
         _favorites = favorites;
+        _searchTracker = searchTracker;
     }
 
     public async Task<SearchResult> ExecuteAsync(SearchQuery query, CancellationToken ct = default)
@@ -68,6 +71,7 @@ public class SearchHandler
                 p.Neighbourhood,
                 p.PropertyType,
                 p.Tier,
+                p.TierExpiresAt,
                 p.IsVerified,
                 p.PetsAllowed,
                 p.Furnished,
@@ -77,10 +81,15 @@ public class SearchHandler
                     .ThenBy(i => i.DisplayOrder)
                     .Select(i => i.Url)
                     .FirstOrDefault(),
-                Units = p.Units.Select(u => new { u.Price, u.Bedrooms, u.Bathrooms }).ToList()
+                Units = p.Units.Select(u => new { u.Price, u.Bedrooms, u.Bathrooms }).ToList(),
+                ActiveSpecials = p.RentSpecials
+                    .Where(s => s.IsActive)
+                    .Select(s => new { s.Title, s.StartDate, s.EndDate })
+                    .ToList()
             })
             .ToListAsync(ct);
 
+        var now = DateTimeOffset.UtcNow;
         var projected = raw.Select(p => new PropertyCard
         {
             Id = p.Id,
@@ -98,10 +107,17 @@ public class SearchHandler
             MinBathrooms = p.Units.Count == 0 ? 0m : p.Units.Min(u => u.Bathrooms),
             PropertyType = p.PropertyType,
             Tier = p.Tier,
+            TierExpiresAt = p.TierExpiresAt,
             IsVerified = p.IsVerified,
             PetsAllowed = p.PetsAllowed,
             Furnished = p.Furnished,
-            CreatedAt = p.CreatedAt
+            CreatedAt = p.CreatedAt,
+            SpecialTitle = p.ActiveSpecials
+                .Where(s =>
+                    (!s.StartDate.HasValue || s.StartDate.Value <= now) &&
+                    (!s.EndDate.HasValue || s.EndDate.Value >= now))
+                .Select(s => s.Title)
+                .FirstOrDefault()
         }).ToList();
 
         IEnumerable<PropertyCard> ordered = query.Sort switch
@@ -109,11 +125,11 @@ public class SearchHandler
             SearchSort.PriceAsc  => projected.OrderBy(p => p.FromPrice ?? decimal.MaxValue),
             SearchSort.PriceDesc => projected.OrderByDescending(p => p.FromPrice ?? decimal.MinValue),
             SearchSort.Popular   => projected
-                                    .OrderByDescending(p => p.Tier)
+                                    .OrderByDescending(p => p.EffectiveTier)
                                     .ThenByDescending(p => p.IsVerified)
                                     .ThenBy(p => p.Title),
             _ /* Newest */       => projected
-                                    .OrderByDescending(p => p.Tier)
+                                    .OrderByDescending(p => p.EffectiveTier)
                                     .ThenByDescending(p => p.CreatedAt)
                                     .ThenBy(p => p.Title)
         };
@@ -130,6 +146,10 @@ public class SearchHandler
                 card.IsFavorited = favIds.Contains(card.Id);
         }
 
+        // Fire-and-forget: increment popular searches counter so the admin dashboard
+        // can rank the most-used filter combinations. Never blocks the user response.
+        await _searchTracker.TrackAsync(BuildNormalizedQuery(query), city.Slug, ct);
+
         return new SearchResult
         {
             City = city,
@@ -138,5 +158,25 @@ public class SearchHandler
             Page = query.Page,
             PageSize = query.PageSize
         };
+    }
+
+    private static string BuildNormalizedQuery(SearchQuery q)
+    {
+        var parts = new List<string>();
+        if (q.MinPrice.HasValue) parts.Add($"minprice={q.MinPrice.Value:0}");
+        if (q.MaxPrice.HasValue) parts.Add($"maxprice={q.MaxPrice.Value:0}");
+        if (q.Bedrooms.HasValue) parts.Add($"bedrooms={q.Bedrooms.Value}");
+        if (q.Bathrooms.HasValue) parts.Add($"bathrooms={q.Bathrooms.Value:0.#}");
+        var types = q.EffectiveTypes();
+        if (types.Length > 0)
+        {
+            var typeList = string.Join(",", types.Select(t => t.ToString().ToLowerInvariant()).OrderBy(s => s));
+            parts.Add($"types={typeList}");
+        }
+        if (q.PetsAllowed) parts.Add("pets=true");
+        if (q.Furnished) parts.Add("furnished=true");
+        if (q.HasParking) parts.Add("parking=true");
+        if (q.Sort != SearchSort.Newest) parts.Add($"sort={q.Sort.ToString().ToLowerInvariant()}");
+        return parts.Count == 0 ? string.Empty : string.Join("&", parts);
     }
 }

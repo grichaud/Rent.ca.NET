@@ -11,6 +11,7 @@
     var htmlClass = themeCookie == "dark" ? "h-full dark" : "h-full";
     var isLandlord = SignInManager.IsSignedIn(User) && User.IsInRole(Roles.Landlord);
     var isRenter = SignInManager.IsSignedIn(User) && User.IsInRole(Roles.Renter);
+    var isAdmin = SignInManager.IsSignedIn(User) && User.IsInRole(Roles.Admin);
     var mapsKey = MapsOpts.Value.GoogleApiKey;
     var culture = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
     if (culture != "en" && culture != "fr") { culture = "en"; }
@@ -55,7 +56,11 @@
                 <a href="/@culture" class="px-3 py-2 rounded-lg text-slate-700 dark:text-white/80 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">@L["common.rent"]</a>
                 <a href="/@culture/landlords" class="px-3 py-2 rounded-lg text-slate-700 dark:text-white/80 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">@L["common.landlords"]</a>
                 <a href="/@culture/privacy" class="px-3 py-2 rounded-lg text-slate-700 dark:text-white/80 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">@L["common.about"]</a>
-                @if (isLandlord)
+                @if (isAdmin)
+                {
+                    <a href="/@culture/admin" class="px-3 py-2 rounded-lg text-amber-600 dark:text-amber-300 font-medium hover:bg-amber-500/10 transition-colors">@L["admin.linkAdmin"]</a>
+                }
+                else if (isLandlord)
                 {
                     <a href="/@culture/landlord" class="px-3 py-2 rounded-lg text-slate-700 dark:text-white/80 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">@L["common.dashboard"]</a>
                 }
@@ -138,6 +143,13 @@
                     <icon name="info" class="h-4 w-4 shrink-0" />
                     <span class="font-medium">@L["common.about"]</span>
                 </a>
+                @if (isAdmin)
+                {
+                    <a href="/@culture/admin" class="flex items-center gap-3 rounded-xl px-4 py-3 text-amber-600 dark:text-amber-300 font-medium hover:bg-amber-500/10 transition-colors">
+                        <icon name="sparkles" class="h-4 w-4 shrink-0" />
+                        <span>@L["admin.linkAdmin"]</span>
+                    </a>
+                }
                 @if (isLandlord)
                 {
                     <a href="/@culture/landlord" class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-700 dark:text-white/80 hover:text-slate-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">

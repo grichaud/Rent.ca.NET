@@ -559,6 +559,9 @@ namespace Rent.Web.Infrastructure.Data.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
+                    b.Property<DateTimeOffset?>("TierExpiresAt")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<int>("TotalListings")
                         .HasColumnType("int");
 
@@ -572,6 +575,40 @@ namespace Rent.Web.Infrastructure.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("LandlordProfiles", (string)null);
+                });
+
+            modelBuilder.Entity("Rent.Web.Domain.PopularSearch", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CitySlug")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasDefaultValue("");
+
+                    b.Property<DateTimeOffset>("LastSearchedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedQuery")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("SearchCount")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedQuery", "CitySlug")
+                        .IsUnique();
+
+                    b.HasIndex("SearchCount", "LastSearchedAt");
+
+                    b.ToTable("PopularSearches", (string)null);
                 });
 
             modelBuilder.Entity("Rent.Web.Domain.Property", b =>
@@ -660,6 +697,9 @@ namespace Rent.Web.Infrastructure.Data.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
+                    b.Property<DateTimeOffset?>("TierExpiresAt")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -686,6 +726,8 @@ namespace Rent.Web.Infrastructure.Data.Migrations
 
                     b.HasIndex("Slug")
                         .IsUnique();
+
+                    b.HasIndex("TierExpiresAt");
 
                     b.HasIndex("City", "Status");
 
@@ -730,6 +772,43 @@ namespace Rent.Web.Infrastructure.Data.Migrations
                     b.HasIndex("PropertyId");
 
                     b.ToTable("PropertyImages");
+                });
+
+            modelBuilder.Entity("Rent.Web.Domain.RentSpecial", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<DateTimeOffset?>("EndDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("PropertyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("StartDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PropertyId", "IsActive", "EndDate");
+
+                    b.ToTable("RentSpecials", (string)null);
                 });
 
             modelBuilder.Entity("Rent.Web.Domain.Unit", b =>
@@ -950,6 +1029,17 @@ namespace Rent.Web.Infrastructure.Data.Migrations
                     b.Navigation("Property");
                 });
 
+            modelBuilder.Entity("Rent.Web.Domain.RentSpecial", b =>
+                {
+                    b.HasOne("Rent.Web.Domain.Property", "Property")
+                        .WithMany("RentSpecials")
+                        .HasForeignKey("PropertyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Property");
+                });
+
             modelBuilder.Entity("Rent.Web.Domain.Unit", b =>
                 {
                     b.HasOne("Rent.Web.Domain.Property", "Property")
@@ -981,6 +1071,8 @@ namespace Rent.Web.Infrastructure.Data.Migrations
                     b.Navigation("Images");
 
                     b.Navigation("Inquiries");
+
+                    b.Navigation("RentSpecials");
 
                     b.Navigation("Units");
                 });

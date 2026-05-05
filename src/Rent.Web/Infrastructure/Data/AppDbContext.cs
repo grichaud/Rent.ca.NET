@@ -20,6 +20,8 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid
     public DbSet<Alert> Alerts => Set<Alert>();
     public DbSet<AiConversation> AiConversations => Set<AiConversation>();
     public DbSet<AiMessage> AiMessages => Set<AiMessage>();
+    public DbSet<RentSpecial> RentSpecials => Set<RentSpecial>();
+    public DbSet<PopularSearch> PopularSearches => Set<PopularSearch>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -77,6 +79,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid
             e.HasIndex(x => new { x.City, x.Status });
             e.HasIndex(x => x.Slug).IsUnique();
             e.HasIndex(x => new { x.Status, x.Tier });
+            e.HasIndex(x => x.TierExpiresAt);
 
             e.HasOne(x => x.LandlordProfile)
              .WithMany(x => x.Properties)
@@ -212,6 +215,34 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid
              .WithMany(x => x.Messages)
              .HasForeignKey(x => x.ConversationId)
              .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        builder.Entity<RentSpecial>(e =>
+        {
+            e.ToTable("RentSpecials");
+            e.HasKey(x => x.Id);
+
+            e.Property(x => x.Title).IsRequired().HasMaxLength(200);
+            e.Property(x => x.Description).HasMaxLength(2000);
+
+            e.HasIndex(x => new { x.PropertyId, x.IsActive, x.EndDate });
+
+            e.HasOne(x => x.Property)
+             .WithMany(x => x.RentSpecials)
+             .HasForeignKey(x => x.PropertyId)
+             .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        builder.Entity<PopularSearch>(e =>
+        {
+            e.ToTable("PopularSearches");
+            e.HasKey(x => x.Id);
+
+            e.Property(x => x.NormalizedQuery).IsRequired().HasMaxLength(200);
+            e.Property(x => x.CitySlug).IsRequired().HasMaxLength(100).HasDefaultValue(string.Empty);
+
+            e.HasIndex(x => new { x.NormalizedQuery, x.CitySlug }).IsUnique();
+            e.HasIndex(x => new { x.SearchCount, x.LastSearchedAt });
         });
     }
 }

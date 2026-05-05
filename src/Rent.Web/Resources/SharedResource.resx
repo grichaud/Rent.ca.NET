@@ -406,4 +406,106 @@
   <data name="results.empty" xml:space="preserve"><value>No rentals match your filters yet.</value></data>
   <data name="results.emptyDesc" xml:space="preserve"><value>Try widening your search or removing a filter.</value></data>
   <data name="map.couldNotLoad" xml:space="preserve"><value>Map could not be loaded.</value></data>
+  <data name="admin.title" xml:space="preserve"><value>Admin</value></data>
+  <data name="admin.role" xml:space="preserve"><value>Admin role</value></data>
+  <data name="admin.linkAdmin" xml:space="preserve"><value>Admin</value></data>
+  <data name="admin.backToSite" xml:space="preserve"><value>Back to site</value></data>
+  <data name="admin.dashboardTitle" xml:space="preserve"><value>Admin Dashboard</value></data>
+  <data name="admin.dashboardSubtitle" xml:space="preserve"><value>Manage tiers, specials, popular searches, AI usage, and users.</value></data>
+  <data name="admin.navDashboard" xml:space="preserve"><value>Dashboard</value></data>
+  <data name="admin.navProperties" xml:space="preserve"><value>Properties</value></data>
+  <data name="admin.navLandlords" xml:space="preserve"><value>Landlords</value></data>
+  <data name="admin.navSpecials" xml:space="preserve"><value>Rent Specials</value></data>
+  <data name="admin.navSearches" xml:space="preserve"><value>Popular Searches</value></data>
+  <data name="admin.navAi" xml:space="preserve"><value>AI Usage</value></data>
+  <data name="admin.navUsers" xml:space="preserve"><value>Users</value></data>
+  <data name="admin.cardProperties" xml:space="preserve"><value>Properties</value></data>
+  <data name="admin.cardPropertiesBreakdown" xml:space="preserve"><value>{0} Featured &#183; {1} Promoted</value></data>
+  <data name="admin.cardLandlords" xml:space="preserve"><value>Landlords</value></data>
+  <data name="admin.cardActiveSpecials" xml:space="preserve"><value>Active Specials</value></data>
+  <data name="admin.cardConversations" xml:space="preserve"><value>AI Conversations</value></data>
+  <data name="admin.propertiesTitle" xml:space="preserve"><value>Properties</value></data>
+  <data name="admin.propertiesSubtitle" xml:space="preserve"><value>Promote or demote any listing. Set an optional expiration to auto-revert to Limited.</value></data>
+  <data name="admin.landlordsTitle" xml:space="preserve"><value>Landlords</value></data>
+  <data name="admin.landlordsSubtitle" xml:space="preserve"><value>Manage landlord-level tier (applies a halo to every listing they own).</value></data>
+  <data name="admin.filterCity" xml:space="preserve"><value>City contains&#8230;</value></data>
+  <data name="admin.filterAnyTier" xml:space="preserve"><value>Any tier</value></data>
+  <data name="admin.filterAnyStatus" xml:space="preserve"><value>Any status</value></data>
+  <data name="admin.filterLandlordEmail" xml:space="preserve"><value>Landlord email contains&#8230;</value></data>
+  <data name="admin.applyFilters" xml:space="preserve"><value>Apply</value></data>
+  <data name="admin.resultsCount" xml:space="preserve"><value>{0} result(s)</value></data>
+  <data name="admin.colTitle" xml:space="preserve"><value>Title</value></data>
+  <data name="admin.colCity" xml:space="preserve"><value>City</value></data>
+  <data name="admin.colLandlord" xml:space="preserve"><value>Landlord</value></data>
+  <data name="admin.colStatus" xml:space="preserve"><value>Status</value></data>
+  <data name="admin.colTier" xml:space="preserve"><value>Tier</value></data>
+  <data name="admin.colExpires" xml:space="preserve"><value>Expires</value></data>
+  <data name="admin.colActions" xml:space="preserve"><value>Actions</value></data>
+  <data name="admin.colEmail" xml:space="preserve"><value>Email</value></data>
+  <data name="admin.colCompany" xml:space="preserve"><value>Company</value></data>
+  <data name="admin.colListings" xml:space="preserve"><value>Listings</value></data>
+  <data name="admin.applyAction" xml:space="preserve"><value>Apply</value></data>
+  <data name="admin.expiredTooltip" xml:space="preserve"><value>Stored tier has expired and is treated as Limited until updated.</value></data>
+  <data name="admin.noResults" xml:space="preserve"><value>No matches.</value></data>
+  <data name="admin.specialsTitle" xml:space="preserve"><value>Rent Specials</value></data>
+  <data name="admin.specialsSubtitle" xml:space="preserve"><value>Add or edit move-in incentives shown as a banner on the listing detail and a chip on search cards.</value></data>
+  <data name="admin.specialsNew" xml:space="preserve"><value>New Special</value></data>
+  <data name="admin.specialsCreateTitle" xml:space="preserve"><value>Create a new special</value></data>
+  <data name="admin.specialsEditTitle" xml:space="preserve"><value>Edit special</value></data>
+  <data name="admin.specialsProperty" xml:space="preserve"><value>Property</value></data>
+  <data name="admin.specialsSelectProperty" xml:space="preserve"><value>Pick a property&#8230;</value></data>
+  <data name="admin.specialsTitleLabel" xml:space="preserve"><value>Title</value></data>
+  <data name="admin.specialsDescriptionLabel" xml:space="preserve"><value>Description</value></data>
+  <data name="admin.specialsStart" xml:space="preserve"><value>Start date (optional)</value></data>
+  <data name="admin.specialsEnd" xml:space="preserve"><value>End date (optional)</value></data>
+  <data name="admin.specialsActive" xml:space="preserve"><value>Active</value></data>
+  <data name="admin.specialsInactive" xml:space="preserve"><value>Inactive</value></data>
+  <data name="admin.specialsCreate" xml:space="preserve"><value>Create</value></data>
+  <data name="admin.specialsSave" xml:space="preserve"><value>Save changes</value></data>
+  <data name="admin.specialsEdit" xml:space="preserve"><value>Edit</value></data>
+  <data name="admin.specialsDelete" xml:space="preserve"><value>Deactivate</value></data>
+  <data name="admin.specialsColProperty" xml:space="preserve"><value>Property</value></data>
+  <data name="admin.specialsColTitle" xml:space="preserve"><value>Title</value></data>
+  <data name="admin.specialsColWindow" xml:space="preserve"><value>Window</value></data>
+  <data name="admin.specialsColActive" xml:space="preserve"><value>Active</value></data>
+  <data name="detail.specialOffer" xml:space="preserve"><value>Special offer</value></data>
+  <data name="admin.searchesTitle" xml:space="preserve"><value>Popular Searches</value></data>
+  <data name="admin.searchesSubtitle" xml:space="preserve"><value>Top 20 query/city combinations sorted by usage. Edit to clean up typos or delete bogus entries.</value></data>
+  <data name="admin.searchesFilterPlaceholder" xml:space="preserve"><value>Filter query or city&#8230;</value></data>
+  <data name="admin.searchesEditTitle" xml:space="preserve"><value>Edit search entry</value></data>
+  <data name="admin.searchesColQuery" xml:space="preserve"><value>Query</value></data>
+  <data name="admin.searchesColCity" xml:space="preserve"><value>City</value></data>
+  <data name="admin.searchesColCount" xml:space="preserve"><value>Count</value></data>
+  <data name="admin.searchesColLastSeen" xml:space="preserve"><value>Last seen</value></data>
+  <data name="admin.searchesDelete" xml:space="preserve"><value>Delete</value></data>
+  <data name="admin.searchesTopHint" xml:space="preserve"><value>Showing the top 20 entries by SearchCount. Use the filter above to find others.</value></data>
+  <data name="admin.aiTitle" xml:space="preserve"><value>AI Usage</value></data>
+  <data name="admin.aiSubtitle" xml:space="preserve"><value>Read-only metrics for the assistant powered by Claude Haiku via OpenRouter. Token estimates use a chars/4 heuristic.</value></data>
+  <data name="admin.aiCardConversations" xml:space="preserve"><value>Conversations</value></data>
+  <data name="admin.aiCardMessages" xml:space="preserve"><value>Messages</value></data>
+  <data name="admin.aiCardTokens" xml:space="preserve"><value>Estimated tokens</value></data>
+  <data name="admin.aiCardTokensHint" xml:space="preserve"><value>USD (estimate)</value></data>
+  <data name="admin.aiToolBreakdown" xml:space="preserve"><value>Tool calls breakdown</value></data>
+  <data name="admin.aiNoToolCalls" xml:space="preserve"><value>No tool calls recorded yet.</value></data>
+  <data name="admin.aiChartTitle" xml:space="preserve"><value>Messages per day (last 7 days)</value></data>
+  <data name="admin.aiNoActivity" xml:space="preserve"><value>No activity yet.</value></data>
+  <data name="admin.aiRecentTitle" xml:space="preserve"><value>Recent conversations</value></data>
+  <data name="admin.aiColUser" xml:space="preserve"><value>User</value></data>
+  <data name="admin.aiColTitle" xml:space="preserve"><value>Title</value></data>
+  <data name="admin.aiColCount" xml:space="preserve"><value>Messages</value></data>
+  <data name="admin.aiColLastMessage" xml:space="preserve"><value>Last message</value></data>
+  <data name="admin.aiColUpdated" xml:space="preserve"><value>Updated</value></data>
+  <data name="admin.aiConversationTitle" xml:space="preserve"><value>Conversation detail</value></data>
+  <data name="admin.aiBackToList" xml:space="preserve"><value>Back to AI usage</value></data>
+  <data name="admin.aiSession" xml:space="preserve"><value>Session</value></data>
+  <data name="admin.aiCreated" xml:space="preserve"><value>Created</value></data>
+  <data name="admin.aiToolArgs" xml:space="preserve"><value>Tool arguments</value></data>
+  <data name="admin.aiToolResult" xml:space="preserve"><value>Tool result</value></data>
+  <data name="admin.usersTitle" xml:space="preserve"><value>Users</value></data>
+  <data name="admin.usersSubtitle" xml:space="preserve"><value>50 most recently created accounts. Toggle the Admin role with the action button. The system always keeps at least one admin.</value></data>
+  <data name="admin.usersColName" xml:space="preserve"><value>Name</value></data>
+  <data name="admin.usersColRoles" xml:space="preserve"><value>Roles</value></data>
+  <data name="admin.usersColCreated" xml:space="preserve"><value>Created</value></data>
+  <data name="admin.usersGrantAdmin" xml:space="preserve"><value>Grant Admin</value></data>
+  <data name="admin.usersRevokeAdmin" xml:space="preserve"><value>Revoke Admin</value></data>
 </root>

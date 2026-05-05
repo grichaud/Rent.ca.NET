@@ -41,37 +41,43 @@ public class IndexModel : PageModel
             .AsNoTracking()
             .Include(p => p.Units)
             .Include(p => p.Images)
+            .Include(p => p.RentSpecials)
             .Where(p => p.Status == ListingStatus.Active)
             .OrderByDescending(p => p.Tier)
             .Take(20)
             .ToListAsync(ct);
 
+        var now = DateTimeOffset.UtcNow;
+
         LatestListings = raw
-            .OrderByDescending(p => p.Tier)
-            .ThenByDescending(p => p.CreatedAt)
-            .Take(6)
             .Select(p => new PropertyCard
-        {
-            Id = p.Id,
-            Title = p.Title,
-            Slug = p.Slug,
-            City = p.City,
-            CitySlug = citySlugByName.TryGetValue(p.City, out var slug) ? slug : p.City.ToLowerInvariant(),
-            Neighbourhood = p.Neighbourhood,
-            PrimaryImageUrl = p.Images
-                .OrderByDescending(i => i.IsPrimary)
-                .ThenBy(i => i.DisplayOrder)
-                .Select(i => i.Url)
-                .FirstOrDefault(),
-            FromPrice = p.Units.Count == 0 ? null : p.Units.Min(u => (decimal?)u.Price),
-            MinBedrooms = p.Units.Count == 0 ? 0 : p.Units.Min(u => u.Bedrooms),
-            MinBathrooms = p.Units.Count == 0 ? 0m : p.Units.Min(u => u.Bathrooms),
-            PropertyType = p.PropertyType,
-            Tier = p.Tier,
-            IsVerified = p.IsVerified,
-            PetsAllowed = p.PetsAllowed,
-            Furnished = p.Furnished
-        })
+            {
+                Id = p.Id,
+                Title = p.Title,
+                Slug = p.Slug,
+                City = p.City,
+                CitySlug = citySlugByName.TryGetValue(p.City, out var slug) ? slug : p.City.ToLowerInvariant(),
+                Neighbourhood = p.Neighbourhood,
+                PrimaryImageUrl = p.Images
+                    .OrderByDescending(i => i.IsPrimary)
+                    .ThenBy(i => i.DisplayOrder)
+                    .Select(i => i.Url)
+                    .FirstOrDefault(),
+                FromPrice = p.Units.Count == 0 ? null : p.Units.Min(u => (decimal?)u.Price),
+                MinBedrooms = p.Units.Count == 0 ? 0 : p.Units.Min(u => u.Bedrooms),
+                MinBathrooms = p.Units.Count == 0 ? 0m : p.Units.Min(u => u.Bathrooms),
+                PropertyType = p.PropertyType,
+                Tier = p.Tier,
+                TierExpiresAt = p.TierExpiresAt,
+                IsVerified = p.IsVerified,
+                PetsAllowed = p.PetsAllowed,
+                Furnished = p.Furnished,
+                CreatedAt = p.CreatedAt,
+                SpecialTitle = p.ActiveSpecial(now)?.Title
+            })
+            .OrderByDescending(c => c.EffectiveTier)
+            .ThenByDescending(c => c.CreatedAt)
+            .Take(6)
             .ToList();
 
         if (User.Identity?.IsAuthenticated == true

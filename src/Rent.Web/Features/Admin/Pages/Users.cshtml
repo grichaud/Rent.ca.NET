@@ -1,0 +1,76 @@
+@page "/{culture:locale}/admin/users"
+@model Rent.Web.Features.Admin.Pages.UsersModel
+@{
+    ViewData["Title"] = L["admin.usersTitle"].Value;
+}
+
+<div class="space-y-6">
+    <div>
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">@L["admin.usersTitle"]</h1>
+        <p class="mt-1 text-sm text-slate-600 dark:text-white/70">@L["admin.usersSubtitle"]</p>
+    </div>
+
+    @if (!string.IsNullOrEmpty(Model.FlashSuccess))
+    {
+        <div class="glass-card p-3 text-sm text-emerald-700 dark:text-emerald-300 border border-emerald-500/30">@Model.FlashSuccess</div>
+    }
+    @if (!string.IsNullOrEmpty(Model.FlashError))
+    {
+        <div class="glass-card p-3 text-sm text-rose-700 dark:text-rose-300 border border-rose-500/30">@Model.FlashError</div>
+    }
+
+    <form method="get" class="glass-card p-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <input type="text" name="Email" value="@Model.Email" placeholder="@L["admin.filterLandlordEmail"]" class="glass-input text-sm" />
+        <button type="submit" class="glass-button-primary text-sm">@L["admin.applyFilters"]</button>
+    </form>
+
+    <div class="overflow-x-auto glass-card">
+        <table class="min-w-full text-sm">
+            <thead class="text-left text-xs uppercase tracking-wider text-slate-500 dark:text-white/50">
+                <tr>
+                    <th class="px-4 py-3">@L["admin.colEmail"]</th>
+                    <th class="px-4 py-3">@L["admin.usersColName"]</th>
+                    <th class="px-4 py-3">@L["admin.usersColRoles"]</th>
+                    <th class="px-4 py-3">@L["admin.usersColCreated"]</th>
+                    <th class="px-4 py-3">@L["admin.colActions"]</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100 dark:divide-white/5">
+                @foreach (var r in Model.Rows)
+                {
+                    <tr>
+                        <td class="px-4 py-3 font-medium text-gray-900 dark:text-white truncate max-w-[260px]" title="@r.Email">@r.Email</td>
+                        <td class="px-4 py-3 text-slate-600 dark:text-white/70">@(r.FullName ?? "—")</td>
+                        <td class="px-4 py-3">
+                            <div class="flex flex-wrap gap-1">
+                                @foreach (var roleName in r.Roles)
+                                {
+                                    var classes = roleName == "Admin"
+                                        ? "bg-amber-500/20 text-amber-700 dark:text-amber-300"
+                                        : roleName == "Landlord"
+                                            ? "bg-brand-500/20 text-brand-700 dark:text-brand-300"
+                                            : "bg-pink-500/20 text-pink-700 dark:text-pink-300";
+                                    <span class="inline-flex rounded-md px-2 py-0.5 text-xs font-medium @classes">@roleName</span>
+                                }
+                            </div>
+                        </td>
+                        <td class="px-4 py-3 text-xs text-slate-500 dark:text-white/60">@r.CreatedAt.ToString("yyyy-MM-dd")</td>
+                        <td class="px-4 py-3">
+                            <form method="post" asp-page-handler="ToggleAdmin" class="inline">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="UserId" value="@r.Id" />
+                                <button type="submit" class="glass-button text-xs py-1 px-2 @(r.IsAdmin ? "text-rose-600 dark:text-rose-300" : "text-emerald-600 dark:text-emerald-300")">
+                                    @(r.IsAdmin ? L["admin.usersRevokeAdmin"] : L["admin.usersGrantAdmin"])
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+                @if (Model.Rows.Count == 0)
+                {
+                    <tr><td colspan="5" class="px-4 py-8 text-center text-sm text-slate-500 dark:text-white/50">@L["admin.noResults"]</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -88,6 +88,7 @@ builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddScoped<Rent.Web.Features.Search.SearchHandler>();
 builder.Services.AddScoped<Rent.Web.Features.Maps.MapMarkersHandler>();
 builder.Services.AddScoped<Rent.Web.Features.Favorites.IFavoriteService, Rent.Web.Features.Favorites.FavoriteService>();
+builder.Services.AddScoped<Rent.Web.Features.Admin.Services.IPopularSearchTracker, Rent.Web.Features.Admin.Services.PopularSearchTracker>();
 
 builder.Services.Configure<Rent.Web.Features.Maps.MapsOptions>(
     builder.Configuration.GetSection(Rent.Web.Features.Maps.MapsOptions.SectionName));

@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using Rent.Web.Infrastructure.Identity;
 
 namespace Rent.Web.Infrastructure.Data.Seed;
@@ -27,5 +29,10 @@ public static class DatabaseSeeder
 
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<Domain.ApplicationUser>>();
         await SamplePropertiesSeeder.SeedAsync(db, userManager, ct);
+        await RentSpecialsSeeder.SeedAsync(db, ct);
+
+        var environment = scope.ServiceProvider.GetRequiredService<IHostEnvironment>();
+        var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
+        await AdminUserSeeder.SeedAsync(userManager, environment, configuration, ct);
     }
 }

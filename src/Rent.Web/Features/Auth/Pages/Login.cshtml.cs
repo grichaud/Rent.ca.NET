@@ -58,6 +58,9 @@ public class LoginModel : PageModel
         var user = await _userManager.FindByEmailAsync(Input.Email);
         if (user is not null)
         {
+            // Admin takes priority over Landlord/Renter — most privileged role wins.
+            if (await _userManager.IsInRoleAsync(user, Roles.Admin))
+                return Redirect(this.Localized("/admin"));
             if (await _userManager.IsInRoleAsync(user, Roles.Landlord))
                 return Redirect(this.Localized("/landlord"));
             if (await _userManager.IsInRoleAsync(user, Roles.Renter))

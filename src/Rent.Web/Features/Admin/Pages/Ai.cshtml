@@ -1,0 +1,115 @@
+@page "/{culture:locale}/admin/ai"
+@model Rent.Web.Features.Admin.Pages.AiModel
+@{
+    ViewData["Title"] = L["admin.aiTitle"].Value;
+    var maxBucket = Model.Last7Days.Count == 0 ? 0 : Model.Last7Days.Max(b => b.Count);
+    var culture = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+    if (culture != "en" && culture != "fr") { culture = "en"; }
+}
+
+<div class="space-y-8">
+    <div>
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">@L["admin.aiTitle"]</h1>
+        <p class="mt-1 text-sm text-slate-600 dark:text-white/70">@L["admin.aiSubtitle"]</p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="glass-card p-5">
+            <p class="text-xs uppercase tracking-wider text-slate-500 dark:text-white/50">@L["admin.aiCardConversations"]</p>
+            <p class="mt-2 text-3xl font-bold text-gray-900 dark:text-white">@Model.TotalConversations</p>
+        </div>
+        <div class="glass-card p-5">
+            <p class="text-xs uppercase tracking-wider text-slate-500 dark:text-white/50">@L["admin.aiCardMessages"]</p>
+            <p class="mt-2 text-3xl font-bold text-gray-900 dark:text-white">@Model.TotalMessages</p>
+        </div>
+        <div class="glass-card p-5">
+            <p class="text-xs uppercase tracking-wider text-slate-500 dark:text-white/50">@L["admin.aiCardTokens"]</p>
+            <p class="mt-2 text-3xl font-bold text-gray-900 dark:text-white">@Model.EstimatedTokens.ToString("N0")</p>
+            <p class="mt-1 text-xs text-slate-500 dark:text-white/50">~ $@Model.EstimatedCostUsd.ToString("0.0000") @L["admin.aiCardTokensHint"]</p>
+        </div>
+    </div>
+
+    <section class="glass-card p-5">
+        <h2 class="text-base font-semibold text-gray-900 dark:text-white mb-3">@L["admin.aiToolBreakdown"]</h2>
+        @if (Model.ToolBreakdown.Count == 0)
+        {
+            <p class="text-sm text-slate-500 dark:text-white/50">@L["admin.aiNoToolCalls"]</p>
+        }
+        else
+        {
+            <ul class="space-y-2 text-sm">
+                @foreach (var t in Model.ToolBreakdown)
+                {
+                    <li class="flex items-center justify-between gap-2">
+                        <span class="font-mono text-xs text-gray-700 dark:text-white/80">@t.Name</span>
+                        <span class="font-bold text-gray-900 dark:text-white">@t.Count</span>
+                    </li>
+                }
+            </ul>
+        }
+    </section>
+
+    <section class="glass-card p-5">
+        <h2 class="text-base font-semibold text-gray-900 dark:text-white mb-3">@L["admin.aiChartTitle"]</h2>
+        @if (maxBucket == 0)
+        {
+            <p class="text-sm text-slate-500 dark:text-white/50">@L["admin.aiNoActivity"]</p>
+        }
+        else
+        {
+            <div class="flex items-end gap-2 h-40">
+                @foreach (var b in Model.Last7Days)
+                {
+                    var pct = maxBucket == 0 ? 0 : (int)Math.Round((double)b.Count / maxBucket * 100);
+                    <div class="flex-1 flex flex-col items-center justify-end gap-1">
+                        <div class="text-[10px] text-slate-500 dark:text-white/50">@b.Count</div>
+                        <div class="w-full bg-gradient-to-t from-amber-500/80 to-orange-500/80 rounded-t-md transition-all"
+                             style="height: @pct%"></div>
+                        <div class="text-[10px] text-slate-500 dark:text-white/50">@b.Date.ToString("MMM d")</div>
+                    </div>
+                }
+            </div>
+        }
+    </section>
+
+    <section class="glass-card p-5">
+        <div class="flex items-center justify-between gap-3 mb-3">
+            <h2 class="text-base font-semibold text-gray-900 dark:text-white">@L["admin.aiRecentTitle"]</h2>
+            <form method="get" class="flex gap-2">
+                <input type="text" name="userEmail" value="@Model.UserEmailFilter" placeholder="@L["admin.filterLandlordEmail"]" class="glass-input text-xs py-1 px-2" />
+                <button type="submit" class="glass-button text-xs py-1 px-2">@L["admin.applyFilters"]</button>
+            </form>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="min-w-full text-sm">
+                <thead class="text-left text-xs uppercase tracking-wider text-slate-500 dark:text-white/50">
+                    <tr>
+                        <th class="px-3 py-2">@L["admin.aiColUser"]</th>
+                        <th class="px-3 py-2">@L["admin.aiColTitle"]</th>
+                        <th class="px-3 py-2">@L["admin.aiColCount"]</th>
+                        <th class="px-3 py-2">@L["admin.aiColLastMessage"]</th>
+                        <th class="px-3 py-2">@L["admin.aiColUpdated"]</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100 dark:divide-white/5">
+                    @foreach (var c in Model.Recent)
+                    {
+                        <tr class="hover:bg-gray-50 dark:hover:bg-white/5">
+                            <td class="px-3 py-2 truncate max-w-[180px]" title="@c.UserEmail">@(c.UserEmail ?? "guest")</td>
+                            <td class="px-3 py-2 truncate max-w-[180px]">@(c.Title ?? "—")</td>
+                            <td class="px-3 py-2 font-medium">@c.MessageCount</td>
+                            <td class="px-3 py-2 text-xs text-slate-500 dark:text-white/60 truncate max-w-[280px]" title="@c.LastMessage">@(c.LastMessage ?? "—")</td>
+                            <td class="px-3 py-2 text-xs text-slate-500 dark:text-white/60">
+                                <a href="/@culture/admin/ai/@c.Id" class="hover:underline">@c.UpdatedAt.ToString("yyyy-MM-dd HH:mm")</a>
+                            </td>
+                        </tr>
+                    }
+                    @if (Model.Recent.Count == 0)
+                    {
+                        <tr><td colspan="5" class="px-3 py-8 text-center text-sm text-slate-500 dark:text-white/50">@L["admin.noResults"]</td></tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>

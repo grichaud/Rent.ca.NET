@@ -66,11 +66,14 @@ public class PropertyCard
     public decimal MinBathrooms { get; set; }
     public PropertyType PropertyType { get; set; }
     public ListingTier Tier { get; set; }
+    public DateTimeOffset? TierExpiresAt { get; set; }
+    public ListingTier EffectiveTier => ListingTierExtensions.Resolve(Tier, TierExpiresAt);
     public bool IsVerified { get; set; }
     public bool PetsAllowed { get; set; }
     public bool Furnished { get; set; }
     public bool IsFavorited { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
+    public string? SpecialTitle { get; set; }
 }
 
 public class SearchResult

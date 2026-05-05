@@ -1,0 +1,8 @@
+@model string
+@{
+    var truncated = Model.Length > 40 ? Model.Substring(0, 40) + "…" : Model;
+}
+<span class="inline-flex items-center gap-1 bg-gradient-to-r from-amber-400 to-rose-500 text-white text-[10px] uppercase tracking-wider font-bold px-2 py-1 rounded-md shadow-md shadow-orange-500/40 max-w-[200px]">
+    <icon name="sparkles" class="h-3 w-3 shrink-0" />
+    <span class="truncate">@truncated</span>
+</span>

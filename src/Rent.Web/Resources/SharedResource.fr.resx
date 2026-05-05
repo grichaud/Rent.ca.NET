@@ -406,4 +406,106 @@
   <data name="results.empty" xml:space="preserve"><value>Aucune location ne correspond à vos filtres.</value></data>
   <data name="results.emptyDesc" xml:space="preserve"><value>Essayez d'élargir votre recherche ou de retirer un filtre.</value></data>
   <data name="map.couldNotLoad" xml:space="preserve"><value>La carte n'a pas pu se charger.</value></data>
+  <data name="admin.title" xml:space="preserve"><value>Admin</value></data>
+  <data name="admin.role" xml:space="preserve"><value>Rôle administrateur</value></data>
+  <data name="admin.linkAdmin" xml:space="preserve"><value>Admin</value></data>
+  <data name="admin.backToSite" xml:space="preserve"><value>Retour au site</value></data>
+  <data name="admin.dashboardTitle" xml:space="preserve"><value>Tableau de bord administrateur</value></data>
+  <data name="admin.dashboardSubtitle" xml:space="preserve"><value>Gérez les paliers, les promotions, les recherches populaires, l'utilisation de l'IA et les utilisateurs.</value></data>
+  <data name="admin.navDashboard" xml:space="preserve"><value>Tableau de bord</value></data>
+  <data name="admin.navProperties" xml:space="preserve"><value>Propriétés</value></data>
+  <data name="admin.navLandlords" xml:space="preserve"><value>Propriétaires</value></data>
+  <data name="admin.navSpecials" xml:space="preserve"><value>Promotions</value></data>
+  <data name="admin.navSearches" xml:space="preserve"><value>Recherches populaires</value></data>
+  <data name="admin.navAi" xml:space="preserve"><value>Utilisation IA</value></data>
+  <data name="admin.navUsers" xml:space="preserve"><value>Utilisateurs</value></data>
+  <data name="admin.cardProperties" xml:space="preserve"><value>Propriétés</value></data>
+  <data name="admin.cardPropertiesBreakdown" xml:space="preserve"><value>{0} En vedette · {1} Promues</value></data>
+  <data name="admin.cardLandlords" xml:space="preserve"><value>Propriétaires</value></data>
+  <data name="admin.cardActiveSpecials" xml:space="preserve"><value>Promotions actives</value></data>
+  <data name="admin.cardConversations" xml:space="preserve"><value>Conversations IA</value></data>
+  <data name="admin.propertiesTitle" xml:space="preserve"><value>Propriétés</value></data>
+  <data name="admin.propertiesSubtitle" xml:space="preserve"><value>Promouvez ou rétrogradez n'importe quelle annonce. Définissez une expiration optionnelle pour revenir automatiquement à Limited.</value></data>
+  <data name="admin.landlordsTitle" xml:space="preserve"><value>Propriétaires</value></data>
+  <data name="admin.landlordsSubtitle" xml:space="preserve"><value>Gérez le palier au niveau du propriétaire (applique un halo à toutes ses annonces).</value></data>
+  <data name="admin.filterCity" xml:space="preserve"><value>La ville contient…</value></data>
+  <data name="admin.filterAnyTier" xml:space="preserve"><value>Tous les paliers</value></data>
+  <data name="admin.filterAnyStatus" xml:space="preserve"><value>Tous les statuts</value></data>
+  <data name="admin.filterLandlordEmail" xml:space="preserve"><value>L'email contient…</value></data>
+  <data name="admin.applyFilters" xml:space="preserve"><value>Appliquer</value></data>
+  <data name="admin.resultsCount" xml:space="preserve"><value>{0} résultat(s)</value></data>
+  <data name="admin.colTitle" xml:space="preserve"><value>Titre</value></data>
+  <data name="admin.colCity" xml:space="preserve"><value>Ville</value></data>
+  <data name="admin.colLandlord" xml:space="preserve"><value>Propriétaire</value></data>
+  <data name="admin.colStatus" xml:space="preserve"><value>Statut</value></data>
+  <data name="admin.colTier" xml:space="preserve"><value>Palier</value></data>
+  <data name="admin.colExpires" xml:space="preserve"><value>Expire</value></data>
+  <data name="admin.colActions" xml:space="preserve"><value>Actions</value></data>
+  <data name="admin.colEmail" xml:space="preserve"><value>Email</value></data>
+  <data name="admin.colCompany" xml:space="preserve"><value>Société</value></data>
+  <data name="admin.colListings" xml:space="preserve"><value>Annonces</value></data>
+  <data name="admin.applyAction" xml:space="preserve"><value>Appliquer</value></data>
+  <data name="admin.expiredTooltip" xml:space="preserve"><value>Le palier enregistré a expiré et est traité comme Limited tant qu'il n'est pas mis à jour.</value></data>
+  <data name="admin.noResults" xml:space="preserve"><value>Aucun résultat.</value></data>
+  <data name="admin.specialsTitle" xml:space="preserve"><value>Promotions</value></data>
+  <data name="admin.specialsSubtitle" xml:space="preserve"><value>Ajoutez ou modifiez des incitations à l'emménagement affichées comme bannière sur la fiche et comme étiquette sur les cartes de recherche.</value></data>
+  <data name="admin.specialsNew" xml:space="preserve"><value>Nouvelle promotion</value></data>
+  <data name="admin.specialsCreateTitle" xml:space="preserve"><value>Créer une promotion</value></data>
+  <data name="admin.specialsEditTitle" xml:space="preserve"><value>Modifier la promotion</value></data>
+  <data name="admin.specialsProperty" xml:space="preserve"><value>Propriété</value></data>
+  <data name="admin.specialsSelectProperty" xml:space="preserve"><value>Choisissez une propriété…</value></data>
+  <data name="admin.specialsTitleLabel" xml:space="preserve"><value>Titre</value></data>
+  <data name="admin.specialsDescriptionLabel" xml:space="preserve"><value>Description</value></data>
+  <data name="admin.specialsStart" xml:space="preserve"><value>Date de début (facultative)</value></data>
+  <data name="admin.specialsEnd" xml:space="preserve"><value>Date de fin (facultative)</value></data>
+  <data name="admin.specialsActive" xml:space="preserve"><value>Active</value></data>
+  <data name="admin.specialsInactive" xml:space="preserve"><value>Inactive</value></data>
+  <data name="admin.specialsCreate" xml:space="preserve"><value>Créer</value></data>
+  <data name="admin.specialsSave" xml:space="preserve"><value>Enregistrer</value></data>
+  <data name="admin.specialsEdit" xml:space="preserve"><value>Modifier</value></data>
+  <data name="admin.specialsDelete" xml:space="preserve"><value>Désactiver</value></data>
+  <data name="admin.specialsColProperty" xml:space="preserve"><value>Propriété</value></data>
+  <data name="admin.specialsColTitle" xml:space="preserve"><value>Titre</value></data>
+  <data name="admin.specialsColWindow" xml:space="preserve"><value>Fenêtre</value></data>
+  <data name="admin.specialsColActive" xml:space="preserve"><value>Active</value></data>
+  <data name="detail.specialOffer" xml:space="preserve"><value>Offre spéciale</value></data>
+  <data name="admin.searchesTitle" xml:space="preserve"><value>Recherches populaires</value></data>
+  <data name="admin.searchesSubtitle" xml:space="preserve"><value>Les 20 combinaisons recherche/ville les plus utilisées. Modifiez pour corriger des fautes ou supprimez les entrées erronées.</value></data>
+  <data name="admin.searchesFilterPlaceholder" xml:space="preserve"><value>Filtrer la recherche ou la ville…</value></data>
+  <data name="admin.searchesEditTitle" xml:space="preserve"><value>Modifier l'entrée</value></data>
+  <data name="admin.searchesColQuery" xml:space="preserve"><value>Recherche</value></data>
+  <data name="admin.searchesColCity" xml:space="preserve"><value>Ville</value></data>
+  <data name="admin.searchesColCount" xml:space="preserve"><value>Décompte</value></data>
+  <data name="admin.searchesColLastSeen" xml:space="preserve"><value>Vu pour la dernière fois</value></data>
+  <data name="admin.searchesDelete" xml:space="preserve"><value>Supprimer</value></data>
+  <data name="admin.searchesTopHint" xml:space="preserve"><value>Affichage des 20 premières entrées par décompte. Utilisez le filtre pour en trouver d'autres.</value></data>
+  <data name="admin.aiTitle" xml:space="preserve"><value>Utilisation IA</value></data>
+  <data name="admin.aiSubtitle" xml:space="preserve"><value>Métriques en lecture seule pour l'assistant Claude Haiku via OpenRouter. Estimation des jetons par heuristique caractères/4.</value></data>
+  <data name="admin.aiCardConversations" xml:space="preserve"><value>Conversations</value></data>
+  <data name="admin.aiCardMessages" xml:space="preserve"><value>Messages</value></data>
+  <data name="admin.aiCardTokens" xml:space="preserve"><value>Jetons estimés</value></data>
+  <data name="admin.aiCardTokensHint" xml:space="preserve"><value>USD (estimation)</value></data>
+  <data name="admin.aiToolBreakdown" xml:space="preserve"><value>Répartition des appels d'outils</value></data>
+  <data name="admin.aiNoToolCalls" xml:space="preserve"><value>Aucun appel d'outil enregistré.</value></data>
+  <data name="admin.aiChartTitle" xml:space="preserve"><value>Messages par jour (7 derniers jours)</value></data>
+  <data name="admin.aiNoActivity" xml:space="preserve"><value>Aucune activité.</value></data>
+  <data name="admin.aiRecentTitle" xml:space="preserve"><value>Conversations récentes</value></data>
+  <data name="admin.aiColUser" xml:space="preserve"><value>Utilisateur</value></data>
+  <data name="admin.aiColTitle" xml:space="preserve"><value>Titre</value></data>
+  <data name="admin.aiColCount" xml:space="preserve"><value>Messages</value></data>
+  <data name="admin.aiColLastMessage" xml:space="preserve"><value>Dernier message</value></data>
+  <data name="admin.aiColUpdated" xml:space="preserve"><value>Mis à jour</value></data>
+  <data name="admin.aiConversationTitle" xml:space="preserve"><value>Détail de la conversation</value></data>
+  <data name="admin.aiBackToList" xml:space="preserve"><value>Retour à l'utilisation IA</value></data>
+  <data name="admin.aiSession" xml:space="preserve"><value>Session</value></data>
+  <data name="admin.aiCreated" xml:space="preserve"><value>Créée</value></data>
+  <data name="admin.aiToolArgs" xml:space="preserve"><value>Arguments de l'outil</value></data>
+  <data name="admin.aiToolResult" xml:space="preserve"><value>Résultat de l'outil</value></data>
+  <data name="admin.usersTitle" xml:space="preserve"><value>Utilisateurs</value></data>
+  <data name="admin.usersSubtitle" xml:space="preserve"><value>Les 50 comptes les plus récemment créés. Activez ou désactivez le rôle Admin. Le système conserve toujours au moins un admin.</value></data>
+  <data name="admin.usersColName" xml:space="preserve"><value>Nom</value></data>
+  <data name="admin.usersColRoles" xml:space="preserve"><value>Rôles</value></data>
+  <data name="admin.usersColCreated" xml:space="preserve"><value>Créé le</value></data>
+  <data name="admin.usersGrantAdmin" xml:space="preserve"><value>Promouvoir Admin</value></data>
+  <data name="admin.usersRevokeAdmin" xml:space="preserve"><value>Retirer Admin</value></data>
 </root>

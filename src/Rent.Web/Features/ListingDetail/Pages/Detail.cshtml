@@ -33,6 +33,14 @@
 
 <partial name="/Features/ListingDetail/Partials/_Gallery.cshtml" model="orderedImages" />
 
+@{
+    var activeSpecial = p.ActiveSpecial();
+}
+@if (activeSpecial is not null)
+{
+    <partial name="/Features/ListingDetail/Partials/_RentSpecialBanner.cshtml" model="activeSpecial" />
+}
+
 <section class="grid lg:grid-cols-[1fr_400px] gap-8 mt-8">
     <article class="space-y-6">
         <header>

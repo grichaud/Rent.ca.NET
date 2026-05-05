@@ -11,6 +11,7 @@ public class LandlordProfile
 
     public bool IsVerified { get; set; }
     public ListingTier Tier { get; set; } = ListingTier.Limited;
+    public DateTimeOffset? TierExpiresAt { get; set; }
     public int TotalListings { get; set; }
 
     public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;

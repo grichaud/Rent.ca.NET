@@ -12,6 +12,7 @@ public class Property
     public PropertyType PropertyType { get; set; }
     public ListingStatus Status { get; set; } = ListingStatus.Draft;
     public ListingTier Tier { get; set; } = ListingTier.Limited;
+    public DateTimeOffset? TierExpiresAt { get; set; }
 
     public string StreetAddress { get; set; } = string.Empty;
     public string City { get; set; } = string.Empty;
@@ -45,4 +46,5 @@ public class Property
     public ICollection<PropertyImage> Images { get; set; } = new List<PropertyImage>();
     public ICollection<Amenity> Amenities { get; set; } = new List<Amenity>();
     public ICollection<ContactInquiry> Inquiries { get; set; } = new List<ContactInquiry>();
+    public ICollection<RentSpecial> RentSpecials { get; set; } = new List<RentSpecial>();
 }

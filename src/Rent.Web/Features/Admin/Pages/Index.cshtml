@@ -1,0 +1,61 @@
+@page "/{culture:locale}/admin"
+@model Rent.Web.Features.Admin.Pages.IndexModel
+@{
+    ViewData["Title"] = L["admin.dashboardTitle"].Value;
+    var culture = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+    if (culture != "en" && culture != "fr") { culture = "en"; }
+}
+
+<div class="space-y-8">
+    <div>
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">@L["admin.dashboardTitle"]</h1>
+        <p class="mt-1 text-sm text-slate-600 dark:text-white/70">@L["admin.dashboardSubtitle"]</p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <a href="/@culture/admin/properties" class="glass-card p-5 flex items-center gap-4 hover:bg-gray-50 dark:hover:bg-white/10 transition-colors group">
+            <div class="flex items-center justify-center h-12 w-12 rounded-2xl shrink-0 bg-amber-500/20">
+                <icon name="building" class="h-6 w-6 text-amber-500 dark:text-amber-300" />
+            </div>
+            <div class="flex-1 min-w-0">
+                <p class="text-sm text-slate-500 dark:text-white/50">@L["admin.cardProperties"]</p>
+                <p class="text-2xl font-bold text-gray-900 dark:text-white">@Model.TotalProperties</p>
+                <p class="text-xs text-slate-500 dark:text-white/50 mt-0.5">@string.Format(L["admin.cardPropertiesBreakdown"].Value, Model.FeaturedProperties, Model.PromotedProperties)</p>
+            </div>
+            <icon name="arrow-right" class="h-4 w-4 text-gray-300 dark:text-white/30 group-hover:text-gray-500 dark:group-hover:text-white/60 transition-colors shrink-0" />
+        </a>
+
+        <a href="/@culture/admin/landlords" class="glass-card p-5 flex items-center gap-4 hover:bg-gray-50 dark:hover:bg-white/10 transition-colors group">
+            <div class="flex items-center justify-center h-12 w-12 rounded-2xl shrink-0 bg-brand-500/20">
+                <icon name="user" class="h-6 w-6 text-brand-500 dark:text-brand-300" />
+            </div>
+            <div class="flex-1 min-w-0">
+                <p class="text-sm text-slate-500 dark:text-white/50">@L["admin.cardLandlords"]</p>
+                <p class="text-2xl font-bold text-gray-900 dark:text-white">@Model.TotalLandlords</p>
+            </div>
+            <icon name="arrow-right" class="h-4 w-4 text-gray-300 dark:text-white/30 group-hover:text-gray-500 dark:group-hover:text-white/60 transition-colors shrink-0" />
+        </a>
+
+        <a href="/@culture/admin/specials" class="glass-card p-5 flex items-center gap-4 hover:bg-gray-50 dark:hover:bg-white/10 transition-colors group">
+            <div class="flex items-center justify-center h-12 w-12 rounded-2xl shrink-0 bg-orange-500/20">
+                <icon name="sparkles" class="h-6 w-6 text-orange-500 dark:text-orange-300" />
+            </div>
+            <div class="flex-1 min-w-0">
+                <p class="text-sm text-slate-500 dark:text-white/50">@L["admin.cardActiveSpecials"]</p>
+                <p class="text-2xl font-bold text-gray-900 dark:text-white">@Model.ActiveSpecials</p>
+            </div>
+            <icon name="arrow-right" class="h-4 w-4 text-gray-300 dark:text-white/30 group-hover:text-gray-500 dark:group-hover:text-white/60 transition-colors shrink-0" />
+        </a>
+
+        <a href="/@culture/admin/ai" class="glass-card p-5 flex items-center gap-4 hover:bg-gray-50 dark:hover:bg-white/10 transition-colors group">
+            <div class="flex items-center justify-center h-12 w-12 rounded-2xl shrink-0 bg-cyan-500/20">
+                <icon name="message-square" class="h-6 w-6 text-cyan-500 dark:text-cyan-300" />
+            </div>
+            <div class="flex-1 min-w-0">
+                <p class="text-sm text-slate-500 dark:text-white/50">@L["admin.cardConversations"]</p>
+                <p class="text-2xl font-bold text-gray-900 dark:text-white">@Model.Conversations</p>
+            </div>
+            <icon name="arrow-right" class="h-4 w-4 text-gray-300 dark:text-white/30 group-hover:text-gray-500 dark:group-hover:text-white/60 transition-colors shrink-0" />
+        </a>
+    </div>
+</div>

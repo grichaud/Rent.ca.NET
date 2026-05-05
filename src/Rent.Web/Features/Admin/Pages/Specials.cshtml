@@ -1,0 +1,170 @@
+@page "/{culture:locale}/admin/specials"
+@model Rent.Web.Features.Admin.Pages.SpecialsModel
+@{
+    ViewData["Title"] = L["admin.specialsTitle"].Value;
+    var showForm = Model.ShowForm || Model.EditingRow is not null;
+    var editing = Model.EditingRow;
+    var formTitle = editing is not null ? L["admin.specialsEditTitle"].Value : L["admin.specialsCreateTitle"].Value;
+    var formAction = editing is not null ? "Update" : "Create";
+}
+
+<div class="space-y-6">
+    <div class="flex items-start justify-between gap-3">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">@L["admin.specialsTitle"]</h1>
+            <p class="mt-1 text-sm text-slate-600 dark:text-white/70">@L["admin.specialsSubtitle"]</p>
+        </div>
+        @if (!showForm)
+        {
+            <a href="?showForm=true" class="glass-button-primary text-sm inline-flex items-center gap-2">
+                <icon name="plus" class="h-4 w-4" />
+                @L["admin.specialsNew"]
+            </a>
+        }
+    </div>
+
+    @if (!string.IsNullOrEmpty(Model.FlashSuccess))
+    {
+        <div class="glass-card p-3 text-sm text-emerald-700 dark:text-emerald-300 border border-emerald-500/30">@Model.FlashSuccess</div>
+    }
+    @if (!string.IsNullOrEmpty(Model.FlashError))
+    {
+        <div class="glass-card p-3 text-sm text-rose-700 dark:text-rose-300 border border-rose-500/30">@Model.FlashError</div>
+    }
+
+    @if (showForm)
+    {
+        <form method="post" asp-page-handler="@formAction" class="glass-card p-5 space-y-4">
+            @Html.AntiForgeryToken()
+            @if (editing is not null)
+            {
+                <input type="hidden" name="Id" value="@editing.Id" />
+            }
+            <div class="text-base font-semibold text-gray-900 dark:text-white">@formTitle</div>
+
+            @if (editing is null)
+            {
+                <div>
+                    <label class="block text-xs uppercase tracking-wider text-slate-500 dark:text-white/50 mb-1">@L["admin.specialsProperty"]</label>
+                    <select name="PropertyId" class="glass-input text-sm w-full" required>
+                        <option value="">@L["admin.specialsSelectProperty"]</option>
+                        @foreach (var po in Model.PropertyOptions)
+                        {
+                            <option value="@po.Id">@po.City &mdash; @po.Title</option>
+                        }
+                    </select>
+                </div>
+            }
+            else
+            {
+                <div class="text-xs text-slate-500 dark:text-white/60">@editing.PropertyCity &mdash; @editing.PropertyTitle</div>
+            }
+
+            <div>
+                <label class="block text-xs uppercase tracking-wider text-slate-500 dark:text-white/50 mb-1">@L["admin.specialsTitleLabel"]</label>
+                <input type="text" name="Title" maxlength="200" required value="@(editing?.Title)" class="glass-input text-sm w-full" placeholder="First month free!" />
+            </div>
+
+            <div>
+                <label class="block text-xs uppercase tracking-wider text-slate-500 dark:text-white/50 mb-1">@L["admin.specialsDescriptionLabel"]</label>
+                <textarea name="Description" maxlength="2000" rows="3" class="glass-input text-sm w-full" placeholder="Sign a 12-month lease and get the first month free.">@(editing?.Description)</textarea>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs uppercase tracking-wider text-slate-500 dark:text-white/50 mb-1">@L["admin.specialsStart"]</label>
+                    <input type="datetime-local" name="StartDate" class="glass-input text-sm w-full"
+                           value="@(editing?.StartDate?.UtcDateTime.ToString("yyyy-MM-ddTHH:mm"))" />
+                </div>
+                <div>
+                    <label class="block text-xs uppercase tracking-wider text-slate-500 dark:text-white/50 mb-1">@L["admin.specialsEnd"]</label>
+                    <input type="datetime-local" name="EndDate" class="glass-input text-sm w-full"
+                           value="@(editing?.EndDate?.UtcDateTime.ToString("yyyy-MM-ddTHH:mm"))" />
+                </div>
+            </div>
+
+            <label class="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-white/80">
+                <input type="checkbox" name="IsActive" value="true" checked="@(editing is null || editing.IsActive)" class="h-4 w-4" />
+                @L["admin.specialsActive"]
+            </label>
+
+            <div class="flex items-center gap-2">
+                <button type="submit" class="glass-button-primary text-sm">@(editing is null ? L["admin.specialsCreate"] : L["admin.specialsSave"])</button>
+                <a href="@(editing is null ? "?" : "?showForm=false")" class="glass-button text-sm">@L["common.cancel"]</a>
+            </div>
+        </form>
+    }
+
+    <div class="text-xs text-slate-500 dark:text-white/50">
+        @string.Format(L["admin.resultsCount"].Value, Model.TotalRows)
+    </div>
+
+    <div class="overflow-x-auto glass-card">
+        <table class="min-w-full text-sm">
+            <thead class="text-left text-xs uppercase tracking-wider text-slate-500 dark:text-white/50">
+                <tr>
+                    <th class="px-4 py-3">@L["admin.specialsColProperty"]</th>
+                    <th class="px-4 py-3">@L["admin.specialsColTitle"]</th>
+                    <th class="px-4 py-3">@L["admin.specialsColWindow"]</th>
+                    <th class="px-4 py-3">@L["admin.specialsColActive"]</th>
+                    <th class="px-4 py-3">@L["admin.colActions"]</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100 dark:divide-white/5">
+                @foreach (var r in Model.Rows)
+                {
+                    <tr>
+                        <td class="px-4 py-3 text-slate-700 dark:text-white/80">
+                            <div class="font-medium">@r.PropertyTitle</div>
+                            <div class="text-xs text-slate-500 dark:text-white/50">@r.PropertyCity</div>
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="font-medium text-gray-900 dark:text-white">@r.Title</div>
+                            @if (!string.IsNullOrWhiteSpace(r.Description))
+                            {
+                                <div class="text-xs text-slate-500 dark:text-white/60 line-clamp-1 max-w-[280px]">@r.Description</div>
+                            }
+                        </td>
+                        <td class="px-4 py-3 text-xs text-slate-500 dark:text-white/60">
+                            @(r.StartDate?.ToString("yyyy-MM-dd") ?? "—") → @(r.EndDate?.ToString("yyyy-MM-dd") ?? "—")
+                        </td>
+                        <td class="px-4 py-3">
+                            @if (r.IsActive)
+                            {
+                                <span class="inline-flex rounded-md px-2 py-0.5 text-xs font-medium bg-emerald-500/20 text-emerald-700 dark:text-emerald-300">@L["admin.specialsActive"]</span>
+                            }
+                            else
+                            {
+                                <span class="inline-flex rounded-md px-2 py-0.5 text-xs font-medium bg-slate-200 dark:bg-white/10 text-slate-500 dark:text-white/50">@L["admin.specialsInactive"]</span>
+                            }
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="flex items-center gap-2">
+                                <a href="?editId=@r.Id" class="glass-button text-xs py-1 px-2">@L["admin.specialsEdit"]</a>
+                                <form method="post" asp-page-handler="Delete" class="inline">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="Id" value="@r.Id" />
+                                    <button type="submit" class="glass-button text-xs py-1 px-2 text-rose-600 dark:text-rose-300">@L["admin.specialsDelete"]</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+                @if (Model.Rows.Count == 0)
+                {
+                    <tr><td colspan="5" class="px-4 py-8 text-center text-sm text-slate-500 dark:text-white/50">@L["admin.noResults"]</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (Model.TotalPages > 1)
+    {
+        <div class="flex items-center justify-center gap-2 text-sm">
+            @for (int p = 1; p <= Model.TotalPages; p++)
+            {
+                <a href="?Page=@p" class="px-3 py-1 rounded-md @(p == Model.PageIndex ? "bg-amber-500/20 text-amber-600 dark:text-amber-300" : "text-slate-500 dark:text-white/60 hover:bg-gray-100 dark:hover:bg-white/10")">@p</a>
+            }
+        </div>
+    }
+</div>

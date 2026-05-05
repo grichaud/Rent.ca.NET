@@ -61,11 +61,11 @@ public class SearchPropertiesTool : IAiTool
         if (args.PetsAllowed == true)
             q = q.Where(p => p.PetsAllowed);
 
-        var raw = await q
+        // Over-fetch by raw Tier in SQL, then re-rank by EffectiveTier in memory so listings whose
+        // tier expired don't get an artificial boost in the AI tool ranking.
+        var rawCandidates = await q
             .OrderByDescending(p => p.Tier)
-            .ThenByDescending(p => p.IsVerified)
-            .ThenBy(p => p.Title)
-            .Take(5)
+            .Take(20)
             .Select(p => new
             {
                 p.Id,
@@ -73,9 +73,19 @@ public class SearchPropertiesTool : IAiTool
                 p.Slug,
                 p.City,
                 p.PropertyType,
+                p.Tier,
+                p.TierExpiresAt,
+                p.IsVerified,
                 Units = p.Units.Select(u => new { u.Bedrooms, u.Bathrooms, u.Price }).ToList()
             })
             .ToListAsync(ct);
+
+        var raw = rawCandidates
+            .OrderByDescending(p => ListingTierExtensions.Resolve(p.Tier, p.TierExpiresAt))
+            .ThenByDescending(p => p.IsVerified)
+            .ThenBy(p => p.Title)
+            .Take(5)
+            .ToList();
 
         var slugs = raw.Select(r => r.City).Distinct().ToList();
         var cityMap = await _db.Cities

@@ -1,0 +1,79 @@
+@page "/{culture:locale}/admin/ai/{id:guid}"
+@model Rent.Web.Features.Admin.Pages.AiConversationModel
+@using Rent.Web.Domain
+@{
+    ViewData["Title"] = L["admin.aiConversationTitle"].Value;
+    var c = Model.Conversation;
+    var culture = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+    if (culture != "en" && culture != "fr") { culture = "en"; }
+}
+
+@if (c is null)
+{
+    <p class="text-slate-500">Not found.</p>
+    return;
+}
+
+<div class="space-y-6">
+    <div class="flex items-center gap-3">
+        <a href="/@culture/admin/ai" class="text-sm text-slate-500 dark:text-white/60 hover:underline">&larr; @L["admin.aiBackToList"]</a>
+    </div>
+
+    <div class="glass-card p-5">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
+            <div>
+                <p class="text-xs uppercase tracking-wider text-slate-500 dark:text-white/50">@L["admin.aiColUser"]</p>
+                <p class="font-medium text-gray-900 dark:text-white">@(Model.UserEmail ?? "guest")</p>
+            </div>
+            <div>
+                <p class="text-xs uppercase tracking-wider text-slate-500 dark:text-white/50">@L["admin.aiSession"]</p>
+                <p class="font-mono text-xs text-gray-700 dark:text-white/70 truncate" title="@c.SessionId">@(c.SessionId?.ToString().Substring(0, 8) ?? "—")</p>
+            </div>
+            <div>
+                <p class="text-xs uppercase tracking-wider text-slate-500 dark:text-white/50">@L["admin.aiCreated"]</p>
+                <p class="text-gray-900 dark:text-white">@c.CreatedAt.ToString("yyyy-MM-dd HH:mm")</p>
+            </div>
+            <div>
+                <p class="text-xs uppercase tracking-wider text-slate-500 dark:text-white/50">@L["admin.aiColCount"]</p>
+                <p class="font-bold text-gray-900 dark:text-white">@Model.Messages.Count</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="space-y-3">
+        @foreach (var m in Model.Messages)
+        {
+            <div class="glass-card p-4">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="inline-flex rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider
+                        @(m.Role == AiMessageRole.User ? "bg-brand-500/20 text-brand-700 dark:text-brand-300" :
+                          m.Role == AiMessageRole.Assistant ? "bg-emerald-500/20 text-emerald-700 dark:text-emerald-300" :
+                          m.Role == AiMessageRole.Tool ? "bg-amber-500/20 text-amber-700 dark:text-amber-300" :
+                          "bg-slate-500/20 text-slate-700 dark:text-white/70")">
+                        @m.Role
+                    </span>
+                    @if (!string.IsNullOrEmpty(m.ToolName))
+                    {
+                        <span class="font-mono text-xs text-slate-500 dark:text-white/60">@m.ToolName</span>
+                    }
+                    <span class="ml-auto text-[10px] text-slate-400 dark:text-white/40">@m.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss")</span>
+                </div>
+                <pre class="whitespace-pre-wrap text-sm text-gray-800 dark:text-white/90 font-sans">@m.Content</pre>
+                @if (!string.IsNullOrEmpty(m.ToolArgsJson))
+                {
+                    <details class="mt-2">
+                        <summary class="text-xs text-slate-500 dark:text-white/50 cursor-pointer">@L["admin.aiToolArgs"]</summary>
+                        <pre class="mt-1 text-xs bg-gray-50 dark:bg-white/5 p-2 rounded font-mono overflow-x-auto">@m.ToolArgsJson</pre>
+                    </details>
+                }
+                @if (!string.IsNullOrEmpty(m.ToolResultJson))
+                {
+                    <details class="mt-2">
+                        <summary class="text-xs text-slate-500 dark:text-white/50 cursor-pointer">@L["admin.aiToolResult"]</summary>
+                        <pre class="mt-1 text-xs bg-gray-50 dark:bg-white/5 p-2 rounded font-mono overflow-x-auto">@m.ToolResultJson</pre>
+                    </details>
+                }
+            </div>
+        }
+    </div>
+</div>

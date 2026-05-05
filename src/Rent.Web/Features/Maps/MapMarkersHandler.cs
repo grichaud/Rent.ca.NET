@@ -63,6 +63,7 @@ public class MapMarkersHandler
                 p.Longitude,
                 p.PropertyType,
                 p.Tier,
+                p.TierExpiresAt,
                 PrimaryImageUrl = p.Images
                     .OrderByDescending(i => i.IsPrimary)
                     .ThenBy(i => i.DisplayOrder)
@@ -85,6 +86,7 @@ public class MapMarkersHandler
                 Lng = p.Longitude!.Value,
                 PropertyType = p.PropertyType,
                 Tier = p.Tier,
+                TierExpiresAt = p.TierExpiresAt,
                 PrimaryImageUrl = p.PrimaryImageUrl,
                 FromPrice = p.Units.Count == 0 ? null : p.Units.Min(u => (decimal?)u.Price),
                 MinBedrooms = p.Units.Count == 0 ? 0 : p.Units.Min(u => u.Bedrooms)

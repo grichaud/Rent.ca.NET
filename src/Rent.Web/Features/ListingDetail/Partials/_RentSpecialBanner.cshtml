@@ -1,0 +1,20 @@
+@model Rent.Web.Domain.RentSpecial
+<section class="relative overflow-hidden rounded-2xl border border-orange-300/60 dark:border-orange-500/30 bg-gradient-to-r from-amber-400/90 via-orange-500/90 to-rose-500/90 p-5 text-white shadow-lg shadow-orange-500/30 my-6">
+    <div class="absolute inset-0 opacity-20 mix-blend-overlay" aria-hidden="true">
+        <div class="absolute -top-8 -right-8 h-32 w-32 rounded-full bg-white/40 blur-2xl"></div>
+        <div class="absolute -bottom-10 -left-10 h-32 w-32 rounded-full bg-yellow-200/60 blur-2xl"></div>
+    </div>
+    <div class="relative flex items-start gap-4">
+        <div class="shrink-0 h-10 w-10 rounded-xl bg-white/25 backdrop-blur-sm flex items-center justify-center">
+            <icon name="sparkles" class="h-5 w-5" />
+        </div>
+        <div class="flex-1 min-w-0">
+            <div class="text-[11px] uppercase tracking-widest font-semibold text-white/85">@L["detail.specialOffer"]</div>
+            <div class="text-lg sm:text-xl font-bold leading-tight mt-0.5">@Model.Title</div>
+            @if (!string.IsNullOrWhiteSpace(Model.Description))
+            {
+                <p class="mt-1 text-sm text-white/90 whitespace-pre-line">@Model.Description</p>
+            }
+        </div>
+    </div>
+</section>
