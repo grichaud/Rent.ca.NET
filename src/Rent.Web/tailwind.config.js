@@ -25,8 +25,7 @@ module.exports = {
         }
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        display: ['"DM Serif Display"', 'Georgia', 'serif']
+        sans: ['Inter', 'system-ui', 'sans-serif']
       },
       animation: {
         'float-bg': 'floatBG 15s ease-in-out infinite',

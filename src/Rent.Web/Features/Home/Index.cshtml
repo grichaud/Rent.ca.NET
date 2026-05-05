@@ -34,7 +34,7 @@
         @foreach (var city in Model.FeaturedCities)
         {
             <a href="/@culture/@city.Slug" class="group flex flex-col items-center text-center">
-                <div class="relative h-24 w-24 sm:h-28 sm:w-28 rounded-full bg-gradient-to-br @CityGradient(city.Slug) flex items-center justify-center text-white font-display text-3xl sm:text-4xl shadow-xl group-hover:shadow-brand-500/40 group-hover:scale-105 transition-all duration-300 ring-2 ring-white/40 dark:ring-white/15 group-hover:ring-brand-400/60">
+                <div class="relative h-24 w-24 sm:h-28 sm:w-28 rounded-full bg-gradient-to-br @CityGradient(city.Slug) flex items-center justify-center text-white font-sans font-bold tracking-tight text-3xl sm:text-4xl shadow-xl group-hover:shadow-brand-500/40 group-hover:scale-105 transition-all duration-300 ring-2 ring-white/40 dark:ring-white/15 group-hover:ring-brand-400/60">
                     @city.Name.Substring(0, 1)
                 </div>
                 <div class="mt-3 font-semibold text-slate-900 dark:text-white text-sm">@city.Name</div>
