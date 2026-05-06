@@ -33,7 +33,7 @@ public class HomeTests : IClassFixture<RentAppFactory>
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         var body = await response.Content.ReadAsStringAsync();
-        body.Should().Contain("List your rental");
+        body.Should().Contain("List Your Property on");
     }
 
     [Fact]
