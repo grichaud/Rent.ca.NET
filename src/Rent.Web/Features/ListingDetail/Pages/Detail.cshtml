@@ -116,53 +116,88 @@
             </div>
         </header>
 
-        <section class="glass-card p-6">
-            <h2 class="font-semibold text-slate-900 dark:text-white mb-3">@L["detail.aboutListing"]</h2>
-            <p class="text-slate-700 dark:text-white/80 whitespace-pre-line">@p.Description</p>
-        </section>
+        <div class="glass-card p-2" role="tablist" aria-label="Listing details">
+            <div class="flex gap-1">
+                <button type="button" role="tab" id="tab-floorplans" aria-controls="panel-floorplans" aria-selected="true"
+                        data-detail-tab="floorplans"
+                        class="flex-1 py-2.5 px-4 rounded-xl text-sm font-medium transition-colors data-[active=true]:bg-brand-500 data-[active=true]:text-white text-slate-600 dark:text-white/70 hover:text-slate-900 dark:hover:text-white"
+                        data-active="true">
+                    @L["detail.floorPlans"]
+                </button>
+                <button type="button" role="tab" id="tab-amenities" aria-controls="panel-amenities" aria-selected="false"
+                        data-detail-tab="amenities"
+                        class="flex-1 py-2.5 px-4 rounded-xl text-sm font-medium transition-colors data-[active=true]:bg-brand-500 data-[active=true]:text-white text-slate-600 dark:text-white/70 hover:text-slate-900 dark:hover:text-white"
+                        data-active="false">
+                    @L["detail.amenities"]
+                </button>
+                <button type="button" role="tab" id="tab-about" aria-controls="panel-about" aria-selected="false"
+                        data-detail-tab="about"
+                        class="flex-1 py-2.5 px-4 rounded-xl text-sm font-medium transition-colors data-[active=true]:bg-brand-500 data-[active=true]:text-white text-slate-600 dark:text-white/70 hover:text-slate-900 dark:hover:text-white"
+                        data-active="false">
+                    @L["detail.tabAbout"]
+                </button>
+            </div>
+        </div>
 
-        @if (p.Latitude.HasValue && p.Longitude.HasValue)
-        {
-            <section class="glass-card p-6">
-                <h2 class="font-semibold text-slate-900 dark:text-white mb-3 inline-flex items-center gap-2">
-                    <icon name="map-pin" class="h-4 w-4 text-brand-500" />
-                    @L["detail.locationLabel"]
-                </h2>
-                <div id="rentca-detail-map"
-                     class="h-[320px] w-full rounded-xl overflow-hidden bg-gray-100 dark:bg-slate-800/40"
-                     data-lat="@p.Latitude.Value.ToString(System.Globalization.CultureInfo.InvariantCulture)"
-                     data-lng="@p.Longitude.Value.ToString(System.Globalization.CultureInfo.InvariantCulture)"
-                     data-title="@p.Title">
-                </div>
-                <p class="text-xs text-slate-500 dark:text-white/50 mt-2">@L["detail.locationApprox"]</p>
-            </section>
-        }
+        <div id="panel-floorplans" role="tabpanel" aria-labelledby="tab-floorplans" data-detail-panel="floorplans">
+            <partial name="/Features/ListingDetail/Partials/_UnitsTable.cshtml" model="p.Units" />
+        </div>
 
-        <partial name="/Features/ListingDetail/Partials/_UnitsTable.cshtml" model="p.Units" />
-
-        @if (amenityGroups.Any())
-        {
-            <section class="glass-card p-6">
-                <h2 class="font-semibold text-slate-900 dark:text-white mb-4">@L["detail.amenities"]</h2>
-                <div class="space-y-4">
-                    @foreach (var group in amenityGroups)
-                    {
-                        <div>
-                            <div class="text-xs uppercase tracking-wider text-slate-500 dark:text-white/50 mb-2">@group.Key</div>
-                            <div class="flex flex-wrap gap-2">
-                                @foreach (var a in group)
-                                {
-                                    <span class="glass-badge">@a.Name</span>
-                                }
+        <div id="panel-amenities" role="tabpanel" aria-labelledby="tab-amenities" data-detail-panel="amenities" hidden>
+            @if (amenityGroups.Any())
+            {
+                <section class="glass-card p-6">
+                    <h2 class="font-semibold text-slate-900 dark:text-white mb-4">@L["detail.amenities"]</h2>
+                    <div class="space-y-4">
+                        @foreach (var group in amenityGroups)
+                        {
+                            <div>
+                                <div class="text-xs uppercase tracking-wider text-slate-500 dark:text-white/50 mb-2">@group.Key</div>
+                                <div class="flex flex-wrap gap-2">
+                                    @foreach (var a in group)
+                                    {
+                                        <span class="glass-badge">@a.Name</span>
+                                    }
+                                </div>
                             </div>
-                        </div>
-                    }
-                </div>
+                        }
+                    </div>
+                </section>
+            }
+            else
+            {
+                <section class="glass-card p-6 text-center text-sm text-slate-500 dark:text-white/50">
+                    @L["detail.amenities"]
+                </section>
+            }
+        </div>
+
+        <div id="panel-about" role="tabpanel" aria-labelledby="tab-about" data-detail-panel="about" hidden>
+            <section class="glass-card p-6">
+                <h2 class="font-semibold text-slate-900 dark:text-white mb-3">@L["detail.aboutListing"]</h2>
+                <p class="text-slate-700 dark:text-white/80 whitespace-pre-line">@p.Description</p>
             </section>
-        }
+
+            @if (p.Latitude.HasValue && p.Longitude.HasValue)
+            {
+                <section class="glass-card p-6 mt-4">
+                    <h2 class="font-semibold text-slate-900 dark:text-white mb-3 inline-flex items-center gap-2">
+                        <icon name="map-pin" class="h-4 w-4 text-brand-500" />
+                        @L["detail.locationLabel"]
+                    </h2>
+                    <div id="rentca-detail-map"
+                         class="h-[320px] w-full rounded-xl overflow-hidden bg-gray-100 dark:bg-slate-800/40"
+                         data-lat="@p.Latitude.Value.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+                         data-lng="@p.Longitude.Value.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+                         data-title="@p.Title">
+                    </div>
+                    <p class="text-xs text-slate-500 dark:text-white/50 mt-2">@L["detail.locationApprox"]</p>
+                </section>
+            }
+        </div>
     </article>
 
-    <aside class="lg:sticky lg:top-24 h-fit">
+    <aside class="lg:sticky lg:top-24 h-fit space-y-4">
         <div class="glass-card p-6">
             @if (minPrice.HasValue)
             {
@@ -173,5 +208,101 @@
             }
             <partial name="/Features/ListingDetail/Partials/_ContactForm.cshtml" model="Model" />
         </div>
+
+        <button type="button" id="detail-ask-ai"
+                data-listing-title="@p.Title" data-listing-city="@p.City"
+                class="glass-button w-full inline-flex items-center justify-center gap-2 py-3">
+            <icon name="sparkles" class="h-4 w-4 text-brand-500 dark:text-brand-400" />
+            <span>@L["detail.askAi"]</span>
+        </button>
+
+        <a href="/@culture/renter/alerts?showForm=true"
+           class="glass-button w-full inline-flex items-center justify-between gap-2 py-3 px-4">
+            <span class="inline-flex items-center gap-2">
+                <icon name="bell" class="h-4 w-4 text-brand-500 dark:text-brand-400" />
+                <span>@L["detail.setUpAlert"]</span>
+            </span>
+            <span class="text-xs text-slate-400 dark:text-white/50">@L["detail.getNotified"]</span>
+        </a>
     </aside>
 </section>
+
+@if (Model.SimilarListings.Count > 0)
+{
+    <section class="mt-16 sm:mt-24" aria-labelledby="similar-heading">
+        <div class="flex items-end justify-between mb-8">
+            <div>
+                <p class="text-sm font-medium text-brand-600 dark:text-brand-400 uppercase tracking-widest mb-2">@L["detail.youMayAlsoLike"]</p>
+                <h2 id="similar-heading" class="font-sans font-bold tracking-tight text-3xl sm:text-4xl text-slate-900 dark:text-white">@L["detail.similarRentals"]</h2>
+            </div>
+            <div class="hidden sm:flex items-center gap-2">
+                <button type="button" data-similar-scroll="left"
+                        class="h-10 w-10 rounded-full flex items-center justify-center bg-black/40 hover:bg-black/60 border border-white/20 backdrop-blur-md text-white transition-colors"
+                        aria-label="Scroll left">
+                    <icon name="chevron-left" class="h-5 w-5" />
+                </button>
+                <button type="button" data-similar-scroll="right"
+                        class="h-10 w-10 rounded-full flex items-center justify-center bg-black/40 hover:bg-black/60 border border-white/20 backdrop-blur-md text-white transition-colors"
+                        aria-label="Scroll right">
+                    <icon name="chevron-right" class="h-5 w-5" />
+                </button>
+            </div>
+        </div>
+
+        <div id="similar-track" class="flex gap-5 overflow-x-auto scroll-smooth pb-4 snap-x snap-mandatory" style="scrollbar-width:none" role="list">
+            @foreach (var card in Model.SimilarListings)
+            {
+                <div role="listitem" class="snap-start min-w-[280px] sm:min-w-[320px] max-w-[320px] flex-shrink-0">
+                    <partial name="/Features/Search/Partials/_PropertyCard.cshtml" model="card" />
+                </div>
+            }
+        </div>
+    </section>
+}
+
+@section Scripts {
+    <script>
+      (function () {
+        var tabs = document.querySelectorAll('[data-detail-tab]');
+        var panels = document.querySelectorAll('[data-detail-panel]');
+        function activate(name) {
+          tabs.forEach(function (t) {
+            var on = t.getAttribute('data-detail-tab') === name;
+            t.setAttribute('data-active', on ? 'true' : 'false');
+            t.setAttribute('aria-selected', on ? 'true' : 'false');
+          });
+          panels.forEach(function (panel) {
+            panel.hidden = panel.getAttribute('data-detail-panel') !== name;
+          });
+          if (name === 'about') {
+            window.dispatchEvent(new Event('resize'));
+          }
+        }
+        tabs.forEach(function (t) {
+          t.addEventListener('click', function () { activate(t.getAttribute('data-detail-tab')); });
+        });
+
+        var aiBtn = document.getElementById('detail-ask-ai');
+        if (aiBtn) {
+          aiBtn.addEventListener('click', function () {
+            var trigger = document.getElementById('ai-chat-trigger');
+            if (trigger) trigger.click();
+          });
+        }
+
+        var similarTrack = document.getElementById('similar-track');
+        if (similarTrack) {
+          var step = 320;
+          document.querySelectorAll('[data-similar-scroll]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+              var dir = btn.getAttribute('data-similar-scroll') === 'left' ? -1 : 1;
+              similarTrack.scrollBy({ left: dir * step, behavior: 'smooth' });
+            });
+          });
+        }
+      })();
+    </script>
+    <style>
+      #similar-track::-webkit-scrollbar { display: none; }
+    </style>
+}

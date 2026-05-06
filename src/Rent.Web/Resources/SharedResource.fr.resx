@@ -147,12 +147,12 @@
   <data name="detail.unitAvailable.one" xml:space="preserve"><value>1 unité</value></data>
   <data name="detail.unitAvailable.many" xml:space="preserve"><value>{0} unités</value></data>
   <data name="detail.fromPrice" xml:space="preserve"><value>À partir de {0}/mois</value></data>
-  <data name="detail.formName" xml:space="preserve"><value>Votre nom</value></data>
+  <data name="detail.formName" xml:space="preserve"><value>Nom complet</value></data>
   <data name="detail.formEmail" xml:space="preserve"><value>Votre courriel</value></data>
   <data name="detail.formMessage" xml:space="preserve"><value>Message</value></data>
   <data name="detail.formMessagePlaceholder" xml:space="preserve"><value>Bonjour, je suis intéressé(e) par cette location...</value></data>
   <data name="detail.formPhone" xml:space="preserve"><value>Téléphone (facultatif)</value></data>
-  <data name="detail.formMoveIn" xml:space="preserve"><value>Date d'emménagement</value></data>
+  <data name="detail.formMoveIn" xml:space="preserve"><value>Date d'emménagement souhaitée</value></data>
   <data name="detail.sendInquiry" xml:space="preserve"><value>Envoyer la demande</value></data>
   <data name="detail.availableUnits" xml:space="preserve"><value>Unités disponibles</value></data>
   <data name="detail.unitPlan" xml:space="preserve"><value>Plan</value></data>
@@ -227,7 +227,7 @@
   <data name="footer.copyright" xml:space="preserve"><value>© 2026 Rent.ca. Tous droits réservés.</value></data>
   <data name="footer.builtWith" xml:space="preserve"><value>Conçu avec soin pour les locataires du Canada.</value></data>
   <data name="auth.welcomeBack" xml:space="preserve"><value>Bon retour</value></data>
-  <data name="auth.signInDesc" xml:space="preserve"><value>Connectez-vous à votre compte Rent.ca.</value></data>
+  <data name="auth.signInDesc" xml:space="preserve"><value>Connectez-vous à votre compte Rent.ca</value></data>
   <data name="auth.createAccount" xml:space="preserve"><value>Créez votre compte</value></data>
   <data name="auth.signUpDesc" xml:space="preserve"><value>Rejoignez le marché locatif du Canada</value></data>
   <data name="auth.email" xml:space="preserve"><value>Courriel</value></data>
@@ -239,7 +239,7 @@
   <data name="auth.rememberMe" xml:space="preserve"><value>Se souvenir de moi</value></data>
   <data name="auth.forgotPassword" xml:space="preserve"><value>Mot de passe oublié?</value></data>
   <data name="auth.continueWithGoogle" xml:space="preserve"><value>Continuer avec Google</value></data>
-  <data name="auth.orContinueWith" xml:space="preserve"><value>Ou continuer avec courriel</value></data>
+  <data name="auth.orContinueWith" xml:space="preserve"><value>ou continuer avec</value></data>
   <data name="auth.iAmA" xml:space="preserve"><value>Je suis un...</value></data>
   <data name="auth.renterRole" xml:space="preserve"><value>Locataire</value></data>
   <data name="auth.landlordRole" xml:space="preserve"><value>Propriétaire</value></data>
@@ -508,4 +508,15 @@
   <data name="admin.usersColCreated" xml:space="preserve"><value>Créé le</value></data>
   <data name="admin.usersGrantAdmin" xml:space="preserve"><value>Promouvoir Admin</value></data>
   <data name="admin.usersRevokeAdmin" xml:space="preserve"><value>Retirer Admin</value></data>
+  <data name="detail.tabAbout" xml:space="preserve"><value>À propos</value></data>
+  <data name="detail.setUpAlert" xml:space="preserve"><value>Configurer une alerte</value></data>
+  <data name="auth.dontHaveAccount" xml:space="preserve"><value>Vous n'avez pas de compte?</value></data>
+  <data name="auth.haveAccount" xml:space="preserve"><value>Vous avez déjà un compte?</value></data>
+  <data name="auth.signUpLink" xml:space="preserve"><value>S'inscrire</value></data>
+  <data name="auth.signInLink" xml:space="preserve"><value>Se connecter</value></data>
+  <data name="auth.emailPlaceholder" xml:space="preserve"><value>vous@exemple.com</value></data>
+  <data name="auth.passwordPlaceholder" xml:space="preserve"><value>••••••••</value></data>
+  <data name="auth.fullNamePlaceholder" xml:space="preserve"><value>Votre nom</value></data>
+  <data name="auth.showPassword" xml:space="preserve"><value>Afficher le mot de passe</value></data>
+  <data name="auth.hidePassword" xml:space="preserve"><value>Masquer le mot de passe</value></data>
 </root>

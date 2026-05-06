@@ -147,12 +147,12 @@
   <data name="detail.unitAvailable.one" xml:space="preserve"><value>1 unit</value></data>
   <data name="detail.unitAvailable.many" xml:space="preserve"><value>{0} units</value></data>
   <data name="detail.fromPrice" xml:space="preserve"><value>From {0}/mo</value></data>
-  <data name="detail.formName" xml:space="preserve"><value>Your name</value></data>
+  <data name="detail.formName" xml:space="preserve"><value>Full Name</value></data>
   <data name="detail.formEmail" xml:space="preserve"><value>Your email</value></data>
   <data name="detail.formMessage" xml:space="preserve"><value>Message</value></data>
   <data name="detail.formMessagePlaceholder" xml:space="preserve"><value>Hi, I'm interested in this rental...</value></data>
   <data name="detail.formPhone" xml:space="preserve"><value>Phone (optional)</value></data>
-  <data name="detail.formMoveIn" xml:space="preserve"><value>Move-in date</value></data>
+  <data name="detail.formMoveIn" xml:space="preserve"><value>Desired Move-in Date</value></data>
   <data name="detail.sendInquiry" xml:space="preserve"><value>Send inquiry</value></data>
   <data name="detail.availableUnits" xml:space="preserve"><value>Available units</value></data>
   <data name="detail.unitPlan" xml:space="preserve"><value>Plan</value></data>
@@ -227,7 +227,7 @@
   <data name="footer.copyright" xml:space="preserve"><value>© 2026 Rent.ca. All rights reserved.</value></data>
   <data name="footer.builtWith" xml:space="preserve"><value>Built with care for renters across Canada.</value></data>
   <data name="auth.welcomeBack" xml:space="preserve"><value>Welcome back</value></data>
-  <data name="auth.signInDesc" xml:space="preserve"><value>Log in to your Rent.ca account.</value></data>
+  <data name="auth.signInDesc" xml:space="preserve"><value>Sign in to your Rent.ca account</value></data>
   <data name="auth.createAccount" xml:space="preserve"><value>Create your account</value></data>
   <data name="auth.signUpDesc" xml:space="preserve"><value>Join Canada's rental marketplace</value></data>
   <data name="auth.email" xml:space="preserve"><value>Email</value></data>
@@ -239,7 +239,7 @@
   <data name="auth.rememberMe" xml:space="preserve"><value>Remember me</value></data>
   <data name="auth.forgotPassword" xml:space="preserve"><value>Forgot your password?</value></data>
   <data name="auth.continueWithGoogle" xml:space="preserve"><value>Continue with Google</value></data>
-  <data name="auth.orContinueWith" xml:space="preserve"><value>Or continue with email</value></data>
+  <data name="auth.orContinueWith" xml:space="preserve"><value>or continue with</value></data>
   <data name="auth.iAmA" xml:space="preserve"><value>I am a...</value></data>
   <data name="auth.renterRole" xml:space="preserve"><value>Renter</value></data>
   <data name="auth.landlordRole" xml:space="preserve"><value>Landlord</value></data>
@@ -508,4 +508,15 @@
   <data name="admin.usersColCreated" xml:space="preserve"><value>Created</value></data>
   <data name="admin.usersGrantAdmin" xml:space="preserve"><value>Grant Admin</value></data>
   <data name="admin.usersRevokeAdmin" xml:space="preserve"><value>Revoke Admin</value></data>
+  <data name="detail.tabAbout" xml:space="preserve"><value>About</value></data>
+  <data name="detail.setUpAlert" xml:space="preserve"><value>Set Up an Alert</value></data>
+  <data name="auth.dontHaveAccount" xml:space="preserve"><value>Don't have an account?</value></data>
+  <data name="auth.haveAccount" xml:space="preserve"><value>Already have an account?</value></data>
+  <data name="auth.signUpLink" xml:space="preserve"><value>Sign up</value></data>
+  <data name="auth.signInLink" xml:space="preserve"><value>Sign in</value></data>
+  <data name="auth.emailPlaceholder" xml:space="preserve"><value>you@example.com</value></data>
+  <data name="auth.passwordPlaceholder" xml:space="preserve"><value>••••••••</value></data>
+  <data name="auth.fullNamePlaceholder" xml:space="preserve"><value>Your name</value></data>
+  <data name="auth.showPassword" xml:space="preserve"><value>Show password</value></data>
+  <data name="auth.hidePassword" xml:space="preserve"><value>Hide password</value></data>
 </root>

@@ -6,93 +6,111 @@
     if (culture != "en" && culture != "fr") { culture = "en"; }
 }
 
-<section class="max-w-md mx-auto">
-    <div class="glass-card p-8 sm:p-10">
-        <div class="flex justify-center mb-4">
-            <div class="h-12 w-12 rounded-2xl bg-gradient-to-br from-brand-500 to-cyan-500 flex items-center justify-center text-white shadow-lg shadow-brand-500/30">
-                <icon name="log-in" class="h-6 w-6" />
-            </div>
+<div class="glass-card p-8 sm:p-10">
+    <h1 class="font-sans font-bold tracking-tight text-3xl text-slate-900 dark:text-white text-center">@L["auth.welcomeBack"]</h1>
+    <p class="text-slate-500 dark:text-white/60 text-center mt-2">@L["auth.signInDesc"]</p>
+
+    @if (Model.StatusMessage is not null)
+    {
+        <div class="mt-4 p-3 rounded-lg border border-red-300 bg-red-50 dark:border-red-500/40 dark:bg-red-500/10 text-sm text-red-700 dark:text-red-300">
+            @Model.StatusMessage
         </div>
-        <h1 class="font-sans font-bold tracking-tight text-3xl text-slate-900 dark:text-white text-center">@L["auth.welcomeBack"]</h1>
-        <p class="text-slate-500 dark:text-white/60 text-center mt-2">@L["auth.signInDesc"]</p>
+    }
 
-        @if (Model.StatusMessage is not null)
-        {
-            <div class="mt-4 p-3 rounded-lg border border-red-300 bg-red-50 dark:border-red-500/40 dark:bg-red-500/10 text-sm text-red-700 dark:text-red-300">
-                @Model.StatusMessage
-            </div>
-        }
-
-        @if (Model.SuccessMessage is not null)
-        {
-            <div class="mt-4 p-3 rounded-lg border border-emerald-300 bg-emerald-50 dark:border-emerald-500/40 dark:bg-emerald-500/10 text-sm text-emerald-700 dark:text-emerald-300">
-                @Model.SuccessMessage
-            </div>
-        }
-
-        @if (Model.ExternalLogins.Any())
-        {
-            <div class="mt-8 space-y-2">
-                @foreach (var scheme in Model.ExternalLogins)
-                {
-                    <form method="post" asp-page-handler="ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl">
-                        <input type="hidden" name="provider" value="@scheme.Name" />
-                        <button type="submit" class="glass-button w-full inline-flex items-center justify-center gap-3" title="@L["auth.continueWithGoogle"]">
-                            @if (scheme.Name == "Google")
-                            {
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" class="h-5 w-5" aria-hidden="true">
-                                    <path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/>
-                                    <path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/>
-                                    <path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238C29.211 35.091 26.715 36 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/>
-                                    <path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303c-.792 2.237-2.231 4.166-4.087 5.571.001-.001.002-.001.003-.002l6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/>
-                                </svg>
-                            }
-                            <span class="font-medium">@L["auth.continueWithGoogle"]</span>
-                        </button>
-                    </form>
-                }
-            </div>
-
-            <div class="my-6 flex items-center gap-3 text-xs uppercase tracking-wider text-slate-400 dark:text-white/40">
-                <span class="flex-1 h-px bg-slate-200 dark:bg-white/10"></span>
-                <span>@L["auth.orContinueWith"]</span>
-                <span class="flex-1 h-px bg-slate-200 dark:bg-white/10"></span>
-            </div>
-        }
-
-        <form method="post" class="mt-8 space-y-4">
-            <div asp-validation-summary="ModelOnly" class="text-sm text-red-600 dark:text-red-400"></div>
-
-            <div>
-                <label asp-for="Input.Email" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["auth.email"]</label>
-                <input asp-for="Input.Email" type="email" class="glass-input" autocomplete="email" />
-                <span asp-validation-for="Input.Email" class="text-xs text-red-600 dark:text-red-400"></span>
-            </div>
-
-            <div>
-                <label asp-for="Input.Password" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["auth.password"]</label>
-                <input asp-for="Input.Password" type="password" class="glass-input" autocomplete="current-password" />
-                <span asp-validation-for="Input.Password" class="text-xs text-red-600 dark:text-red-400"></span>
-            </div>
-
-            <label class="inline-flex items-center gap-2 text-sm text-slate-600 dark:text-white/70">
-                <input asp-for="Input.RememberMe" type="checkbox" class="rounded border-gray-300 dark:border-white/20 text-brand-500 focus:ring-brand-500" />
-                @L["auth.rememberMe"]
-            </label>
-
-            <button type="submit" class="glass-button-primary w-full mt-2 inline-flex items-center justify-center gap-2">
-                <icon name="log-in" class="h-4 w-4" />
-                @L["auth.signInButton"]
-            </button>
-        </form>
-
-        <div class="flex items-center justify-between mt-6 text-sm">
-            <a href="/@culture/forgot-password" class="text-slate-500 dark:text-white/60 hover:underline">@L["auth.forgotPassword"]</a>
-            <a href="/@culture/signup" class="text-brand-600 dark:text-brand-400 font-medium hover:underline">@L["auth.createAccount"]</a>
+    @if (Model.SuccessMessage is not null)
+    {
+        <div class="mt-4 p-3 rounded-lg border border-emerald-300 bg-emerald-50 dark:border-emerald-500/40 dark:bg-emerald-500/10 text-sm text-emerald-700 dark:text-emerald-300">
+            @Model.SuccessMessage
         </div>
-    </div>
-</section>
+    }
+
+    <form method="post" class="mt-8 space-y-4">
+        <div asp-validation-summary="ModelOnly" class="text-sm text-red-600 dark:text-red-400"></div>
+
+        <div>
+            <label asp-for="Input.Email" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["auth.email"]</label>
+            <div class="relative">
+                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-white/40">
+                    <icon name="mail" class="h-4 w-4" />
+                </span>
+                <input asp-for="Input.Email" type="email" autocomplete="email" placeholder="@L["auth.emailPlaceholder"]" class="glass-input !pl-10" />
+            </div>
+            <span asp-validation-for="Input.Email" class="text-xs text-red-600 dark:text-red-400"></span>
+        </div>
+
+        <div>
+            <div class="flex items-center justify-between mb-1">
+                <label asp-for="Input.Password" class="block text-sm text-slate-700 dark:text-white/80">@L["auth.password"]</label>
+                <a href="/@culture/forgot-password" class="text-xs text-brand-600 dark:text-brand-400 hover:underline">@L["auth.forgotPassword"]</a>
+            </div>
+            <div class="relative" data-password-wrap>
+                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-white/40">
+                    <icon name="lock" class="h-4 w-4" />
+                </span>
+                <input asp-for="Input.Password" type="password" autocomplete="current-password" placeholder="@L["auth.passwordPlaceholder"]" class="glass-input !pl-10 !pr-10" />
+                <button type="button" data-password-toggle aria-label="@L["auth.showPassword"]"
+                        class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-white/40 hover:text-slate-700 dark:hover:text-white/80">
+                    <icon name="eye" class="h-4 w-4" />
+                </button>
+            </div>
+            <span asp-validation-for="Input.Password" class="text-xs text-red-600 dark:text-red-400"></span>
+        </div>
+
+        <button type="submit" class="glass-button-primary w-full inline-flex items-center justify-center gap-2">
+            <icon name="log-in" class="h-4 w-4" />
+            @L["auth.signInButton"]
+        </button>
+    </form>
+
+    @if (Model.ExternalLogins.Any())
+    {
+        <div class="my-6 flex items-center gap-3 text-xs uppercase tracking-wider text-slate-400 dark:text-white/40">
+            <span class="flex-1 h-px bg-slate-200 dark:bg-white/10"></span>
+            <span>@L["auth.orContinueWith"]</span>
+            <span class="flex-1 h-px bg-slate-200 dark:bg-white/10"></span>
+        </div>
+
+        <div class="space-y-2">
+            @foreach (var scheme in Model.ExternalLogins)
+            {
+                <form method="post" asp-page-handler="ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl">
+                    <input type="hidden" name="provider" value="@scheme.Name" />
+                    <button type="submit" class="glass-button w-full inline-flex items-center justify-center gap-3" title="@L["auth.continueWithGoogle"]">
+                        @if (scheme.Name == "Google")
+                        {
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" class="h-5 w-5" aria-hidden="true">
+                                <path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/>
+                                <path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/>
+                                <path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238C29.211 35.091 26.715 36 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/>
+                                <path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303c-.792 2.237-2.231 4.166-4.087 5.571.001-.001.002-.001.003-.002l6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/>
+                            </svg>
+                        }
+                        <span class="font-medium">@L["auth.continueWithGoogle"]</span>
+                    </button>
+                </form>
+            }
+        </div>
+    }
+
+    <p class="mt-6 text-center text-sm text-slate-600 dark:text-white/70">
+        @L["auth.dontHaveAccount"]
+        <a href="/@culture/signup" class="text-brand-600 dark:text-brand-400 font-medium hover:underline ml-1">@L["auth.signUpLink"]</a>
+    </p>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+      document.querySelectorAll('[data-password-toggle]').forEach(function (btn) {
+        var wrap = btn.closest('[data-password-wrap]');
+        if (!wrap) return;
+        var input = wrap.querySelector('input[type="password"], input[type="text"]');
+        if (!input) return;
+        btn.addEventListener('click', function () {
+          var hidden = input.type === 'password';
+          input.type = hidden ? 'text' : 'password';
+          btn.setAttribute('aria-label', btn.getAttribute('data-show-label') || '');
+        });
+      });
+    </script>
 }
