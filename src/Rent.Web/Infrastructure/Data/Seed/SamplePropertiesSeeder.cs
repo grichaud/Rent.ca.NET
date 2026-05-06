@@ -13,7 +13,7 @@ public static class SamplePropertiesSeeder
     // Bump this when changing the sample data so prod re-seeds itself.
     // The version string is stored in the demo landlord's Description field. If it
     // does not match, all demo-landlord properties are wiped and re-inserted.
-    private const string SeedVersion = "v3-2026-05-02-curated-unsplash";
+    private const string SeedVersion = "v4-2026-05-06-nextjs-parity";
 
     public static async Task SeedAsync(
         AppDbContext db,
@@ -87,7 +87,7 @@ public static class SamplePropertiesSeeder
             Description = "Sample listings populated by the seeder for portfolio demo purposes.",
             IsVerified = true,
             Tier = ListingTier.Featured,
-            LogoUrl = Photo.ApartmentBuilding
+            LogoUrl = Photo.CondoTower
         };
         db.LandlordProfiles.Add(profile);
         await db.SaveChangesAsync();
@@ -95,274 +95,403 @@ public static class SamplePropertiesSeeder
     }
 
     /// <summary>
-    /// Real-estate stock photos. Each ID was pulled from a Unsplash topic search
-    /// (`modern-apartment-interior`, `condo-building`, `modern-house-exterior`, `loft-apartment`)
-    /// and visually verified to be a residential property. Do NOT swap an ID without
-    /// loading it in a browser first.
+    /// Real-estate stock photos. Each ID was visually verified to be a residential property.
+    /// Mapping locks the Next.js canonical photo IDs from the Bloque E QA pass (2026-05-06):
+    /// 7 IDs are taken straight from the Next.js seed; 2 IDs (BasementInterior, TownhouseExterior)
+    /// were swapped for verified Photo.X constants because the Next.js originals were a tropical
+    /// mansion (wrong for basement/duplex/apt) and an apartment block (wrong for townhouse).
     /// </summary>
     private static class Photo
     {
         private static string U(string id, int w = 1200, int h = 800) =>
             $"https://images.unsplash.com/photo-{id}?w={w}&h={h}&fit=crop&q=80";
 
-        // Apartment / condo interiors (living rooms, kitchens, dining areas).
-        public static readonly string ApartmentInterior1 = U("1603072845032-7b5bd641a82a"); // modern living room with a yellow cabinet and city view
-        public static readonly string ApartmentInterior2 = U("1738168279272-c08d6dd22002"); // living room with couch, table and chairs
-        public static readonly string ApartmentInterior3 = U("1647082550285-119acfd169f2"); // living room with a large painting on the wall
-        public static readonly string ApartmentInterior4 = U("1666282167632-c613fbeb163c"); // living room with a couch and a coffee table
-        public static readonly string ApartmentInterior5 = U("1737233459465-8eaf6c7d8856"); // living room with furniture and dining table
-        public static readonly string ApartmentInterior6 = U("1738168246881-40f35f8aba0a"); // living room with a large green couch
+        // Verified 2026-05-06 — see unsplash-photo-verification-bloque-E.png
+        public static readonly string StudioInterior     = U("1522708323590-d24dbb6b0267"); // bright studio with kitchen + sleeping area
+        public static readonly string ApartmentLiving    = U("1502672260266-1c1ef2d93688"); // cozy living room with couch + plants
+        public static readonly string BasementInterior   = U("1666282167632-c613fbeb163c"); // SUBSTITUTED — couch + coffee table interior
+        public static readonly string TownhouseExterior  = U("1706808849777-96e0d7be3bb7"); // SUBSTITUTED — modern house front yard
+        public static readonly string ApartmentBuilding  = U("1460317442991-0ec209397118"); // mid-rise apartment with balconies
+        public static readonly string CondoTower         = U("1486406146926-c627a92ad1ab"); // dark glass condo high-rise from below
+        public static readonly string LoftExterior       = U("1545324418-cc1a3fa10c00"); // dark apartment building exterior
+        public static readonly string ModernHousePool    = U("1600596542815-ffad4c1539a9"); // white modern house with pool
+        public static readonly string ModernHouseDark    = U("1600585154340-be6161a56a0c"); // dark modern house at twilight
 
-        // Apartment / condo building exteriors.
-        public static readonly string ApartmentBuilding  = U("1573921470445-8d99c48c879f"); // high-rise condo under a blue sky (verified)
-        public static readonly string ApartmentBuilding2 = U("1770962282626-61b2f4931bf7"); // modern apartment building, dark grey accents
-        public static readonly string ApartmentBuilding3 = U("1773558061377-fd3fa0cc2447"); // modern apartment balconies under blue sky
-        public static readonly string ApartmentBuilding4 = U("1766761562522-5a0a12bd2a27"); // tall apartment buildings with balconies
-
-        // Detached / semi-detached / townhouse exteriors.
-        public static readonly string House1 = U("1721815693498-cc28507c0ba2"); // modern 2-storey house with windows + balconies (verified)
-        public static readonly string House2 = U("1706808849777-96e0d7be3bb7"); // modern house with a large front yard
-        public static readonly string House3 = U("1706808849780-7a04fbac83ef"); // modern house with a pool and lounge chairs
-        public static readonly string House4 = U("1513584684374-8bab748fbf90"); // landscape photo of a 2-storey house
-
-        // Loft + bedroom for variety.
-        public static readonly string LoftInterior = U("1505873242700-f289a29e1e0f"); // black leather couch with throw pillow (loft style)
-        public static readonly string Bedroom      = U("1662454419716-c4c504728811"); // bed in a sunlit room
+        // Secondary interior shots reused for image carousels.
+        public static readonly string LivingRoom1        = U("1603072845032-7b5bd641a82a");
+        public static readonly string LivingRoom2        = U("1738168279272-c08d6dd22002");
+        public static readonly string LivingRoom3        = U("1647082550285-119acfd169f2");
+        public static readonly string LivingRoom4        = U("1737233459465-8eaf6c7d8856");
+        public static readonly string LivingRoom5        = U("1738168246881-40f35f8aba0a");
+        public static readonly string Bedroom            = U("1662454419716-c4c504728811");
     }
 
     private static IEnumerable<(Property property, string[] amenities)> BuildSamples(Guid landlordId)
     {
-        // ---- Toronto (4) ----
+        // ---- Toronto (8) ----
         yield return (Make(landlordId,
-            title: "Luxury Lofts on King Street",
-            type: PropertyType.Loft,
-            street: "250 King Street West", city: "Toronto", province: "ON", postal: "M5V 1J2",
-            neighbourhood: "Entertainment District",
-            lat: 43.6466, lng: -79.3901,
-            slug: "luxury-lofts-on-king-street",
-            tier: ListingTier.Featured,
-            description: "Soaring 12-ft ceilings, exposed brick, and floor-to-ceiling windows overlooking King West. Walk to the CN Tower, restaurants, and TIFF.",
-            units:
-            [
-                new Unit { Bedrooms = 1, Bathrooms = 1, SqFt = 620, Price = 2450, AvailableUnits = 2, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(15)) },
-                new Unit { Bedrooms = 2, Bathrooms = 2, SqFt = 950, Price = 3600, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(30)) }
-            ],
-            images:
-            [
-                Photo.LoftInterior,
-                Photo.ApartmentInterior4,
-                Photo.ApartmentBuilding3,
-                Photo.Bedroom,
-            ]),
-            ["Elevator", "Gym", "In-Suite Laundry", "Hardwood Floors", "Balcony", "Underground Parking", "24/7 Security", "Pet Friendly"]);
+            title: "Cozy Studio near Riverdale Park",
+            type: PropertyType.Studio,
+            street: "123 Broadview Ave", city: "Toronto", province: "ON", postal: "M4K 2S1",
+            neighbourhood: "Riverdale", lat: 43.6677, lng: -79.3530,
+            slug: "cozy-studio-riverdale-park",
+            tier: ListingTier.Limited,
+            descriptionEn: "Bright and cozy studio apartment just steps from Riverdale Park.",
+            descriptionFr: "Studio chaleureux et lumineux à deux pas du parc Riverdale.",
+            petsAllowed: true, furnished: false,
+            units: [ new Unit { Bedrooms = 0, Bathrooms = 1, SqFt = 380, Price = 1550, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(20)) } ],
+            images: [ Photo.StudioInterior, Photo.LivingRoom1, Photo.Bedroom ]),
+            ["Hardwood Floors", "Heat Included", "Cats Allowed"]);
 
         yield return (Make(landlordId,
-            title: "Bright 2BR Near High Park",
+            title: "Modern Apartment in Riverdale",
             type: PropertyType.Apartment,
-            street: "1860 Bloor Street West", city: "Toronto", province: "ON", postal: "M6P 1P5",
-            neighbourhood: "High Park",
-            lat: 43.6544, lng: -79.4673,
-            slug: "bright-2br-near-high-park",
-            tier: ListingTier.Promoted,
-            description: "Spacious two-bedroom with parquet floors, a sun-drenched living room, and a shared rooftop garden. Steps from the subway.",
-            units: [ new Unit { Bedrooms = 2, Bathrooms = 1, SqFt = 780, Price = 2800, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(20)) } ],
-            images: [ Photo.ApartmentInterior2, Photo.ApartmentBuilding2, Photo.Bedroom ]),
+            street: "88 Pape Ave", city: "Toronto", province: "ON", postal: "M4K 1Y3",
+            neighbourhood: "Riverdale", lat: 43.6680, lng: -79.3475,
+            slug: "modern-apartment-riverdale",
+            tier: ListingTier.Limited,
+            descriptionEn: "Stylish 1-bedroom in the heart of Riverdale with thoughtful finishes throughout.",
+            descriptionFr: "Élégant 1 chambre au cœur de Riverdale avec des finitions soignées.",
+            petsAllowed: true, furnished: true,
+            units: [ new Unit { Bedrooms = 1, Bathrooms = 1, SqFt = 580, Price = 1950, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(15)) } ],
+            images: [ Photo.ApartmentLiving, Photo.LivingRoom2, Photo.Bedroom ]),
             ["Hardwood Floors", "In-Suite Laundry", "Cats Allowed", "Heat Included"]);
 
         yield return (Make(landlordId,
-            title: "Roncesvalles Family Flat",
-            type: PropertyType.Apartment,
-            street: "188 Roncesvalles Avenue", city: "Toronto", province: "ON", postal: "M6R 2L5",
-            neighbourhood: "Roncesvalles",
-            lat: 43.6464, lng: -79.4510,
-            slug: "roncesvalles-family-flat",
+            title: "Renovated Basement Suite in Bloor West Village",
+            type: PropertyType.Basement,
+            street: "2280 Bloor St W", city: "Toronto", province: "ON", postal: "M6S 1A4",
+            neighbourhood: "Bloor West Village", lat: 43.6512, lng: -79.4818,
+            slug: "renovated-basement-bloor-west-village",
             tier: ListingTier.Limited,
-            description: "Pet-friendly second-floor flat with a huge backyard deck. Walk to Sorauren Park, the TTC, and coffee shops.",
-            units: [ new Unit { Bedrooms = 2, Bathrooms = 1, SqFt = 880, Price = 2600, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(35)) } ],
-            images: [ Photo.House2, Photo.ApartmentInterior5, Photo.Bedroom ]),
-            ["Pet Friendly", "Dogs Allowed", "Cats Allowed", "Hardwood Floors", "Storage Locker"]);
+            descriptionEn: "Renovated basement suite in Bloor West Village, steps from the subway and High Park.",
+            descriptionFr: "Sous-sol rénové à Bloor West Village, à proximité du métro et de High Park.",
+            petsAllowed: true, furnished: false,
+            units: [ new Unit { Bedrooms = 1, Bathrooms = 1, SqFt = 520, Price = 1580, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(25)) } ],
+            images: [ Photo.BasementInterior, Photo.LivingRoom3 ]),
+            ["Heat Included", "Water Included", "Cats Allowed"]);
 
         yield return (Make(landlordId,
-            title: "Yonge & Eglinton Modern Condo",
-            type: PropertyType.Condo,
-            street: "2221 Yonge Street", city: "Toronto", province: "ON", postal: "M4S 2B4",
-            neighbourhood: "Yonge & Eglinton",
-            lat: 43.7066, lng: -79.3982,
-            slug: "yonge-eglinton-modern-condo",
+            title: "Charming Townhouse in Riverdale",
+            type: PropertyType.Townhouse,
+            street: "246 Logan Ave", city: "Toronto", province: "ON", postal: "M4K 3E2",
+            neighbourhood: "Riverdale", lat: 43.6650, lng: -79.3470,
+            slug: "charming-townhouse-riverdale",
             tier: ListingTier.Promoted,
-            description: "Brand-new high-rise above the Eglinton Crosstown station. Floor-to-ceiling windows, granite counters, full amenities floor.",
+            descriptionEn: "Charming townhouse in Riverdale with multiple floor plans and a quiet leafy street.",
+            descriptionFr: "Charmante maison de ville à Riverdale avec plusieurs plans et une rue paisible et verdoyante.",
+            petsAllowed: true, furnished: false,
             units:
             [
-                new Unit { Bedrooms = 1, Bathrooms = 1, SqFt = 540, Price = 2350, AvailableUnits = 4, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(7)) },
-                new Unit { Bedrooms = 2, Bathrooms = 2, SqFt = 870, Price = 3300, AvailableUnits = 2, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(14)) }
+                new Unit { Bedrooms = 1, Bathrooms = 1, SqFt = 620, Price = 1250, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(10)) },
+                new Unit { Bedrooms = 2, Bathrooms = 1, SqFt = 880, Price = 2150, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(20)) },
+                new Unit { Bedrooms = 3, Bathrooms = 1, SqFt = 1100, Price = 2950, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(30)) }
             ],
-            images: [ Photo.ApartmentBuilding, Photo.ApartmentInterior1, Photo.ApartmentInterior3 ]),
-            ["Gym", "Pool", "Concierge", "Elevator", "In-Suite Laundry", "Smart Access", "Underground Parking"]);
+            images: [ Photo.TownhouseExterior, Photo.LivingRoom4, Photo.Bedroom ]),
+            ["Hardwood Floors", "Pet Friendly", "Dogs Allowed", "Outdoor Parking"]);
+
+        yield return (Make(landlordId,
+            title: "Spacious 2BR Apartment in Leslieville",
+            type: PropertyType.Apartment,
+            street: "412 Queen St E", city: "Toronto", province: "ON", postal: "M4M 1J6",
+            neighbourhood: "Leslieville", lat: 43.6630, lng: -79.3340,
+            slug: "spacious-2br-apartment-leslieville",
+            tier: ListingTier.Promoted,
+            descriptionEn: "Spacious two-bedroom apartment in Leslieville close to Queen Street cafés and parks.",
+            descriptionFr: "Spacieux 2 chambres à Leslieville près des cafés de la rue Queen et des parcs.",
+            petsAllowed: true, furnished: false,
+            units:
+            [
+                new Unit { Bedrooms = 2, Bathrooms = 1, SqFt = 760, Price = 1850, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(15)) },
+                new Unit { Bedrooms = 2, Bathrooms = 1, SqFt = 820, Price = 1950, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(30)) }
+            ],
+            images: [ Photo.ApartmentBuilding, Photo.LivingRoom5, Photo.Bedroom ]),
+            ["Hardwood Floors", "In-Suite Laundry", "Cats Allowed", "Heat Included"]);
+
+        yield return (Make(landlordId,
+            title: "Modern Condo in the Heart of Downtown Toronto",
+            type: PropertyType.Condo,
+            street: "88 King St W", city: "Toronto", province: "ON", postal: "M5V 3K2",
+            neighbourhood: "King West", lat: 43.6440, lng: -79.4006,
+            slug: "modern-condo-downtown-toronto",
+            tier: ListingTier.Featured,
+            descriptionEn: "Modern downtown condo with skyline views in the King West entertainment corridor.",
+            descriptionFr: "Condo moderne au centre-ville avec vue sur les gratte-ciel, dans le corridor King West.",
+            petsAllowed: true, furnished: false,
+            units:
+            [
+                new Unit { Bedrooms = 1, Bathrooms = 1, SqFt = 540, Price = 2350, AvailableUnits = 3, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(7)) },
+                new Unit { Bedrooms = 2, Bathrooms = 1, SqFt = 820, Price = 3250, AvailableUnits = 2, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(14)) },
+                new Unit { Bedrooms = 3, Bathrooms = 1, SqFt = 1100, Price = 4700, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(21)) }
+            ],
+            images: [ Photo.CondoTower, Photo.LivingRoom1, Photo.LivingRoom3, Photo.Bedroom ]),
+            ["Gym", "Pool", "Concierge", "Elevator", "In-Suite Laundry", "Smart Access", "Underground Parking", "Pet Friendly"]);
+
+        yield return (Make(landlordId,
+            title: "Luxury Loft in Liberty Village",
+            type: PropertyType.Loft,
+            street: "70 Jefferson Ave", city: "Toronto", province: "ON", postal: "M5V 0E5",
+            neighbourhood: "Liberty Village", lat: 43.6390, lng: -79.4202,
+            slug: "luxury-loft-liberty-village",
+            tier: ListingTier.Featured,
+            descriptionEn: "Luxury loft in Liberty Village with industrial details and easy access to King West.",
+            descriptionFr: "Loft de luxe à Liberty Village avec détails industriels et accès facile à King West.",
+            petsAllowed: false, furnished: true,
+            units:
+            [
+                new Unit { Bedrooms = 1, Bathrooms = 1, SqFt = 720, Price = 2650, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(20)) },
+                new Unit { Bedrooms = 2, Bathrooms = 1, SqFt = 1040, Price = 3550, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(35)) }
+            ],
+            images: [ Photo.LoftExterior, Photo.LivingRoom2, Photo.Bedroom ]),
+            ["Hardwood Floors", "Elevator", "In-Suite Laundry", "Air Conditioning", "Underground Parking"]);
+
+        yield return (Make(landlordId,
+            title: "Cozy Studio near University of Toronto",
+            type: PropertyType.Studio,
+            street: "215 Bloor St W", city: "Toronto", province: "ON", postal: "M5S 1X8",
+            neighbourhood: "The Annex", lat: 43.6701, lng: -79.4080,
+            slug: "cozy-studio-university-toronto",
+            tier: ListingTier.Limited,
+            descriptionEn: "Cozy studio near the University of Toronto in The Annex, perfect for students and faculty.",
+            descriptionFr: "Studio chaleureux près de l'Université de Toronto dans The Annex, parfait pour étudiants et professeurs.",
+            petsAllowed: false, furnished: true,
+            units: [ new Unit { Bedrooms = 0, Bathrooms = 1, SqFt = 360, Price = 1450, AvailableUnits = 2, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(10)) } ],
+            images: [ Photo.ApartmentLiving, Photo.LivingRoom4 ]),
+            ["Heat Included", "Water Included", "Hardwood Floors"]);
+
+        // ---- Vancouver (4) ----
+        yield return (Make(landlordId,
+            title: "Stunning Ocean-View Condo in Coal Harbour",
+            type: PropertyType.Condo,
+            street: "1166 W Georgia St", city: "Vancouver", province: "BC", postal: "V6E 4M3",
+            neighbourhood: "Coal Harbour", lat: 49.2900, lng: -123.1290,
+            slug: "ocean-view-condo-coal-harbour",
+            tier: ListingTier.Featured,
+            descriptionEn: "Stunning ocean-view condo with panoramic Coal Harbour views and luxury finishes.",
+            descriptionFr: "Magnifique condo avec vue panoramique sur la mer à Coal Harbour et finitions de luxe.",
+            petsAllowed: false, furnished: true,
+            units:
+            [
+                new Unit { Bedrooms = 2, Bathrooms = 2, SqFt = 1120, Price = 4800, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(20)) },
+                new Unit { Bedrooms = 3, Bathrooms = 2, SqFt = 1480, Price = 6200, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(40)) }
+            ],
+            images: [ Photo.CondoTower, Photo.LivingRoom1, Photo.LivingRoom5, Photo.Bedroom ]),
+            ["Concierge", "Pool", "Sauna", "Gym", "Elevator", "24/7 Security", "Underground Parking", "In-Suite Laundry"]);
+
+        yield return (Make(landlordId,
+            title: "Modern 1BR in Kitsilano Steps from the Beach",
+            type: PropertyType.Apartment,
+            street: "2050 W 4th Ave", city: "Vancouver", province: "BC", postal: "V6K 1N4",
+            neighbourhood: "Kitsilano", lat: 49.2700, lng: -123.1550,
+            slug: "modern-1br-kitsilano-beach",
+            tier: ListingTier.Promoted,
+            descriptionEn: "Modern one-bedroom in Kitsilano just steps from the beach and West 4th cafés.",
+            descriptionFr: "Moderne 1 chambre à Kitsilano à deux pas de la plage et des cafés de West 4th.",
+            petsAllowed: true, furnished: false,
+            units:
+            [
+                new Unit { Bedrooms = 1, Bathrooms = 1, SqFt = 540, Price = 2380, AvailableUnits = 2, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(10)) },
+                new Unit { Bedrooms = 2, Bathrooms = 1, SqFt = 760, Price = 2950, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(25)) }
+            ],
+            images: [ Photo.ApartmentBuilding, Photo.LivingRoom2 ]),
+            ["Hardwood Floors", "Balcony", "Cats Allowed", "Dogs Allowed", "In-Suite Laundry"]);
+
+        yield return (Make(landlordId,
+            title: "Spacious House in East Vancouver",
+            type: PropertyType.House,
+            street: "1450 Commercial Dr", city: "Vancouver", province: "BC", postal: "V5L 3X1",
+            neighbourhood: "Commercial Drive", lat: 49.2750, lng: -123.0700,
+            slug: "spacious-house-east-vancouver",
+            tier: ListingTier.Promoted,
+            descriptionEn: "Spacious house in East Vancouver near Commercial Drive's vibrant restaurants and shops.",
+            descriptionFr: "Maison spacieuse dans l'Est de Vancouver près des restaurants et boutiques de Commercial Drive.",
+            petsAllowed: true, furnished: false,
+            units:
+            [
+                new Unit { Bedrooms = 1, Bathrooms = 1, SqFt = 600, Price = 1650, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(15)) },
+                new Unit { Bedrooms = 2, Bathrooms = 1, SqFt = 950, Price = 2650, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(30)) },
+                new Unit { Bedrooms = 3, Bathrooms = 1, SqFt = 1380, Price = 3850, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(45)) }
+            ],
+            images: [ Photo.ModernHousePool, Photo.LivingRoom3, Photo.Bedroom ]),
+            ["Fireplace", "Pet Friendly", "Dogs Allowed", "Outdoor Parking"]);
+
+        yield return (Make(landlordId,
+            title: "Sleek Studio in Yaletown",
+            type: PropertyType.Studio,
+            street: "999 Pacific Blvd", city: "Vancouver", province: "BC", postal: "V6Z 2P3",
+            neighbourhood: "Yaletown", lat: 49.2745, lng: -123.1209,
+            slug: "sleek-studio-yaletown",
+            tier: ListingTier.Limited,
+            descriptionEn: "Sleek studio in the heart of Yaletown with floor-to-ceiling windows and city views.",
+            descriptionFr: "Studio élégant au cœur de Yaletown avec fenêtres pleine hauteur et vue sur la ville.",
+            petsAllowed: false, furnished: true,
+            units: [ new Unit { Bedrooms = 0, Bathrooms = 1, SqFt = 420, Price = 1850, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(7)) } ],
+            images: [ Photo.LoftExterior, Photo.LivingRoom4 ]),
+            ["Gym", "Concierge", "Elevator", "Smart Access"]);
 
         // ---- Montreal (3) ----
         yield return (Make(landlordId,
-            title: "Charming Plateau Triplex",
-            type: PropertyType.Duplex,
-            street: "4550 Rue Saint-Denis", city: "Montreal", province: "QC", postal: "H2J 2L4",
-            neighbourhood: "Le Plateau",
-            lat: 45.5258, lng: -73.5809,
-            slug: "charming-plateau-triplex",
-            tier: ListingTier.Promoted,
-            description: "Classic Montreal triplex with original mouldings, wide plank floors, and a sun-filled kitchen. Steps from Mont-Royal Avenue.",
-            units: [ new Unit { Bedrooms = 3, Bathrooms = 1.5m, SqFt = 1100, Price = 2300, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(45)) } ],
-            images: [ Photo.House4, Photo.ApartmentInterior5, Photo.Bedroom ]),
-            ["Hardwood Floors", "Balcony", "Pet Friendly", "Fireplace"]);
-
-        yield return (Make(landlordId,
-            title: "Old Montreal Heritage Loft",
-            type: PropertyType.Loft,
-            street: "445 Rue Saint-Pierre", city: "Montreal", province: "QC", postal: "H2Y 2M8",
-            neighbourhood: "Vieux-Montréal",
-            lat: 45.5026, lng: -73.5556,
-            slug: "old-montreal-heritage-loft",
-            tier: ListingTier.Featured,
-            description: "Restored 19th-century warehouse with cast-iron columns, exposed brick, and a private terrace overlooking the cobblestones.",
-            units: [ new Unit { Bedrooms = 1, Bathrooms = 1, SqFt = 950, Price = 2750, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(20)) } ],
-            images: [ Photo.LoftInterior, Photo.ApartmentInterior6, Photo.Bedroom ]),
-            ["Hardwood Floors", "Elevator", "Balcony", "In-Suite Laundry", "Air Conditioning"]);
-
-        yield return (Make(landlordId,
-            title: "Mile End Studio Apartment",
-            type: PropertyType.Studio,
-            street: "5145 Avenue du Parc", city: "Montreal", province: "QC", postal: "H2V 4G9",
-            neighbourhood: "Mile End",
-            lat: 45.5260, lng: -73.5970,
-            slug: "mile-end-studio-apartment",
-            tier: ListingTier.Limited,
-            description: "Cozy studio in the heart of Mile End. Bagels, coffee, and the metro all within a 5-minute walk. Utilities included.",
-            units: [ new Unit { Bedrooms = 0, Bathrooms = 1, SqFt = 380, Price = 1395, AvailableUnits = 2, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(30)) } ],
-            images: [ Photo.ApartmentInterior4, Photo.Bedroom ]),
-            ["Heat Included", "Water Included", "Hardwood Floors", "Cats Allowed"]);
-
-        // ---- Vancouver (3) ----
-        yield return (Make(landlordId,
-            title: "Yaletown Skyline Condo",
+            title: "Chic Condo in Old Montreal",
             type: PropertyType.Condo,
-            street: "1308 Hornby Street", city: "Vancouver", province: "BC", postal: "V6Z 0C4",
-            neighbourhood: "Yaletown",
-            lat: 49.2747, lng: -123.1207,
-            slug: "yaletown-skyline-condo",
+            street: "470 Rue Saint-Pierre", city: "Montreal", province: "QC", postal: "H2Y 1T8",
+            neighbourhood: "Old Montreal", lat: 45.5070, lng: -73.5560,
+            slug: "chic-condo-old-montreal",
             tier: ListingTier.Featured,
-            description: "Panoramic views of False Creek and the North Shore mountains. Modern finishes, in-suite laundry, and a rooftop pool.",
+            descriptionEn: "Chic condo in historic Old Montreal with cobblestone-street views and original details.",
+            descriptionFr: "Condo chic dans le Vieux-Montréal historique avec vue sur les rues pavées et cachet d'origine.",
+            petsAllowed: false, furnished: true,
             units:
             [
-                new Unit { Bedrooms = 1, Bathrooms = 1, SqFt = 580, Price = 2650, AvailableUnits = 3, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(10)) },
-                new Unit { Bedrooms = 2, Bathrooms = 2, SqFt = 880, Price = 3950, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(25)) }
+                new Unit { Bedrooms = 1, Bathrooms = 1, SqFt = 620, Price = 2800, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(15)) },
+                new Unit { Bedrooms = 2, Bathrooms = 1, SqFt = 880, Price = 3750, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(30)) }
             ],
-            images: [ Photo.ApartmentBuilding, Photo.ApartmentInterior1, Photo.ApartmentInterior3, Photo.Bedroom ]),
-            ["Gym", "Pool", "Concierge", "Elevator", "In-Suite Laundry", "Smart Access", "Underground Parking"]);
+            images: [ Photo.CondoTower, Photo.LivingRoom2, Photo.Bedroom ]),
+            ["Hardwood Floors", "Elevator", "In-Suite Laundry", "Air Conditioning"]);
 
         yield return (Make(landlordId,
-            title: "Kitsilano Beach House",
-            type: PropertyType.House,
-            street: "2245 Cornwall Avenue", city: "Vancouver", province: "BC", postal: "V6K 1B7",
-            neighbourhood: "Kitsilano",
-            lat: 49.2714, lng: -123.1558,
-            slug: "kitsilano-beach-house",
-            tier: ListingTier.Limited,
-            description: "Detached 3-bedroom with a sun deck, garden, and a short walk to Kits Beach. Perfect for families.",
-            units: [ new Unit { Bedrooms = 3, Bathrooms = 2, SqFt = 1650, Price = 4750, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(60)) } ],
-            images: [ Photo.House3, Photo.House2, Photo.ApartmentInterior2 ]),
-            ["Fireplace", "Dogs Allowed", "Outdoor Parking"]);
-
-        yield return (Make(landlordId,
-            title: "Coal Harbour Waterfront",
-            type: PropertyType.Condo,
-            street: "1777 Bayshore Drive", city: "Vancouver", province: "BC", postal: "V6G 3H4",
-            neighbourhood: "Coal Harbour",
-            lat: 49.2930, lng: -123.1323,
-            slug: "coal-harbour-waterfront",
-            tier: ListingTier.Featured,
-            description: "High-floor two-bedroom with wrap-around views, spa-inspired bathroom, and full concierge service.",
-            units: [ new Unit { Bedrooms = 2, Bathrooms = 2, SqFt = 1120, Price = 5200, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(30)) } ],
-            images: [ Photo.ApartmentBuilding4, Photo.ApartmentInterior1, Photo.ApartmentInterior6, Photo.Bedroom ]),
-            ["Concierge", "Pool", "Sauna", "Gym", "Elevator", "24/7 Security", "Underground Parking", "In-Suite Laundry"]);
-
-        // ---- Calgary (2) ----
-        yield return (Make(landlordId,
-            title: "Beltline Studio",
-            type: PropertyType.Studio,
-            street: "1011 12 Avenue SW", city: "Calgary", province: "AB", postal: "T2R 0J5",
-            neighbourhood: "Beltline",
-            lat: 51.0397, lng: -114.0791,
-            slug: "beltline-studio",
-            tier: ListingTier.Limited,
-            description: "Cozy studio in the heart of the Beltline. Walking distance to 17th Ave shops and restaurants. Utilities included.",
-            units: [ new Unit { Bedrooms = 0, Bathrooms = 1, SqFt = 420, Price = 1395, AvailableUnits = 4, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow) } ],
-            images: [ Photo.ApartmentInterior3, Photo.Bedroom ]),
-            ["Heat Included", "Water Included", "Elevator", "Gym"]);
-
-        yield return (Make(landlordId,
-            title: "Inglewood Loft Conversion",
-            type: PropertyType.Loft,
-            street: "1322 9 Avenue SE", city: "Calgary", province: "AB", postal: "T2G 0T5",
-            neighbourhood: "Inglewood",
-            lat: 51.0387, lng: -114.0379,
-            slug: "inglewood-loft-conversion",
-            tier: ListingTier.Promoted,
-            description: "Two-storey loft in a converted warehouse. Polished concrete floors, mezzanine bedroom, and a private rooftop deck.",
-            units: [ new Unit { Bedrooms = 1, Bathrooms = 1.5m, SqFt = 1050, Price = 2150, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(21)) } ],
-            images: [ Photo.LoftInterior, Photo.ApartmentInterior6, Photo.ApartmentBuilding3 ]),
-            ["Hardwood Floors", "Balcony", "Underground Parking", "Pet Friendly", "Air Conditioning"]);
-
-        // ---- Ottawa (2) ----
-        yield return (Make(landlordId,
-            title: "ByWard Market Townhouse",
-            type: PropertyType.Townhouse,
-            street: "380 Dalhousie Street", city: "Ottawa", province: "ON", postal: "K1N 7E8",
-            neighbourhood: "ByWard Market",
-            lat: 45.4309, lng: -75.6927,
-            slug: "byward-market-townhouse",
-            tier: ListingTier.Promoted,
-            description: "Three-level townhouse with private garage and rooftop patio. Steps from Parliament, restaurants, and the market.",
-            units: [ new Unit { Bedrooms = 3, Bathrooms = 2.5m, SqFt = 1480, Price = 3200, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(30)) } ],
-            images: [ Photo.House2, Photo.House4, Photo.ApartmentInterior5 ]),
-            ["Fireplace", "Balcony", "EV Charging", "Air Conditioning", "In-Suite Laundry"]);
-
-        yield return (Make(landlordId,
-            title: "Glebe Heritage Apartment",
+            title: "Classic Plateau Apartment with French Doors",
             type: PropertyType.Apartment,
-            street: "788 Bank Street", city: "Ottawa", province: "ON", postal: "K1S 3V5",
-            neighbourhood: "The Glebe",
-            lat: 45.3949, lng: -75.6884,
-            slug: "glebe-heritage-apartment",
+            street: "4400 Rue Saint-Denis", city: "Montreal", province: "QC", postal: "H2W 2P5",
+            neighbourhood: "Plateau-Mont-Royal", lat: 45.5230, lng: -73.5800,
+            slug: "classic-plateau-apartment-montreal",
+            tier: ListingTier.Promoted,
+            descriptionEn: "Classic Plateau apartment with French doors, wood floors, and Mont-Royal nearby.",
+            descriptionFr: "Appartement classique du Plateau avec portes françaises, planchers de bois et Mont-Royal à proximité.",
+            petsAllowed: true, furnished: false,
+            units:
+            [
+                new Unit { Bedrooms = 2, Bathrooms = 1, SqFt = 800, Price = 1780, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(20)) },
+                new Unit { Bedrooms = 2, Bathrooms = 1, SqFt = 860, Price = 1850, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(35)) }
+            ],
+            images: [ Photo.ApartmentBuilding, Photo.LivingRoom5 ]),
+            ["Hardwood Floors", "Balcony", "Pet Friendly", "Heat Included"]);
+
+        yield return (Make(landlordId,
+            title: "Bright Duplex in Mile End",
+            type: PropertyType.Duplex,
+            street: "5575 Avenue du Parc", city: "Montreal", province: "QC", postal: "H2T 1Y9",
+            neighbourhood: "Mile End", lat: 45.5260, lng: -73.5970,
+            slug: "bright-duplex-mile-end",
             tier: ListingTier.Limited,
-            description: "Top-floor unit in a 1920s heritage building. Original tin ceilings, refinished hardwood, and a quiet tree-lined street.",
-            units: [ new Unit { Bedrooms = 2, Bathrooms = 1, SqFt = 740, Price = 1950, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(40)) } ],
-            images: [ Photo.ApartmentInterior3, Photo.ApartmentBuilding2, Photo.Bedroom ]),
-            ["Hardwood Floors", "Heat Included", "Cats Allowed"]);
+            descriptionEn: "Bright duplex in Mile End close to bagels, coffee, and the Plateau metro station.",
+            descriptionFr: "Duplex lumineux dans Mile End près des bagels, du café et du métro Plateau.",
+            petsAllowed: true, furnished: false,
+            units: [ new Unit { Bedrooms = 2, Bathrooms = 1, SqFt = 920, Price = 1680, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(20)) } ],
+            images: [ Photo.BasementInterior, Photo.LivingRoom1, Photo.Bedroom ]),
+            ["Hardwood Floors", "Cats Allowed", "Heat Included", "Water Included"]);
+
+        // ---- Calgary (3) ----
+        yield return (Make(landlordId,
+            title: "Executive Condo in Beltline Calgary",
+            type: PropertyType.Condo,
+            street: "1110 12 Ave SW", city: "Calgary", province: "AB", postal: "T2R 0T7",
+            neighbourhood: "Beltline", lat: 51.0420, lng: -114.0750,
+            slug: "executive-condo-beltline-calgary",
+            tier: ListingTier.Featured,
+            descriptionEn: "Executive condo in Beltline with downtown views and walking access to 17th Avenue.",
+            descriptionFr: "Condo exécutif à Beltline avec vue sur le centre-ville et accès piéton à la 17e Avenue.",
+            petsAllowed: true, furnished: false,
+            units:
+            [
+                new Unit { Bedrooms = 1, Bathrooms = 1, SqFt = 580, Price = 1980, AvailableUnits = 2, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(10)) },
+                new Unit { Bedrooms = 2, Bathrooms = 1, SqFt = 880, Price = 2680, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(25)) }
+            ],
+            images: [ Photo.CondoTower, Photo.LivingRoom3, Photo.Bedroom ]),
+            ["Gym", "Pool", "Elevator", "Smart Access", "Pet Friendly", "Underground Parking"]);
+
+        yield return (Make(landlordId,
+            title: "Modern Townhouse in Garrison Woods",
+            type: PropertyType.Townhouse,
+            street: "2055 27 Ave SW", city: "Calgary", province: "AB", postal: "T2T 6E5",
+            neighbourhood: "Garrison Woods", lat: 51.0260, lng: -114.0900,
+            slug: "modern-townhouse-garrison-woods",
+            tier: ListingTier.Promoted,
+            descriptionEn: "Modern townhouse in Garrison Woods with a private garage and family-friendly streets.",
+            descriptionFr: "Maison de ville moderne à Garrison Woods avec garage privé et rues conviviales pour les familles.",
+            petsAllowed: true, furnished: false,
+            units: [ new Unit { Bedrooms = 3, Bathrooms = 3, SqFt = 1620, Price = 2850, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(30)) } ],
+            images: [ Photo.TownhouseExterior, Photo.LivingRoom4, Photo.Bedroom ]),
+            ["Fireplace", "Pet Friendly", "Dogs Allowed", "Outdoor Parking", "Air Conditioning"]);
+
+        yield return (Make(landlordId,
+            title: "Affordable 1BR Apartment in Kensington",
+            type: PropertyType.Apartment,
+            street: "1217 Kensington Rd NW", city: "Calgary", province: "AB", postal: "T2N 3C8",
+            neighbourhood: "Kensington", lat: 51.0510, lng: -114.0890,
+            slug: "affordable-1br-apartment-kensington-calgary",
+            tier: ListingTier.Limited,
+            descriptionEn: "Affordable one-bedroom in Kensington with great walkability to shops and the Bow River.",
+            descriptionFr: "1 chambre abordable à Kensington avec excellente proximité des boutiques et de la rivière Bow.",
+            petsAllowed: false, furnished: false,
+            units: [ new Unit { Bedrooms = 1, Bathrooms = 1, SqFt = 520, Price = 1550, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(15)) } ],
+            images: [ Photo.ApartmentBuilding, Photo.LivingRoom2 ]),
+            ["Heat Included", "Water Included", "Elevator"]);
 
         // ---- Edmonton (2) ----
         yield return (Make(landlordId,
-            title: "Oliver Square One-Bedroom",
+            title: "Spacious 2BR in Oliver Edmonton",
             type: PropertyType.Apartment,
-            street: "10235 104 Street NW", city: "Edmonton", province: "AB", postal: "T5J 1B9",
-            neighbourhood: "Oliver",
-            lat: 53.5456, lng: -113.4936,
-            slug: "oliver-square-one-bedroom",
-            tier: ListingTier.Limited,
-            description: "Modern one-bedroom in downtown Edmonton with a balcony, in-suite laundry, and access to a shared fitness room.",
-            units: [ new Unit { Bedrooms = 1, Bathrooms = 1, SqFt = 540, Price = 1450, AvailableUnits = 2, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(14)) } ],
-            images: [ Photo.ApartmentInterior2, Photo.ApartmentBuilding ]),
-            ["Gym", "Elevator", "In-Suite Laundry", "Air Conditioning", "Heat Included"]);
+            street: "10130 104 St NW", city: "Edmonton", province: "AB", postal: "T5J 3K5",
+            neighbourhood: "Oliver", lat: 53.5470, lng: -113.5050,
+            slug: "spacious-2br-oliver-edmonton",
+            tier: ListingTier.Promoted,
+            descriptionEn: "Spacious two-bedroom in Oliver near downtown Edmonton's restaurants and ICE District.",
+            descriptionFr: "Spacieux 2 chambres à Oliver près des restaurants du centre-ville d'Edmonton et du ICE District.",
+            petsAllowed: true, furnished: false,
+            units:
+            [
+                new Unit { Bedrooms = 2, Bathrooms = 1, SqFt = 780, Price = 1780, AvailableUnits = 2, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(14)) },
+                new Unit { Bedrooms = 2, Bathrooms = 1, SqFt = 860, Price = 1980, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(28)) }
+            ],
+            images: [ Photo.LoftExterior, Photo.LivingRoom5, Photo.Bedroom ]),
+            ["Gym", "Elevator", "In-Suite Laundry", "Air Conditioning", "Pet Friendly"]);
 
         yield return (Make(landlordId,
-            title: "Whyte Avenue Studio",
-            type: PropertyType.Studio,
-            street: "10350 82 Avenue NW", city: "Edmonton", province: "AB", postal: "T6E 1Z9",
-            neighbourhood: "Old Strathcona",
-            lat: 53.5188, lng: -113.4923,
-            slug: "whyte-avenue-studio",
+            title: "Cozy House in Strathcona Edmonton",
+            type: PropertyType.House,
+            street: "10310 Whyte Ave", city: "Edmonton", province: "AB", postal: "T6E 1Z9",
+            neighbourhood: "Old Strathcona", lat: 53.5180, lng: -113.4920,
+            slug: "cozy-house-strathcona-edmonton",
+            tier: ListingTier.Limited,
+            descriptionEn: "Cozy house in Old Strathcona steps from Whyte Avenue, music venues, and the U of A.",
+            descriptionFr: "Maison chaleureuse à Old Strathcona à deux pas de l'avenue Whyte, des salles de spectacle et de l'Université de l'Alberta.",
+            petsAllowed: true, furnished: false,
+            units: [ new Unit { Bedrooms = 3, Bathrooms = 2, SqFt = 1380, Price = 2420, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(40)) } ],
+            images: [ Photo.ModernHouseDark, Photo.LivingRoom1, Photo.Bedroom ]),
+            ["Fireplace", "Pet Friendly", "Dogs Allowed", "Outdoor Parking"]);
+
+        // ---- Ottawa (2) ----
+        yield return (Make(landlordId,
+            title: "Bright Apartment in the Glebe Ottawa",
+            type: PropertyType.Apartment,
+            street: "880 Bank St", city: "Ottawa", province: "ON", postal: "K1S 4G7",
+            neighbourhood: "The Glebe", lat: 45.4000, lng: -75.6890,
+            slug: "bright-apartment-glebe-ottawa",
             tier: ListingTier.Promoted,
-            description: "Bright studio above a bookstore on Whyte Ave. Steps from cafes, music venues, and the Saturday farmers market.",
-            units: [ new Unit { Bedrooms = 0, Bathrooms = 1, SqFt = 360, Price = 1150, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(7)) } ],
-            images: [ Photo.ApartmentInterior6, Photo.Bedroom ]),
-            ["Heat Included", "Water Included", "Hardwood Floors"]);
+            descriptionEn: "Bright apartment in The Glebe near Lansdowne Park, the canal, and Bank Street shops.",
+            descriptionFr: "Appartement lumineux dans The Glebe près du parc Lansdowne, du canal et des boutiques de la rue Bank.",
+            petsAllowed: true, furnished: false,
+            units:
+            [
+                new Unit { Bedrooms = 2, Bathrooms = 1, SqFt = 720, Price = 2150, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(15)) },
+                new Unit { Bedrooms = 2, Bathrooms = 1, SqFt = 800, Price = 2250, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(30)) }
+            ],
+            images: [ Photo.BasementInterior, Photo.LivingRoom2, Photo.Bedroom ]),
+            ["Hardwood Floors", "Heat Included", "Cats Allowed", "Pet Friendly"]);
+
+        yield return (Make(landlordId,
+            title: "Modern Condo near Parliament Hill",
+            type: PropertyType.Condo,
+            street: "350 Sparks St", city: "Ottawa", province: "ON", postal: "K1P 5H3",
+            neighbourhood: "Centretown", lat: 45.4170, lng: -75.6960,
+            slug: "modern-condo-parliament-hill-ottawa",
+            tier: ListingTier.Limited,
+            descriptionEn: "Modern condo in Centretown within walking distance of Parliament Hill and the museums.",
+            descriptionFr: "Condo moderne à Centretown à distance de marche de la Colline du Parlement et des musées.",
+            petsAllowed: false, furnished: false,
+            units: [ new Unit { Bedrooms = 1, Bathrooms = 1, SqFt = 580, Price = 2350, AvailableUnits = 1, AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(10)) } ],
+            images: [ Photo.CondoTower, Photo.LivingRoom4 ]),
+            ["Gym", "Concierge", "Elevator", "Smart Access"]);
     }
 
     private static Property Make(
@@ -378,7 +507,10 @@ public static class SamplePropertiesSeeder
         double lng,
         string slug,
         ListingTier tier,
-        string description,
+        string descriptionEn,
+        string descriptionFr,
+        bool petsAllowed,
+        bool furnished,
         Unit[] units,
         string[] images)
     {
@@ -387,7 +519,8 @@ public static class SamplePropertiesSeeder
             Id = Guid.NewGuid(),
             LandlordProfileId = landlordId,
             Title = title,
-            Description = description,
+            Description = descriptionEn,
+            DescriptionFr = descriptionFr,
             PropertyType = type,
             Status = ListingStatus.Active,
             Tier = tier,
@@ -399,10 +532,10 @@ public static class SamplePropertiesSeeder
             Latitude = lat,
             Longitude = lng,
             Slug = slug,
-            IsVerified = true,
-            // Preserve a small bit of variety. Most apartments/houses are pet friendly in this demo.
-            PetsAllowed = type != PropertyType.Studio,
-            Furnished = false,
+            // Next.js does not surface a "Verified" badge — keep this off so cards do not show one.
+            IsVerified = false,
+            PetsAllowed = petsAllowed,
+            Furnished = furnished,
             LeaseTerm = Domain.LeaseTerm.OneYear
         };
 

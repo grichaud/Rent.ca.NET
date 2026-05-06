@@ -8,6 +8,7 @@ public class Property
 
     public string Title { get; set; } = string.Empty;
     public string? Description { get; set; }
+    public string? DescriptionFr { get; set; }
 
     public PropertyType PropertyType { get; set; }
     public ListingStatus Status { get; set; } = ListingStatus.Draft;

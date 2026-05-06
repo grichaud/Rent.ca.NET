@@ -175,7 +175,7 @@
         <div id="panel-about" role="tabpanel" aria-labelledby="tab-about" data-detail-panel="about" hidden>
             <section class="glass-card p-6">
                 <h2 class="font-semibold text-slate-900 dark:text-white mb-3">@L["detail.aboutListing"]</h2>
-                <p class="text-slate-700 dark:text-white/80 whitespace-pre-line">@p.Description</p>
+                <p class="text-slate-700 dark:text-white/80 whitespace-pre-line">@(culture == "fr" && !string.IsNullOrWhiteSpace(p.DescriptionFr) ? p.DescriptionFr : p.Description)</p>
             </section>
 
             @if (p.Latitude.HasValue && p.Longitude.HasValue)
