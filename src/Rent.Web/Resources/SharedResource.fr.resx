@@ -199,19 +199,10 @@
   <data name="stats.citiesCoveredDesc" xml:space="preserve"><value>Communautés d'un océan à l'autre</value></data>
   <data name="stats.happyRenters" xml:space="preserve"><value>Locataires satisfaits</value></data>
   <data name="stats.happyRentersDesc" xml:space="preserve"><value>Canadiens ont trouvé leur chez-eux avec nous</value></data>
-  <data name="landlordPage.badge" xml:space="preserve"><value>Pour les gestionnaires immobiliers</value></data>
   <data name="landlordPage.title" xml:space="preserve"><value>Atteignez des milliers de</value></data>
   <data name="landlordPage.titleHighlight" xml:space="preserve"><value>Locataires qualifiés</value></data>
   <data name="landlordPage.subtitle" xml:space="preserve"><value>Publiez votre propriété sur le marché locatif le plus dynamique du Canada</value></data>
   <data name="landlordPage.getStarted" xml:space="preserve"><value>Commencer gratuitement</value></data>
-  <data name="landlordPage.learnMore" xml:space="preserve"><value>En savoir plus</value></data>
-  <data name="landlordPage.haveAccount" xml:space="preserve"><value>J'ai déjà un compte</value></data>
-  <data name="landlordPage.feature1Title" xml:space="preserve"><value>Publiez en quelques minutes</value></data>
-  <data name="landlordPage.feature1Desc" xml:space="preserve"><value>Ajoutez photos, unités et commodités via un formulaire guidé. Sans limite d'envoi, sans appels de configuration.</value></data>
-  <data name="landlordPage.feature2Title" xml:space="preserve"><value>Demandes dans une seule boîte</value></data>
-  <data name="landlordPage.feature2Desc" xml:space="preserve"><value>Les messages des locataires arrivent dans une seule boîte avec suivi lu/non lu et compte de prospects par annonce.</value></data>
-  <data name="landlordPage.feature3Title" xml:space="preserve"><value>Promouvez quand vous en avez besoin</value></data>
-  <data name="landlordPage.feature3Desc" xml:space="preserve"><value>Mettez une annonce en haut des résultats pendant les semaines creuses. À la carte, sans abonnement.</value></data>
   <data name="footer.about" xml:space="preserve"><value>À propos</value></data>
   <data name="footer.tagline" xml:space="preserve"><value>Trouvez votre prochain chez-vous au Canada.</value></data>
   <data name="footer.verified" xml:space="preserve"><value>Des milliers d'annonces vérifiées dans toutes les grandes villes.</value></data>

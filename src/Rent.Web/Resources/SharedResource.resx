@@ -199,19 +199,10 @@
   <data name="stats.citiesCoveredDesc" xml:space="preserve"><value>Communities from coast to coast</value></data>
   <data name="stats.happyRenters" xml:space="preserve"><value>Happy Renters</value></data>
   <data name="stats.happyRentersDesc" xml:space="preserve"><value>Canadians found their home with us</value></data>
-  <data name="landlordPage.badge" xml:space="preserve"><value>For Property Managers</value></data>
   <data name="landlordPage.title" xml:space="preserve"><value>Reach Thousands of</value></data>
   <data name="landlordPage.titleHighlight" xml:space="preserve"><value>Qualified Renters</value></data>
   <data name="landlordPage.subtitle" xml:space="preserve"><value>List your rental on Canada's fastest-growing rental marketplace</value></data>
   <data name="landlordPage.getStarted" xml:space="preserve"><value>Get Started Free</value></data>
-  <data name="landlordPage.learnMore" xml:space="preserve"><value>Learn More</value></data>
-  <data name="landlordPage.haveAccount" xml:space="preserve"><value>I already have an account</value></data>
-  <data name="landlordPage.feature1Title" xml:space="preserve"><value>Post in minutes</value></data>
-  <data name="landlordPage.feature1Desc" xml:space="preserve"><value>Add photos, units, and amenities through a guided form. No upload limits, no setup calls.</value></data>
-  <data name="landlordPage.feature2Title" xml:space="preserve"><value>Inquiries in one inbox</value></data>
-  <data name="landlordPage.feature2Desc" xml:space="preserve"><value>Renter messages land in a single inbox with read/unread tracking and lead counts per listing.</value></data>
-  <data name="landlordPage.feature3Title" xml:space="preserve"><value>Promote when you need it</value></data>
-  <data name="landlordPage.feature3Desc" xml:space="preserve"><value>Boost a listing to the top of search results during slow weeks. Pay-as-you-go, no subscription.</value></data>
   <data name="footer.about" xml:space="preserve"><value>About</value></data>
   <data name="footer.tagline" xml:space="preserve"><value>Find your next home in Canada.</value></data>
   <data name="footer.verified" xml:space="preserve"><value>Thousands of verified listings across all major cities.</value></data>
