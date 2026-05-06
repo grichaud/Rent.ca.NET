@@ -4,54 +4,275 @@
     ViewData["Title"] = L["common.landlords"].Value;
     var culture = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
     if (culture != "en" && culture != "fr") { culture = "en"; }
+    var signupUrl = $"/{culture}/signup";
 }
 
+@*  ──────────── 1. Hero ──────────── *@
 <section class="relative overflow-hidden rounded-3xl">
     <div class="aurora-orb h-[360px] w-[360px] -top-24 -left-24 bg-brand-500"></div>
     <div class="aurora-orb h-[400px] w-[400px] -top-20 right-0 bg-cyan-400 [animation-delay:2s]"></div>
 
-    <div class="relative max-w-3xl mx-auto text-center py-16 sm:py-24">
+    <div class="relative max-w-4xl mx-auto text-center py-16 sm:py-24">
         <div class="glass-badge mx-auto mb-6 inline-flex">
-            <icon name="building" class="h-3.5 w-3.5 text-brand-600 dark:text-brand-300" />
-            <span class="text-xs font-medium text-slate-700 dark:text-white/80">@L["landlordPage.badge"]</span>
+            <icon name="building-2" class="h-3.5 w-3.5 text-brand-600 dark:text-brand-300" />
+            <span class="text-xs font-medium text-slate-700 dark:text-white/80">@L["Landlords_HeroBadge"]</span>
         </div>
         <h1 class="font-sans font-bold tracking-tight text-5xl sm:text-6xl text-slate-900 dark:text-white leading-tight">
-            @L["landlordPage.title"]
-            <span class="bg-gradient-to-r from-brand-500 to-cyan-500 bg-clip-text text-transparent">@L["landlordPage.titleHighlight"]</span>
+            <span class="block">@L["Landlords_HeroTitle1"]</span>
+            <span class="block bg-gradient-to-r from-brand-500 to-cyan-500 dark:from-brand-400 dark:to-cyan-400 bg-clip-text text-transparent">@L["Landlords_HeroTitle2"]</span>
         </h1>
         <p class="text-lg text-slate-600 dark:text-white/70 mt-6 max-w-xl mx-auto">
-            @L["landlordPage.subtitle"]
+            @L["Landlords_HeroSubtitle"]
         </p>
-        <div class="mt-10 flex items-center justify-center gap-3">
-            <a href="/@culture/signup" class="glass-button-primary inline-flex items-center gap-2">
-                <span>@L["landlordPage.getStarted"]</span>
-                <icon name="user-plus" class="h-4 w-4" />
+        <div class="mt-10 flex flex-wrap items-center justify-center gap-3">
+            <a href="@signupUrl" class="glass-button-primary inline-flex items-center gap-2">
+                <span>@L["Landlords_GetStartedFree"]</span>
+                <icon name="arrow-right" class="h-4 w-4" />
             </a>
-            <a href="/@culture/login" class="glass-button">@L["landlordPage.haveAccount"]</a>
+            <a href="#pricing" class="glass-button">@L["Landlords_ViewPricing"]</a>
+        </div>
+
+        <div class="mt-14 grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto">
+            <div class="glass-card p-5 text-center">
+                <div class="text-3xl font-bold text-slate-900 dark:text-white">10,000+</div>
+                <div class="text-sm text-slate-600 dark:text-white/60 mt-1">@L["Landlords_StatListings"]</div>
+            </div>
+            <div class="glass-card p-5 text-center">
+                <div class="text-3xl font-bold text-slate-900 dark:text-white">200+</div>
+                <div class="text-sm text-slate-600 dark:text-white/60 mt-1">@L["Landlords_StatCities"]</div>
+            </div>
+            <div class="glass-card p-5 text-center">
+                <div class="text-3xl font-bold text-slate-900 dark:text-white">50,000+</div>
+                <div class="text-sm text-slate-600 dark:text-white/60 mt-1">@L["Landlords_StatVisitors"]</div>
+            </div>
         </div>
     </div>
 </section>
 
-<section class="mt-16 grid sm:grid-cols-3 gap-6">
-    <div class="glass-card p-6">
-        <icon name="home" class="h-8 w-8 text-brand-500 mb-3" />
-        <h3 class="font-semibold text-slate-900 dark:text-white">@L["landlordPage.feature1Title"]</h3>
-        <p class="text-sm text-slate-600 dark:text-white/60 mt-2">
-            @L["landlordPage.feature1Desc"]
-        </p>
+@*  ──────────── 2. Why list on Rent.ca ──────────── *@
+<section class="mt-24">
+    <h2 class="font-sans font-bold tracking-tight text-3xl sm:text-4xl text-slate-900 dark:text-white text-center">
+        @L["Landlords_WhyTitle"]
+    </h2>
+    <div class="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <div class="glass-card p-6">
+            <div class="inline-flex items-center justify-center h-12 w-12 rounded-2xl bg-brand-500/15 dark:bg-brand-500/25 mb-4">
+                <icon name="eye" class="h-6 w-6 text-brand-600 dark:text-brand-300" />
+            </div>
+            <h3 class="font-semibold text-lg text-slate-900 dark:text-white">@L["Landlords_Why1Title"]</h3>
+            <p class="text-sm text-slate-600 dark:text-white/60 mt-2 leading-relaxed">@L["Landlords_Why1Body"]</p>
+        </div>
+        <div class="glass-card p-6">
+            <div class="inline-flex items-center justify-center h-12 w-12 rounded-2xl bg-cyan-500/15 dark:bg-cyan-500/25 mb-4">
+                <icon name="sparkles" class="h-6 w-6 text-cyan-600 dark:text-cyan-300" />
+            </div>
+            <h3 class="font-semibold text-lg text-slate-900 dark:text-white">@L["Landlords_Why2Title"]</h3>
+            <p class="text-sm text-slate-600 dark:text-white/60 mt-2 leading-relaxed">@L["Landlords_Why2Body"]</p>
+        </div>
+        <div class="glass-card p-6">
+            <div class="inline-flex items-center justify-center h-12 w-12 rounded-2xl bg-purple-500/15 dark:bg-purple-500/25 mb-4">
+                <icon name="layout-grid" class="h-6 w-6 text-purple-600 dark:text-purple-300" />
+            </div>
+            <h3 class="font-semibold text-lg text-slate-900 dark:text-white">@L["Landlords_Why3Title"]</h3>
+            <p class="text-sm text-slate-600 dark:text-white/60 mt-2 leading-relaxed">@L["Landlords_Why3Body"]</p>
+        </div>
     </div>
-    <div class="glass-card p-6">
-        <icon name="mail" class="h-8 w-8 text-brand-500 mb-3" />
-        <h3 class="font-semibold text-slate-900 dark:text-white">@L["landlordPage.feature2Title"]</h3>
-        <p class="text-sm text-slate-600 dark:text-white/60 mt-2">
-            @L["landlordPage.feature2Desc"]
-        </p>
+</section>
+
+@*  ──────────── 3. How It Works ──────────── *@
+<section class="mt-24">
+    <div class="text-center max-w-2xl mx-auto">
+        <span class="glass-badge inline-flex">
+            <icon name="check-circle" class="h-3.5 w-3.5 text-brand-600 dark:text-brand-300" />
+            <span class="text-xs font-medium text-slate-700 dark:text-white/80">@L["Landlords_HowEyebrow"]</span>
+        </span>
+        <h2 class="mt-4 font-sans font-bold tracking-tight text-3xl sm:text-4xl text-slate-900 dark:text-white">
+            @L["Landlords_HowTitle"]
+        </h2>
+        <p class="mt-3 text-slate-600 dark:text-white/70">@L["Landlords_HowSubtitle"]</p>
     </div>
-    <div class="glass-card p-6">
-        <icon name="sparkles" class="h-8 w-8 text-brand-500 mb-3" />
-        <h3 class="font-semibold text-slate-900 dark:text-white">@L["landlordPage.feature3Title"]</h3>
-        <p class="text-sm text-slate-600 dark:text-white/60 mt-2">
-            @L["landlordPage.feature3Desc"]
-        </p>
+    <div class="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-6">
+        @{ var steps = new[] {
+            new { Num = "1", Icon = "user-plus",  TitleKey = "Landlords_Step1Title", BodyKey = "Landlords_Step1Body" },
+            new { Num = "2", Icon = "file-plus",  TitleKey = "Landlords_Step2Title", BodyKey = "Landlords_Step2Body" },
+            new { Num = "3", Icon = "inbox",      TitleKey = "Landlords_Step3Title", BodyKey = "Landlords_Step3Body" },
+        }; }
+        @foreach (var step in steps)
+        {
+            <div class="relative glass-card p-6">
+                <div class="flex items-start gap-4">
+                    <div class="text-5xl font-bold bg-gradient-to-br from-brand-500 to-cyan-500 bg-clip-text text-transparent leading-none shrink-0">@step.Num</div>
+                    <div class="flex-1">
+                        <icon name="@step.Icon" class="h-6 w-6 text-brand-500 dark:text-brand-300 mb-2" />
+                        <h3 class="font-semibold text-lg text-slate-900 dark:text-white">@L[step.TitleKey]</h3>
+                        <p class="text-sm text-slate-600 dark:text-white/60 mt-2 leading-relaxed">@L[step.BodyKey]</p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+@*  ──────────── 4. Pricing tiers ──────────── *@
+<section id="pricing" class="mt-24 scroll-mt-24">
+    <div class="text-center max-w-2xl mx-auto">
+        <span class="glass-badge inline-flex">
+            <icon name="tag" class="h-3.5 w-3.5 text-brand-600 dark:text-brand-300" />
+            <span class="text-xs font-medium text-slate-700 dark:text-white/80">@L["Landlords_PricingEyebrow"]</span>
+        </span>
+        <h2 class="mt-4 font-sans font-bold tracking-tight text-3xl sm:text-4xl text-slate-900 dark:text-white">
+            @L["Landlords_PricingTitle"]
+        </h2>
+        <p class="mt-3 text-slate-600 dark:text-white/70">@L["Landlords_PricingSubtitle"]</p>
+    </div>
+    <div class="mt-14 grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+        @foreach (var tier in Model.Tiers)
+        {
+            var cardClass = tier.Variant switch
+            {
+                Rent.Web.Features.Home.TierVariant.Promoted => "glass-card-premium p-8 ring-2 ring-brand-500/60 lg:scale-[1.03] z-10 shadow-2xl shadow-brand-500/20",
+                Rent.Web.Features.Home.TierVariant.Featured => "glass-card p-8 ring-1 ring-amber-400/50 dark:ring-amber-400/40 shadow-xl shadow-amber-500/10",
+                _ => "glass-card p-8"
+            };
+            var ctaClass = tier.Variant switch
+            {
+                Rent.Web.Features.Home.TierVariant.Promoted => "glass-button-primary",
+                Rent.Web.Features.Home.TierVariant.Featured => "inline-flex items-center justify-center gap-2 w-full rounded-2xl px-5 py-2.5 font-medium text-white bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 shadow-xl shadow-amber-500/30 hover:shadow-2xl hover:shadow-amber-500/40 transition-all duration-300",
+                _ => "glass-button w-full justify-center"
+            };
+            <div class="@cardClass relative flex flex-col">
+                @if (tier.BadgeKey is not null)
+                {
+                    if (tier.Variant == Rent.Web.Features.Home.TierVariant.Featured)
+                    {
+                        <span class="absolute -top-3 right-6 inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-bold text-amber-950 bg-gradient-to-r from-amber-300 to-yellow-400 shadow-lg shadow-amber-500/40">
+                            <icon name="crown" class="h-3.5 w-3.5" />
+                            <span>@L[tier.BadgeKey]</span>
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="absolute -top-3 right-6 inline-flex items-center rounded-full px-3 py-1 text-xs font-bold text-white bg-gradient-to-r from-brand-500 to-cyan-500 shadow-lg shadow-brand-500/40">
+                            @L[tier.BadgeKey]
+                        </span>
+                    }
+                }
+                <div>
+                    <h3 class="font-semibold text-xl text-slate-900 dark:text-white">@L[tier.NameKey]</h3>
+                    <div class="mt-4 flex items-baseline gap-2">
+                        <span class="text-4xl font-bold text-slate-900 dark:text-white">@L[tier.PriceKey]</span>
+                        <span class="text-sm text-slate-500 dark:text-white/60">@L[tier.PeriodKey]</span>
+                    </div>
+                    <p class="mt-3 text-sm text-slate-600 dark:text-white/60">@L[tier.BodyKey]</p>
+                </div>
+
+                <ul class="mt-6 space-y-3 flex-1">
+                    @foreach (var feat in tier.Features)
+                    {
+                        <li class="flex items-start gap-3 text-sm @(feat.Included ? "text-slate-700 dark:text-white/80" : "text-slate-400 dark:text-white/35 line-through")">
+                            <span class="mt-0.5 inline-flex h-5 w-5 items-center justify-center rounded-full @(feat.Included ? "bg-emerald-500/20 text-emerald-600 dark:text-emerald-400" : "bg-slate-300/40 dark:bg-white/10 text-slate-400 dark:text-white/40") shrink-0">
+                                <icon name="@(feat.Included ? "check" : "x")" class="h-3 w-3" stroke-width="3" />
+                            </span>
+                            <span>@L[feat.LabelKey]</span>
+                        </li>
+                    }
+                </ul>
+
+                <a href="@signupUrl" class="@ctaClass mt-8 inline-flex items-center justify-center gap-2">
+                    <span>@L[tier.CtaKey]</span>
+                    <icon name="arrow-right" class="h-4 w-4" />
+                </a>
+            </div>
+        }
+    </div>
+    <p class="mt-10 text-center text-sm text-slate-500 dark:text-white/55">@L["Landlords_PricingFooter"]</p>
+</section>
+
+@*  ──────────── 5. Testimonials ──────────── *@
+<section class="mt-24">
+    <div class="text-center max-w-2xl mx-auto">
+        <span class="glass-badge inline-flex">
+            <icon name="star" class="h-3.5 w-3.5 text-amber-500" fill="currentColor" />
+            <span class="text-xs font-medium text-slate-700 dark:text-white/80">@L["Landlords_TestimonialsEyebrow"]</span>
+        </span>
+        <h2 class="mt-4 font-sans font-bold tracking-tight text-3xl sm:text-4xl text-slate-900 dark:text-white">
+            @L["Landlords_TestimonialsTitle"]
+        </h2>
+        <p class="mt-3 text-slate-600 dark:text-white/70">@L["Landlords_TestimonialsSubtitle"]</p>
+    </div>
+    <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+        @foreach (var t in Model.Testimonials)
+        {
+            <div class="glass-card p-6 flex flex-col">
+                <div class="flex items-center gap-0.5 text-amber-500">
+                    @for (var i = 0; i < 5; i++)
+                    {
+                        <icon name="star" class="h-4 w-4" fill="currentColor" stroke-width="0" />
+                    }
+                </div>
+                <blockquote class="mt-4 text-slate-700 dark:text-white/80 text-sm leading-relaxed flex-1">
+                    &ldquo;@L[t.QuoteKey]&rdquo;
+                </blockquote>
+                <div class="mt-6 flex items-center gap-3">
+                    <div class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-cyan-500 text-white font-semibold text-sm shrink-0">@t.AvatarLetter</div>
+                    <div>
+                        <div class="font-semibold text-slate-900 dark:text-white text-sm">@L[t.AuthorKey]</div>
+                        <div class="text-xs text-slate-500 dark:text-white/55">@L[t.CompanyKey]</div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+@*  ──────────── 6. FAQ ──────────── *@
+<section class="mt-24">
+    <div class="text-center max-w-2xl mx-auto">
+        <span class="glass-badge inline-flex">
+            <icon name="info" class="h-3.5 w-3.5 text-brand-600 dark:text-brand-300" />
+            <span class="text-xs font-medium text-slate-700 dark:text-white/80">@L["Landlords_FaqEyebrow"]</span>
+        </span>
+        <h2 class="mt-4 font-sans font-bold tracking-tight text-3xl sm:text-4xl text-slate-900 dark:text-white">
+            @L["Landlords_FaqTitle"]
+        </h2>
+        <p class="mt-3 text-slate-600 dark:text-white/70">@L["Landlords_FaqSubtitle"]</p>
+    </div>
+    <div class="mt-10 max-w-3xl mx-auto space-y-3">
+        @foreach (var item in Model.FaqItems)
+        {
+            <details class="faq-item glass-card group">
+                <summary class="flex items-center justify-between gap-4 cursor-pointer list-none p-5 select-none">
+                    <span class="font-medium text-slate-900 dark:text-white">@L[item.QuestionKey]</span>
+                    <icon name="chevron-down" class="faq-chevron h-4 w-4 text-slate-500 dark:text-white/60 transition-transform duration-300" />
+                </summary>
+                <div class="px-5 pb-5 text-sm text-slate-600 dark:text-white/70 leading-relaxed">
+                    @L[item.AnswerKey]
+                </div>
+            </details>
+        }
+    </div>
+</section>
+
+@*  ──────────── 7. Final CTA ──────────── *@
+<section class="mt-24 mb-8">
+    <div class="relative overflow-hidden glass-card-premium p-10 sm:p-14 text-center">
+        <div class="aurora-orb h-[300px] w-[300px] -top-20 -left-20 bg-brand-500"></div>
+        <div class="aurora-orb h-[300px] w-[300px] -bottom-20 -right-20 bg-cyan-400 [animation-delay:1.5s]"></div>
+        <div class="relative">
+            <h2 class="font-sans font-bold tracking-tight text-3xl sm:text-4xl text-slate-900 dark:text-white">
+                @L["Landlords_FinalTitle"]
+            </h2>
+            <p class="mt-4 text-slate-600 dark:text-white/70 max-w-2xl mx-auto">
+                @L["Landlords_FinalBody"]
+            </p>
+            <a href="@signupUrl" class="glass-button-primary inline-flex items-center gap-2 mt-8">
+                <span>@L["Landlords_GetStartedFree"]</span>
+                <icon name="arrow-right" class="h-4 w-4" />
+            </a>
+            <div class="mt-6 inline-flex items-center gap-2 text-sm text-slate-500 dark:text-white/55">
+                <icon name="check" class="h-4 w-4 text-emerald-500" stroke-width="3" />
+                <span>@L["Landlords_FinalNoCard"]</span>
+            </div>
+        </div>
     </div>
 </section>

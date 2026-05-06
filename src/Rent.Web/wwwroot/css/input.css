@@ -117,6 +117,10 @@ html {
   }
 }
 
+/* FAQ accordion (Landlords page) — native <details>/<summary> with rotating chevron */
+.faq-item > summary::-webkit-details-marker { display: none; }
+.faq-item[open] > summary > .faq-chevron { transform: rotate(180deg); }
+
 /* Dual-range slider thumbs (used by the price filter) */
 .rentca-range {
   height: 100%;

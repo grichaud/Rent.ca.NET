@@ -519,4 +519,108 @@
   <data name="auth.fullNamePlaceholder" xml:space="preserve"><value>Your name</value></data>
   <data name="auth.showPassword" xml:space="preserve"><value>Show password</value></data>
   <data name="auth.hidePassword" xml:space="preserve"><value>Hide password</value></data>
+  <data name="Landlords_HeroBadge" xml:space="preserve"><value>For Landlords &amp; Property Managers</value></data>
+  <data name="Landlords_HeroTitle1" xml:space="preserve"><value>List Your Property on</value></data>
+  <data name="Landlords_HeroTitle2" xml:space="preserve"><value>Rent.ca</value></data>
+  <data name="Landlords_HeroSubtitle" xml:space="preserve"><value>Reach thousands of renters across Canada with AI-powered matching</value></data>
+  <data name="Landlords_GetStartedFree" xml:space="preserve"><value>Get Started Free</value></data>
+  <data name="Landlords_ViewPricing" xml:space="preserve"><value>View Pricing</value></data>
+  <data name="Landlords_StatListings" xml:space="preserve"><value>Active Listings</value></data>
+  <data name="Landlords_StatCities" xml:space="preserve"><value>Cities</value></data>
+  <data name="Landlords_StatVisitors" xml:space="preserve"><value>Monthly Visitors</value></data>
+  <data name="Landlords_WhyTitle" xml:space="preserve"><value>Why list on Rent.ca</value></data>
+  <data name="Landlords_Why1Title" xml:space="preserve"><value>Maximum Exposure</value></data>
+  <data name="Landlords_Why1Body" xml:space="preserve"><value>Your listing appears in search, maps, and our AI assistant recommends your property to matching renters.</value></data>
+  <data name="Landlords_Why2Title" xml:space="preserve"><value>AI-Powered Matching</value></data>
+  <data name="Landlords_Why2Body" xml:space="preserve"><value>Our AI assistant actively recommends your properties to renters searching with natural language.</value></data>
+  <data name="Landlords_Why3Title" xml:space="preserve"><value>Easy Management</value></data>
+  <data name="Landlords_Why3Body" xml:space="preserve"><value>Full management portal to handle inquiries, update listings, and track performance.</value></data>
+  <data name="Landlords_HowEyebrow" xml:space="preserve"><value>Simple Process</value></data>
+  <data name="Landlords_HowTitle" xml:space="preserve"><value>How It Works</value></data>
+  <data name="Landlords_HowSubtitle" xml:space="preserve"><value>Get your property in front of qualified renters in three easy steps.</value></data>
+  <data name="Landlords_Step1Title" xml:space="preserve"><value>Create Account</value></data>
+  <data name="Landlords_Step1Body" xml:space="preserve"><value>Sign up as a landlord in 30 seconds. No credit card required.</value></data>
+  <data name="Landlords_Step2Title" xml:space="preserve"><value>Post Your Listing</value></data>
+  <data name="Landlords_Step2Body" xml:space="preserve"><value>Add photos, details, and set your price. Our tools make it simple.</value></data>
+  <data name="Landlords_Step3Title" xml:space="preserve"><value>Get Inquiries</value></data>
+  <data name="Landlords_Step3Body" xml:space="preserve"><value>Receive and manage tenant inquiries from your dashboard.</value></data>
+  <data name="Landlords_PricingEyebrow" xml:space="preserve"><value>Transparent Pricing</value></data>
+  <data name="Landlords_PricingTitle" xml:space="preserve"><value>Choose Your Plan</value></data>
+  <data name="Landlords_PricingSubtitle" xml:space="preserve"><value>Start free and upgrade when you need more exposure and tools.</value></data>
+  <data name="Landlords_TierLimited" xml:space="preserve"><value>Limited</value></data>
+  <data name="Landlords_TierLimitedPrice" xml:space="preserve"><value>$0</value></data>
+  <data name="Landlords_TierLimitedPeriod" xml:space="preserve"><value>per listing</value></data>
+  <data name="Landlords_TierLimitedBody" xml:space="preserve"><value>Get started with a basic listing at no cost.</value></data>
+  <data name="Landlords_TierLimitedCta" xml:space="preserve"><value>Start Free</value></data>
+  <data name="Landlords_TierLimitedF1" xml:space="preserve"><value>Basic listing</value></data>
+  <data name="Landlords_TierLimitedF2" xml:space="preserve"><value>Up to 5 photos</value></data>
+  <data name="Landlords_TierLimitedF3" xml:space="preserve"><value>Standard search placement</value></data>
+  <data name="Landlords_TierLimitedF4" xml:space="preserve"><value>Contact form</value></data>
+  <data name="Landlords_TierLimitedF5" xml:space="preserve"><value>Priority placement</value></data>
+  <data name="Landlords_TierLimitedF6" xml:space="preserve"><value>Performance analytics</value></data>
+  <data name="Landlords_TierLimitedF7" xml:space="preserve"><value>AI priority recommendation</value></data>
+  <data name="Landlords_TierLimitedF8" xml:space="preserve"><value>Dedicated support</value></data>
+  <data name="Landlords_TierPromoted" xml:space="preserve"><value>Promoted</value></data>
+  <data name="Landlords_TierPromotedBadge" xml:space="preserve"><value>Popular</value></data>
+  <data name="Landlords_TierPromotedPrice" xml:space="preserve"><value>$35</value></data>
+  <data name="Landlords_TierPromotedPeriod" xml:space="preserve"><value>per 15 days</value></data>
+  <data name="Landlords_TierPromotedBody" xml:space="preserve"><value>Stand out with priority placement and more visibility.</value></data>
+  <data name="Landlords_TierPromotedCta" xml:space="preserve"><value>Get Promoted</value></data>
+  <data name="Landlords_TierPromotedF1" xml:space="preserve"><value>Everything in Limited</value></data>
+  <data name="Landlords_TierPromotedF2" xml:space="preserve"><value>Priority placement</value></data>
+  <data name="Landlords_TierPromotedF3" xml:space="preserve"><value>Up to 20 photos</value></data>
+  <data name="Landlords_TierPromotedF4" xml:space="preserve"><value>Promoted badge</value></data>
+  <data name="Landlords_TierPromotedF5" xml:space="preserve"><value>Performance analytics</value></data>
+  <data name="Landlords_TierPromotedF6" xml:space="preserve"><value>Social media promotion</value></data>
+  <data name="Landlords_TierPromotedF7" xml:space="preserve"><value>AI priority recommendation</value></data>
+  <data name="Landlords_TierPromotedF8" xml:space="preserve"><value>Dedicated support</value></data>
+  <data name="Landlords_TierFeatured" xml:space="preserve"><value>Featured</value></data>
+  <data name="Landlords_TierFeaturedBadge" xml:space="preserve"><value>Premium</value></data>
+  <data name="Landlords_TierFeaturedPrice" xml:space="preserve"><value>$199</value></data>
+  <data name="Landlords_TierFeaturedPeriod" xml:space="preserve"><value>per 15 days</value></data>
+  <data name="Landlords_TierFeaturedBody" xml:space="preserve"><value>Maximum exposure with top placement and AI boost.</value></data>
+  <data name="Landlords_TierFeaturedCta" xml:space="preserve"><value>Go Featured</value></data>
+  <data name="Landlords_TierFeaturedF1" xml:space="preserve"><value>Everything in Promoted</value></data>
+  <data name="Landlords_TierFeaturedF2" xml:space="preserve"><value>Top placement</value></data>
+  <data name="Landlords_TierFeaturedF3" xml:space="preserve"><value>Featured badge with gold glow</value></data>
+  <data name="Landlords_TierFeaturedF4" xml:space="preserve"><value>Social media promotion</value></data>
+  <data name="Landlords_TierFeaturedF5" xml:space="preserve"><value>Dedicated support</value></data>
+  <data name="Landlords_TierFeaturedF6" xml:space="preserve"><value>AI priority recommendation</value></data>
+  <data name="Landlords_TierFeaturedF7" xml:space="preserve"><value>Performance analytics</value></data>
+  <data name="Landlords_TierFeaturedF8" xml:space="preserve"><value>Up to 40 photos</value></data>
+  <data name="Landlords_PricingFooter" xml:space="preserve"><value>No contracts. Cancel anytime. All prices in CAD.</value></data>
+  <data name="Landlords_TestimonialsEyebrow" xml:space="preserve"><value>Landlord Reviews</value></data>
+  <data name="Landlords_TestimonialsTitle" xml:space="preserve"><value>Trusted by Landlords Across Canada</value></data>
+  <data name="Landlords_TestimonialsSubtitle" xml:space="preserve"><value>Real results from property owners who chose Rent.ca.</value></data>
+  <data name="Landlords_T1Quote" xml:space="preserve"><value>Rent.ca filled my vacancy in under a week. The AI matching feature is incredible — I only got inquiries from qualified renters who were genuinely interested.</value></data>
+  <data name="Landlords_T1Author" xml:space="preserve"><value>James Kowalski</value></data>
+  <data name="Landlords_T1Company" xml:space="preserve"><value>Kowalski Properties · Toronto, ON</value></data>
+  <data name="Landlords_T2Quote" xml:space="preserve"><value>I manage 12 units across Vancouver and the management portal makes everything seamless. The featured listing drove 3x more inquiries than my previous platform.</value></data>
+  <data name="Landlords_T2Author" xml:space="preserve"><value>Priya Sharma</value></data>
+  <data name="Landlords_T2Company" xml:space="preserve"><value>Westside Rentals Inc. · Vancouver, BC</value></data>
+  <data name="Landlords_T3Quote" xml:space="preserve"><value>I was skeptical about the AI assistant, but renters who contacted me through it were the most serious. It genuinely screens for intent. Worth every penny.</value></data>
+  <data name="Landlords_T3Author" xml:space="preserve"><value>Michel Tremblay</value></data>
+  <data name="Landlords_T3Company" xml:space="preserve"><value>Tremblay Immobilier · Montreal, QC</value></data>
+  <data name="Landlords_FaqEyebrow" xml:space="preserve"><value>FAQ</value></data>
+  <data name="Landlords_FaqTitle" xml:space="preserve"><value>Frequently Asked Questions</value></data>
+  <data name="Landlords_FaqSubtitle" xml:space="preserve"><value>Everything you need to know about listing on Rent.ca.</value></data>
+  <data name="Landlords_FaqQ1" xml:space="preserve"><value>How much does it cost to list?</value></data>
+  <data name="Landlords_FaqA1" xml:space="preserve"><value>We offer three tiers: Limited (free), Promoted ($35 per 15 days), and Featured ($199 per 15 days). All prices in CAD with no contracts.</value></data>
+  <data name="Landlords_FaqQ2" xml:space="preserve"><value>How do I get started?</value></data>
+  <data name="Landlords_FaqA2" xml:space="preserve"><value>Sign up as a landlord, verify your email, and post your first listing in under five minutes. No credit card needed for the free tier.</value></data>
+  <data name="Landlords_FaqQ3" xml:space="preserve"><value>What's included in the free tier?</value></data>
+  <data name="Landlords_FaqA3" xml:space="preserve"><value>The Limited plan includes a basic listing with up to 5 photos, standard search placement, and a contact form for renter inquiries.</value></data>
+  <data name="Landlords_FaqQ4" xml:space="preserve"><value>How does the AI assistant help landlords?</value></data>
+  <data name="Landlords_FaqA4" xml:space="preserve"><value>Our AI assistant recommends your listings to renters who describe what they want in natural language, surfacing your property to genuinely interested matches.</value></data>
+  <data name="Landlords_FaqQ5" xml:space="preserve"><value>Can I manage multiple properties?</value></data>
+  <data name="Landlords_FaqA5" xml:space="preserve"><value>Yes. Your dashboard lets you manage as many listings as you need from a single account, with per-listing analytics and inbox tracking.</value></data>
+  <data name="Landlords_FaqQ6" xml:space="preserve"><value>How do I upgrade my listing?</value></data>
+  <data name="Landlords_FaqA6" xml:space="preserve"><value>From your dashboard, open the listing and choose Promote or Feature. The upgrade activates immediately and runs for the selected period.</value></data>
+  <data name="Landlords_FaqQ7" xml:space="preserve"><value>What areas do you cover?</value></data>
+  <data name="Landlords_FaqA7" xml:space="preserve"><value>Rent.ca covers all major Canadian cities including Toronto, Vancouver, Montreal, Calgary, Ottawa, Edmonton, and 200+ other cities across Canada.</value></data>
+  <data name="Landlords_FaqQ8" xml:space="preserve"><value>How do I cancel my subscription?</value></data>
+  <data name="Landlords_FaqA8" xml:space="preserve"><value>Promoted and Featured plans are pay-as-you-go and don't auto-renew. They expire after 15 days unless you choose to renew. There's nothing to cancel.</value></data>
+  <data name="Landlords_FinalTitle" xml:space="preserve"><value>Ready to Find Your Next Tenant?</value></data>
+  <data name="Landlords_FinalBody" xml:space="preserve"><value>Join thousands of landlords and property managers across Canada who trust Rent.ca to fill vacancies fast.</value></data>
+  <data name="Landlords_FinalNoCard" xml:space="preserve"><value>No credit card required · Cancel anytime</value></data>
 </root>
