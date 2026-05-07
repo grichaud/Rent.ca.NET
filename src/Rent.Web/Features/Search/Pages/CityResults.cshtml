@@ -34,21 +34,22 @@
     <partial name="/Features/Search/Partials/_SearchBarCompact.cshtml" model="@Model.Result.City.Name" />
 </header>
 
-<div class="lg:grid lg:grid-cols-[288px_1fr] lg:gap-6 items-start">
-    <aside class="hidden lg:block">
-        <partial name="/Features/Search/Partials/_SidebarFilters.cshtml" model="Model.Query" />
-    </aside>
-
+@if (isMap)
+{
+    @* Map view: no permanent sidebar. Filters open via slide-over from a button on the controls bar.
+       Layout is a 2-col split (map LEFT, cards panel RIGHT) at lg+; stacked on mobile. *@
     <div class="flex flex-col gap-4 min-w-0">
-        @* Mobile filter trigger *@
-        <button type="button"
-                data-mobile-filter-open
-                class="glass-button lg:hidden inline-flex items-center justify-center gap-2 px-4 py-2 text-sm text-gray-800 dark:text-white/80 self-start">
-            <icon name="sliders-horizontal" class="h-4 w-4" />
-            @L["filters.openFilters"]
-        </button>
-
-        <partial name="/Features/Search/Partials/_ResultsHeader.cshtml" model="Model" />
+        <div class="flex items-center gap-2 flex-wrap">
+            <button type="button"
+                    data-mobile-filter-open
+                    class="glass-button inline-flex items-center justify-center gap-2 px-4 py-2 text-sm text-gray-800 dark:text-white/80 shrink-0">
+                <icon name="sliders-horizontal" class="h-4 w-4" />
+                @L["filters.openFilters"]
+            </button>
+            <div class="flex-1 min-w-0">
+                <partial name="/Features/Search/Partials/_ResultsHeader.cshtml" model="Model" />
+            </div>
+        </div>
 
         @if (Model.Result.Properties.Count == 0)
         {
@@ -58,27 +59,65 @@
         }
         else
         {
-            @* Grid / List view container; hidden when Map view is active *@
-            <div id="rentca-results-list"
-                 class="@(isMap ? "hidden " : "")@(isList ? "grid grid-cols-1 gap-4" : "grid sm:grid-cols-2 xl:grid-cols-3 gap-5")">
-                @foreach (var p in Model.Result.Properties)
-                {
-                    <partial name="/Features/Search/Partials/_PropertyCard.cshtml" model="p" view-data='new ViewDataDictionary(ViewData) { ["Variant"] = (isList ? "list" : "grid") }' />
-                }
-            </div>
-
-            <div id="rentca-search-map"
-                 class="@(isMap ? "" : "hidden ")glass-card overflow-hidden p-0 h-[600px] w-full"
-                 data-city-slug="@Model.Query.CitySlug"
-                 data-city-lat="@(Model.Result.City.Latitude?.ToString(System.Globalization.CultureInfo.InvariantCulture))"
-                 data-city-lng="@(Model.Result.City.Longitude?.ToString(System.Globalization.CultureInfo.InvariantCulture))">
+            <div class="grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-4 lg:h-[calc(100vh-260px)] lg:min-h-[640px]">
+                <div id="rentca-search-map"
+                     class="glass-card overflow-hidden p-0 h-[55vh] lg:h-full w-full"
+                     data-city-slug="@Model.Query.CitySlug"
+                     data-city-lat="@(Model.Result.City.Latitude?.ToString(System.Globalization.CultureInfo.InvariantCulture))"
+                     data-city-lng="@(Model.Result.City.Longitude?.ToString(System.Globalization.CultureInfo.InvariantCulture))">
+                </div>
+                <div class="space-y-4 lg:overflow-y-auto lg:pr-1 lg:min-h-0">
+                    @foreach (var p in Model.Result.Properties)
+                    {
+                        <partial name="/Features/Search/Partials/_PropertyCard.cshtml" model="p" view-data='new ViewDataDictionary(ViewData) { ["Variant"] = "list" }' />
+                    }
+                </div>
             </div>
         }
     </div>
-</div>
+}
+else
+{
+    @* Grid / List view: permanent sidebar at lg+; mobile keeps the slide-over trigger. *@
+    <div class="lg:grid lg:grid-cols-[288px_1fr] lg:gap-6 items-start">
+        <aside class="hidden lg:block">
+            <partial name="/Features/Search/Partials/_SidebarFilters.cshtml" model="Model.Query" />
+        </aside>
 
-@* Mobile filter drawer overlay (hidden on desktop) *@
-<div id="rentca-mobile-filters" class="lg:hidden fixed inset-0 z-50 pointer-events-none" aria-hidden="true">
+        <div class="flex flex-col gap-4 min-w-0">
+            <button type="button"
+                    data-mobile-filter-open
+                    class="glass-button lg:hidden inline-flex items-center justify-center gap-2 px-4 py-2 text-sm text-gray-800 dark:text-white/80 self-start">
+                <icon name="sliders-horizontal" class="h-4 w-4" />
+                @L["filters.openFilters"]
+            </button>
+
+            <partial name="/Features/Search/Partials/_ResultsHeader.cshtml" model="Model" />
+
+            @if (Model.Result.Properties.Count == 0)
+            {
+                <div class="glass-card p-10 text-center text-slate-600 dark:text-white/70">
+                    @L["results.empty"] <a href="/@culture/@Model.Query.CitySlug" class="text-brand-600 dark:text-brand-400 underline">@L["filters.clear"]</a>.
+                </div>
+            }
+            else
+            {
+                <div id="rentca-results-list"
+                     class="@(isList ? "grid grid-cols-1 gap-4" : "grid sm:grid-cols-2 xl:grid-cols-3 gap-5")">
+                    @foreach (var p in Model.Result.Properties)
+                    {
+                        <partial name="/Features/Search/Partials/_PropertyCard.cshtml" model="p" view-data='new ViewDataDictionary(ViewData) { ["Variant"] = (isList ? "list" : "grid") }' />
+                    }
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@* Filter slide-over drawer: previously lg:hidden, now universal so the Map view's
+   desktop "Filters" button can open it too. The trigger buttons above already gate
+   visibility per view (only mobile in Grid/List, always in Map). *@
+<div id="rentca-mobile-filters" class="fixed inset-0 z-50 pointer-events-none" aria-hidden="true">
     <div data-mobile-filter-overlay class="absolute inset-0 bg-slate-900/40 dark:bg-black/60 backdrop-blur-sm opacity-0 transition-opacity duration-300"></div>
     <aside class="absolute top-0 left-0 bottom-0 w-80 max-w-[90vw] translate-x-[-100%] transition-transform duration-300 ease-out overflow-y-auto" data-mobile-filter-panel>
         <div class="p-3">
