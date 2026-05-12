@@ -614,4 +614,17 @@
   <data name="Landlords_FinalTitle" xml:space="preserve"><value>Prêt à trouver votre prochain locataire?</value></data>
   <data name="Landlords_FinalBody" xml:space="preserve"><value>Joignez-vous aux milliers de propriétaires et de gestionnaires immobiliers partout au Canada qui font confiance à Rent.ca pour combler leurs vacances rapidement.</value></data>
   <data name="Landlords_FinalNoCard" xml:space="preserve"><value>Aucune carte de crédit requise · Annulable à tout moment</value></data>
+  <data name="About_Title1" xml:space="preserve"><value>À propos de</value></data>
+  <data name="About_Title2" xml:space="preserve"><value>Rent.ca</value></data>
+  <data name="About_Subtitle" xml:space="preserve"><value>Nous bâtissons le marché locatif le plus intelligent au Canada en combinant des annonces complètes et une recherche assistée par IA, pour vous permettre de trouver votre prochain logement sans effort.</value></data>
+  <data name="About_MissionTitle" xml:space="preserve"><value>Notre mission</value></data>
+  <data name="About_MissionBody" xml:space="preserve"><value>Trouver un logement à louer au Canada ne devrait pas être source de stress. Nous avons créé Rent.ca pour rassembler la base de données d'annonces la plus complète et une technologie d'IA de pointe. Que vous soyez locataire à la recherche de l'appartement idéal ou propriétaire souhaitant combler des vacances rapidement, Rent.ca rend le processus simple, transparent et efficace.</value></data>
+  <data name="About_Card1Title" xml:space="preserve"><value>Annonces complètes</value></data>
+  <data name="About_Card1Body" xml:space="preserve"><value>Des milliers de propriétés locatives vérifiées partout au Canada, des appartements aux maisons.</value></data>
+  <data name="About_Card2Title" xml:space="preserve"><value>Recherche assistée par IA</value></data>
+  <data name="About_Card2Body" xml:space="preserve"><value>Notre assistant intelligent vous aide à trouver le logement idéal en langage naturel.</value></data>
+  <data name="About_Card3Title" xml:space="preserve"><value>D'un océan à l'autre</value></data>
+  <data name="About_Card3Body" xml:space="preserve"><value>Couverture dans toutes les grandes villes canadiennes, en expansion continue pour servir chaque communauté.</value></data>
+  <data name="About_Card4Title" xml:space="preserve"><value>Communauté de confiance</value></data>
+  <data name="About_Card4Body" xml:space="preserve"><value>Propriétaires vérifiés, annonces transparentes et engagement envers un logement équitable.</value></data>
 </root>

@@ -226,6 +226,7 @@ if (!app.Environment.IsEnvironment("Testing"))
     app.UseHttpsRedirection();
 }
 app.UseSerilogRequestLogging();
+app.UseMiddleware<LowercasePathRedirectMiddleware>();
 app.UseMiddleware<PathLocaleRedirectMiddleware>();
 app.UseRouting();
 app.UseRequestLocalization();

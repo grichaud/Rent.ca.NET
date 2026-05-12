@@ -614,4 +614,17 @@
   <data name="Landlords_FinalTitle" xml:space="preserve"><value>Ready to Find Your Next Tenant?</value></data>
   <data name="Landlords_FinalBody" xml:space="preserve"><value>Join thousands of landlords and property managers across Canada who trust Rent.ca to fill vacancies fast.</value></data>
   <data name="Landlords_FinalNoCard" xml:space="preserve"><value>No credit card required · Cancel anytime</value></data>
+  <data name="About_Title1" xml:space="preserve"><value>About</value></data>
+  <data name="About_Title2" xml:space="preserve"><value>Rent.ca</value></data>
+  <data name="About_Subtitle" xml:space="preserve"><value>We're building Canada's most intelligent rental marketplace, combining comprehensive listings with AI-powered search to make finding your next home effortless.</value></data>
+  <data name="About_MissionTitle" xml:space="preserve"><value>Our Mission</value></data>
+  <data name="About_MissionBody" xml:space="preserve"><value>Finding a rental home in Canada shouldn't be stressful. We created Rent.ca to bring together the most comprehensive listing database with cutting-edge AI technology. Whether you're a renter searching for the perfect apartment or a landlord looking to fill vacancies quickly, Rent.ca is designed to make the process simple, transparent, and efficient.</value></data>
+  <data name="About_Card1Title" xml:space="preserve"><value>Comprehensive Listings</value></data>
+  <data name="About_Card1Body" xml:space="preserve"><value>Thousands of verified rental properties across Canada, from apartments to houses.</value></data>
+  <data name="About_Card2Title" xml:space="preserve"><value>AI-Powered Search</value></data>
+  <data name="About_Card2Body" xml:space="preserve"><value>Our intelligent assistant helps you find the perfect home using natural language.</value></data>
+  <data name="About_Card3Title" xml:space="preserve"><value>Coast to Coast</value></data>
+  <data name="About_Card3Body" xml:space="preserve"><value>Coverage across all major Canadian cities and growing to serve every community.</value></data>
+  <data name="About_Card4Title" xml:space="preserve"><value>Trusted Community</value></data>
+  <data name="About_Card4Body" xml:space="preserve"><value>Verified landlords, transparent listings, and a commitment to fair housing.</value></data>
 </root>

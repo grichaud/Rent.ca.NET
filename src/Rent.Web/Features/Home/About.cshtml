@@ -1,0 +1,67 @@
+@page "/{culture:locale}/about"
+@model Rent.Web.Features.Home.AboutModel
+@{
+    ViewData["Title"] = L["common.about"].Value;
+}
+
+@*  ──────────── 1. Hero ──────────── *@
+<section class="relative overflow-hidden rounded-3xl">
+    <div class="aurora-orb h-[360px] w-[360px] -top-24 -left-24 bg-brand-500"></div>
+    <div class="aurora-orb h-[400px] w-[400px] -top-20 right-0 bg-cyan-400 [animation-delay:2s]"></div>
+
+    <div class="relative max-w-3xl mx-auto text-center py-16 sm:py-24">
+        <h1 class="font-sans font-bold tracking-tight text-5xl sm:text-6xl text-slate-900 dark:text-white leading-tight">
+            <span class="block">@L["About_Title1"]</span>
+            <span class="block bg-gradient-to-r from-brand-500 to-cyan-500 dark:from-brand-400 dark:to-cyan-400 bg-clip-text text-transparent">@L["About_Title2"]</span>
+        </h1>
+        <p class="text-lg text-slate-600 dark:text-white/70 mt-6 max-w-2xl mx-auto">
+            @L["About_Subtitle"]
+        </p>
+    </div>
+</section>
+
+@*  ──────────── 2. Our Mission ──────────── *@
+<section class="mt-12 max-w-4xl mx-auto">
+    <div class="glass-card p-8 sm:p-10">
+        <h2 class="font-sans font-bold tracking-tight text-2xl sm:text-3xl text-slate-900 dark:text-white">
+            @L["About_MissionTitle"]
+        </h2>
+        <p class="text-base text-slate-600 dark:text-white/70 mt-4 leading-relaxed">
+            @L["About_MissionBody"]
+        </p>
+    </div>
+</section>
+
+@*  ──────────── 3. Feature grid 2x2 ──────────── *@
+<section class="mt-12 max-w-4xl mx-auto">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div class="glass-card p-6">
+            <div class="inline-flex items-center justify-center h-12 w-12 rounded-2xl bg-brand-500/15 dark:bg-brand-500/25 mb-4">
+                <icon name="building-2" class="h-6 w-6 text-brand-600 dark:text-brand-300" />
+            </div>
+            <h3 class="font-semibold text-lg text-slate-900 dark:text-white">@L["About_Card1Title"]</h3>
+            <p class="text-sm text-slate-600 dark:text-white/60 mt-2 leading-relaxed">@L["About_Card1Body"]</p>
+        </div>
+        <div class="glass-card p-6">
+            <div class="inline-flex items-center justify-center h-12 w-12 rounded-2xl bg-cyan-500/15 dark:bg-cyan-500/25 mb-4">
+                <icon name="sparkles" class="h-6 w-6 text-cyan-600 dark:text-cyan-300" />
+            </div>
+            <h3 class="font-semibold text-lg text-slate-900 dark:text-white">@L["About_Card2Title"]</h3>
+            <p class="text-sm text-slate-600 dark:text-white/60 mt-2 leading-relaxed">@L["About_Card2Body"]</p>
+        </div>
+        <div class="glass-card p-6">
+            <div class="inline-flex items-center justify-center h-12 w-12 rounded-2xl bg-purple-500/15 dark:bg-purple-500/25 mb-4">
+                <icon name="map" class="h-6 w-6 text-purple-600 dark:text-purple-300" />
+            </div>
+            <h3 class="font-semibold text-lg text-slate-900 dark:text-white">@L["About_Card3Title"]</h3>
+            <p class="text-sm text-slate-600 dark:text-white/60 mt-2 leading-relaxed">@L["About_Card3Body"]</p>
+        </div>
+        <div class="glass-card p-6">
+            <div class="inline-flex items-center justify-center h-12 w-12 rounded-2xl bg-emerald-500/15 dark:bg-emerald-500/25 mb-4">
+                <icon name="users" class="h-6 w-6 text-emerald-600 dark:text-emerald-300" />
+            </div>
+            <h3 class="font-semibold text-lg text-slate-900 dark:text-white">@L["About_Card4Title"]</h3>
+            <p class="text-sm text-slate-600 dark:text-white/60 mt-2 leading-relaxed">@L["About_Card4Body"]</p>
+        </div>
+    </div>
+</section>
