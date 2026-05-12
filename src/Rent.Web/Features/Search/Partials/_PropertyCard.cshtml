@@ -81,6 +81,13 @@
                     {
                         <partial name="/Features/Search/Partials/_RentSpecialChip.cshtml" model="@Model.SpecialTitle" />
                     }
+                    @if (Model.IsVerified)
+                    {
+                        <span class="inline-flex items-center gap-1 bg-emerald-500/90 text-white text-[10px] uppercase tracking-wider font-bold px-2 py-1 rounded-md">
+                            <icon name="check" class="h-3 w-3" />
+                            @L["detail.verified"]
+                        </span>
+                    }
                 </div>
                 <button type="button"
                         data-favorite-toggle

@@ -13,7 +13,7 @@ public static class SamplePropertiesSeeder
     // Bump this when changing the sample data so prod re-seeds itself.
     // The version string is stored in the demo landlord's Description field. If it
     // does not match, all demo-landlord properties are wiped and re-inserted.
-    private const string SeedVersion = "v4-2026-05-06-nextjs-parity";
+    private const string SeedVersion = "v5-2026-05-12-verified-badge";
 
     public static async Task SeedAsync(
         AppDbContext db,
@@ -532,8 +532,9 @@ public static class SamplePropertiesSeeder
             Latitude = lat,
             Longitude = lng,
             Slug = slug,
-            // Next.js does not surface a "Verified" badge — keep this off so cards do not show one.
-            IsVerified = false,
+            // Verified badge mirrors Next.js list-style cards: shown on Featured + Promoted tiers,
+            // hidden on Limited (Bloque F.5).
+            IsVerified = tier is ListingTier.Featured or ListingTier.Promoted,
             PetsAllowed = petsAllowed,
             Furnished = furnished,
             LeaseTerm = Domain.LeaseTerm.OneYear
