@@ -93,7 +93,9 @@
                         <span class="text-xs font-bold tracking-wider">@culture.ToUpper()</span>
                     </button>
                 </form>
-                <button type="button" data-theme-toggle class="inline-flex items-center justify-center h-9 w-9 rounded-lg text-slate-600 dark:text-white/70 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors" title="@L["common.themeToggleTitle"]" aria-label="Toggle dark mode">
+                @* Mobile: dark toggle lives inside the hamburger drawer below. Keep this one
+                   visible only from sm+ to declutter the mobile top bar (matches Next.js). *@
+                <button type="button" data-theme-toggle class="hidden sm:inline-flex items-center justify-center h-9 w-9 rounded-lg text-slate-600 dark:text-white/70 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors" title="@L["common.themeToggleTitle"]" aria-label="Toggle dark mode">
                     <icon name="sun" class="h-4 w-4 hidden dark:inline-block" />
                     <icon name="moon" class="h-4 w-4 inline-block dark:hidden" />
                 </button>
@@ -192,12 +194,18 @@
             </nav>
 
             <div class="mt-auto p-4 border-t border-gray-200 dark:border-white/10 flex flex-col gap-2">
-                <form method="post" action="/set-language" class="flex gap-2">
-                    @Html.AntiForgeryToken()
-                    <input type="hidden" name="returnUrl" value="@returnUrl" />
-                    <button type="submit" name="culture" value="en" class="flex-1 glass-button text-xs font-bold tracking-wider @(culture == "en" ? "ring-2 ring-brand-500" : string.Empty)">EN</button>
-                    <button type="submit" name="culture" value="fr" class="flex-1 glass-button text-xs font-bold tracking-wider @(culture == "fr" ? "ring-2 ring-brand-500" : string.Empty)">FR</button>
-                </form>
+                <div class="flex items-center gap-2">
+                    <button type="button" data-theme-toggle class="glass-button inline-flex items-center justify-center h-9 w-9 shrink-0" title="@L["common.themeToggleTitle"]" aria-label="Toggle dark mode">
+                        <icon name="sun" class="h-4 w-4 hidden dark:inline-block" />
+                        <icon name="moon" class="h-4 w-4 inline-block dark:hidden" />
+                    </button>
+                    <form method="post" action="/set-language" class="flex-1 flex gap-2">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="returnUrl" value="@returnUrl" />
+                        <button type="submit" name="culture" value="en" class="flex-1 glass-button text-xs font-bold tracking-wider @(culture == "en" ? "ring-2 ring-brand-500" : string.Empty)">EN</button>
+                        <button type="submit" name="culture" value="fr" class="flex-1 glass-button text-xs font-bold tracking-wider @(culture == "fr" ? "ring-2 ring-brand-500" : string.Empty)">FR</button>
+                    </form>
+                </div>
                 @if (SignInManager.IsSignedIn(User))
                 {
                     <form method="post" action="/logout">

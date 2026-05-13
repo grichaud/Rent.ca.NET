@@ -42,7 +42,9 @@
 }
 
 <section class="grid lg:grid-cols-[1fr_400px] gap-8 mt-8">
-    <article class="space-y-6">
+    @* min-w-0 lets the grid column shrink below the table's intrinsic min-content
+       in mobile, so the overflow-x-auto wrapper inside _UnitsTable can actually scroll. *@
+    <article class="space-y-6 min-w-0">
         <header>
             <div class="flex items-start justify-between gap-3">
                 <h1 class="font-sans font-bold tracking-tight text-4xl text-slate-900 dark:text-white">@p.Title</h1>
