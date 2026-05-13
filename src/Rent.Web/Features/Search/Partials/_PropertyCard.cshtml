@@ -75,12 +75,10 @@
         </a>
         <div class="flex flex-col flex-1 p-5 gap-3">
             <div class="flex items-start justify-between gap-3">
+                @* List variant: only Featured tier + Verified badges. RentSpecial chip
+                   is intentionally omitted to match Next.js map-view list cards (Block I). *@
                 <div class="flex flex-wrap gap-1.5">
                     @{ await Html.RenderPartialAsync("/Features/Search/Partials/_PropertyBadges.cshtml", Model); }
-                    @if (!string.IsNullOrWhiteSpace(Model.SpecialTitle))
-                    {
-                        <partial name="/Features/Search/Partials/_RentSpecialChip.cshtml" model="@Model.SpecialTitle" />
-                    }
                     @if (Model.IsVerified)
                     {
                         <span class="inline-flex items-center gap-1 bg-emerald-500/90 text-white text-[10px] uppercase tracking-wider font-bold px-2 py-1 rounded-md">

@@ -27,6 +27,7 @@ public sealed class LowercasePathRedirectMiddleware
         "/img/",
         "/images/",
         "/favicon",
+        "/icon.svg",
         "/_framework/",
         "/_vs/",
         "/_blazor",

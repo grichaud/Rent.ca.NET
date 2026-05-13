@@ -23,6 +23,7 @@ public sealed class PathLocaleRedirectMiddleware
         "/js/",
         "/img/",
         "/favicon",
+        "/icon.svg",
         "/_framework/",
         "/_vs/",
     ];

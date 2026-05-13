@@ -30,6 +30,10 @@
         ? $"{Context.Request.Scheme}://{Context.Request.Host.Value}"
         : canonicalHost.TrimEnd('/');
     var canonicalUrl = canonicalBase + currentPath.ToLowerInvariant();
+    var fullBleedMain = ViewData["FullBleed"] is true;
+    var mainClass = fullBleedMain
+        ? "w-full"
+        : "max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12";
 }
 <!DOCTYPE html>
 <html lang="@culture" class="@htmlClass">
@@ -43,7 +47,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="canonical" href="@canonicalUrl" />
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href="~/icon.svg" />
+    <link rel="alternate icon" type="image/x-icon" href="~/favicon.ico" />
     @if (!string.IsNullOrWhiteSpace(mapsKey))
     {
         <meta name="rentca-maps-key" content="@mapsKey" />
@@ -235,7 +240,7 @@
 
     <form id="rentca-csrf" class="hidden" aria-hidden="true">@Html.AntiForgeryToken()</form>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+    <main class="@mainClass">
         @RenderBody()
     </main>
 
