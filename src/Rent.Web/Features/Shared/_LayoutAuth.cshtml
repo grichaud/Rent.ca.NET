@@ -17,8 +17,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="icon" type="image/svg+xml" href="~/icon.svg" />
-    <link rel="alternate icon" type="image/x-icon" href="~/favicon.ico" />
+    @* Non-fingerprinted: see note in _Layout.cshtml (locale middleware 302s the hashed URL). *@
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <link rel="alternate icon" type="image/x-icon" href="/favicon.ico" />
     <script src="~/js/theme-toggle.js" asp-append-version="true"></script>
 </head>
 <body class="min-h-screen font-sans text-slate-800 dark:text-white/90 antialiased mesh-background flex flex-col">

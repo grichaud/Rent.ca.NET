@@ -47,8 +47,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="canonical" href="@canonicalUrl" />
-    <link rel="icon" type="image/svg+xml" href="~/icon.svg" />
-    <link rel="alternate icon" type="image/x-icon" href="~/favicon.ico" />
+    @* Non-fingerprinted paths on purpose: the fingerprinted asset URL gets
+       302-redirected to /{lang}/... by the locale middleware (then 404s).
+       Static /icon.svg + /favicon.ico are in the middleware passthrough list. *@
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <link rel="alternate icon" type="image/x-icon" href="/favicon.ico" />
     @if (!string.IsNullOrWhiteSpace(mapsKey))
     {
         <meta name="rentca-maps-key" content="@mapsKey" />
