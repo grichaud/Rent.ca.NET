@@ -20,6 +20,18 @@
     var culture = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
     if (culture != "en" && culture != "fr") { culture = "en"; }
     var altCulture = culture == "fr" ? "en" : "fr";
+    string? displayName = null;
+    var portalHref = $"/{culture}";
+    if (SignInManager.IsSignedIn(User))
+    {
+        var currentUser = await UserManager.GetUserAsync(User);
+        displayName = !string.IsNullOrWhiteSpace(currentUser?.FullName)
+            ? currentUser!.FullName
+            : (currentUser?.Email ?? User.Identity?.Name ?? "Account");
+        portalHref = isAdmin
+            ? $"/{culture}/admin"
+            : isLandlord ? $"/{culture}/landlord" : $"/{culture}/renter";
+    }
     var currentPath = Context.Request.Path.HasValue ? Context.Request.Path.Value! : "/";
     var currentQuery = Context.Request.QueryString.HasValue ? Context.Request.QueryString.Value : string.Empty;
     var returnUrl = currentPath + currentQuery;
@@ -92,24 +104,30 @@
             </nav>
 
             <div class="flex items-center gap-2">
+                @* Mobile: dark toggle lives inside the hamburger drawer below. Keep this one
+                   visible only from sm+ to declutter the mobile top bar (matches Next.js). *@
+                <button type="button" data-theme-toggle class="hidden sm:inline-flex items-center justify-center h-9 w-9 rounded-xl bg-gray-100 hover:bg-gray-200 dark:bg-white/10 dark:hover:bg-white/20 backdrop-blur-md border border-gray-200 dark:border-white/25 text-slate-600 dark:text-white/70 transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" title="@L["common.themeToggleTitle"]" aria-label="Toggle dark mode">
+                    <icon name="sun" class="h-4 w-4 hidden dark:inline-block" />
+                    <icon name="moon" class="h-4 w-4 inline-block dark:hidden" />
+                </button>
                 <form method="post" action="/set-language" class="hidden sm:inline-flex">
                     @Html.AntiForgeryToken()
                     <input type="hidden" name="culture" value="@altCulture" />
                     <input type="hidden" name="returnUrl" value="@returnUrl" />
-                    <button type="submit" class="inline-flex items-center justify-center gap-1.5 h-9 px-3 rounded-lg text-sm font-medium text-slate-600 dark:text-white/70 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors" title="@L["common.languageSwitcherTitle"]" aria-label="@L["common.languageSwitcherTitle"]">
+                    <button type="submit" class="inline-flex items-center justify-center gap-1.5 h-9 px-3 rounded-xl bg-gray-100 hover:bg-gray-200 dark:bg-white/10 dark:hover:bg-white/20 backdrop-blur-md border border-gray-200 dark:border-white/25 text-sm font-medium text-slate-600 dark:text-white/70 transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" title="@L["common.languageSwitcherTitle"]" aria-label="@L["common.languageSwitcherTitle"]">
                         <icon name="languages" class="h-4 w-4" />
-                        <span class="text-xs font-bold tracking-wider">@culture.ToUpper()</span>
+                        <span class="text-xs font-bold tracking-wider">@altCulture.ToUpper()</span>
                     </button>
                 </form>
-                @* Mobile: dark toggle lives inside the hamburger drawer below. Keep this one
-                   visible only from sm+ to declutter the mobile top bar (matches Next.js). *@
-                <button type="button" data-theme-toggle class="hidden sm:inline-flex items-center justify-center h-9 w-9 rounded-lg text-slate-600 dark:text-white/70 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors" title="@L["common.themeToggleTitle"]" aria-label="Toggle dark mode">
-                    <icon name="sun" class="h-4 w-4 hidden dark:inline-block" />
-                    <icon name="moon" class="h-4 w-4 inline-block dark:hidden" />
-                </button>
 
                 @if (SignInManager.IsSignedIn(User))
                 {
+                    <a href="@portalHref" class="hidden sm:inline-flex items-center gap-2 glass-button text-sm font-medium text-slate-700 dark:text-white">
+                        <span class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-brand-500/20 border border-brand-400/40">
+                            <icon name="user" class="h-4 w-4 text-brand-600 dark:text-brand-400" />
+                        </span>
+                        <span class="max-w-[120px] truncate">@displayName</span>
+                    </a>
                     <form method="post" action="/logout" class="hidden sm:inline">
                         @Html.AntiForgeryToken()
                         <button type="submit" class="inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-700 dark:text-white/80 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
@@ -120,7 +138,7 @@
                 }
                 else
                 {
-                    <a href="/@culture/login" class="hidden sm:inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-700 dark:text-white/80 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
+                    <a href="/@culture/login" class="hidden sm:inline-flex items-center gap-2 glass-button text-sm font-medium text-slate-700 dark:text-white">
                         <icon name="log-in" class="h-4 w-4" />
                         <span>@L["common.signIn"]</span>
                     </a>
@@ -216,6 +234,12 @@
                 </div>
                 @if (SignInManager.IsSignedIn(User))
                 {
+                    <a href="@portalHref" class="glass-button w-full inline-flex items-center justify-center gap-2 text-sm font-medium">
+                        <span class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-brand-500/20 border border-brand-400/40">
+                            <icon name="user" class="h-4 w-4 text-brand-600 dark:text-brand-400" />
+                        </span>
+                        <span class="max-w-[140px] truncate">@displayName</span>
+                    </a>
                     <form method="post" action="/logout">
                         @Html.AntiForgeryToken()
                         <button type="submit" class="glass-button w-full inline-flex items-center justify-center gap-2">

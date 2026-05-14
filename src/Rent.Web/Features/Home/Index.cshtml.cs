@@ -22,12 +22,11 @@ public class IndexModel : PageModel
     }
 
     public IReadOnlyList<City> FeaturedCities { get; private set; } = [];
-    public IReadOnlyList<City> AllCities { get; private set; } = [];
     public IReadOnlyList<PropertyCard> LatestListings { get; private set; } = [];
 
     public async Task OnGetAsync(CancellationToken ct)
     {
-        AllCities = await _db.Cities
+        var allCities = await _db.Cities
             .OrderBy(c => c.Name)
             .ToListAsync(ct);
 
@@ -36,13 +35,13 @@ public class IndexModel : PageModel
             "toronto", "vancouver", "montreal", "calgary", "edmonton", "ottawa",
             "winnipeg", "quebec-city", "hamilton", "saskatoon", "london", "halifax"
         };
-        var featuredBySlug = AllCities.Where(c => c.IsFeatured).ToDictionary(c => c.Slug);
+        var featuredBySlug = allCities.Where(c => c.IsFeatured).ToDictionary(c => c.Slug);
         FeaturedCities = featuredOrder
             .Where(featuredBySlug.ContainsKey)
             .Select(slug => featuredBySlug[slug])
             .ToList();
 
-        var citySlugByName = AllCities.ToDictionary(c => c.Name, c => c.Slug);
+        var citySlugByName = allCities.ToDictionary(c => c.Name, c => c.Slug);
 
         // SQLite (used by tests) cannot translate ORDER BY on DateTimeOffset or aggregates on decimal,
         // so we over-fetch by Tier and finish ordering + projection in memory.

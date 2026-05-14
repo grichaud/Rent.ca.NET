@@ -214,13 +214,10 @@
                 <label for="hero-city" class="pl-3 text-slate-400 dark:text-white/40">
                     <icon name="search" class="h-5 w-5" />
                 </label>
-                <select id="hero-city" required class="flex-1 bg-transparent border-0 outline-none text-slate-900 dark:text-white text-base py-3 focus:ring-0">
-                    <option value="">@L["hero.searchPlaceholder"]</option>
-                    @foreach (var c in Model.AllCities)
-                    {
-                        <option value="@c.Slug">@c.Name, @c.Province</option>
-                    }
-                </select>
+                <input type="search" id="hero-city" name="q" required autocomplete="off"
+                       placeholder="@L["hero.searchPlaceholder"]"
+                       aria-label="@L["hero.searchPlaceholder"]"
+                       class="flex-1 bg-transparent border-0 outline-none text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-white/40 text-base py-3 focus:ring-0" />
                 <button type="submit" class="glass-button-primary inline-flex items-center gap-2 shrink-0">
                     <span>@L["common.search"]</span>
                     <icon name="search" class="h-4 w-4" />
@@ -246,9 +243,15 @@
 @section Scripts {
     <script>
       var culturePrefix = '/@culture';
+      function slugify(text) {
+        return text.toLowerCase()
+          .normalize('NFD').replace(/[̀-ͯ]/g, '')
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/(^-|-$)+/g, '');
+      }
       document.getElementById('hero-search').addEventListener('submit', function (e) {
         e.preventDefault();
-        var slug = document.getElementById('hero-city').value;
+        var slug = slugify((document.getElementById('hero-city').value || '').trim());
         if (slug) window.location.href = culturePrefix + '/' + slug;
       });
 

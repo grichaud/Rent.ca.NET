@@ -44,4 +44,16 @@ public class HomeTests : IClassFixture<RentAppFactory>
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
+
+    [Fact]
+    public async Task Home_HeroSearch_RendersFreeTextInput()
+    {
+        using var client = _factory.CreateClient();
+        var response = await client.GetAsync("/en");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var body = await response.Content.ReadAsStringAsync();
+        body.Should().MatchRegex("<input[^>]*type=\"search\"[^>]*id=\"hero-city\"");
+        body.Should().NotContain("<select id=\"hero-city\"");
+    }
 }

@@ -58,7 +58,7 @@ html {
 
   /* Primary CTA button with brand→cyan gradient + glow */
   .glass-button-primary {
-    @apply relative bg-gradient-to-r from-brand-500 to-cyan-500 dark:from-brand-500/80 dark:to-cyan-500/80 hover:from-brand-600 hover:to-cyan-600 backdrop-blur-xl border border-brand-400/50 dark:border-white/25 rounded-2xl px-5 py-2 text-white font-medium shadow-xl shadow-brand-500/20 hover:shadow-2xl hover:shadow-brand-500/30 transition-all duration-300;
+    @apply relative bg-gradient-to-r from-brand-500 to-cyan-500 dark:from-brand-500/20 dark:to-cyan-500/20 hover:from-brand-600 hover:to-cyan-600 dark:hover:from-brand-500/30 dark:hover:to-cyan-500/30 backdrop-blur-xl border border-brand-400/50 dark:border-white/25 rounded-2xl px-5 py-2 text-white font-medium shadow-xl shadow-brand-500/20 hover:shadow-2xl hover:shadow-brand-500/30 transition-all duration-300;
   }
 
   /* Text input */
