@@ -75,15 +75,21 @@ public class RenterPortalTests : IClassFixture<RentAppFactory>
     }
 
     [Fact]
-    public async Task Navbar_ShowsMyPortalLinkForRenter()
+    public async Task Navbar_ShowsRenterPortalLinkForRenter()
     {
+        // Paridad Next.js (Fase 2 auditoría, área Shared): el nav principal ya no incluye
+        // un link "My Portal" basado en rol. El link al portal del usuario vive ahora dentro
+        // del UserMenu del header derecho como un glass-button con avatar + nombre del usuario.
         using var client = await TestAuth.CreateAndSignInAsync(_factory, Roles.Renter, "renter-navbar");
-        // Need to follow the post-login redirect to read a normal page
         client.DefaultRequestHeaders.Add("Accept", "text/html");
 
         var response = await client.GetAsync("/en");
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         var body = await response.Content.ReadAsStringAsync();
-        body.Should().Contain("My Portal");
+
+        // El header debe enlazar al portal del renter (no contiene literal "My Portal" más).
+        body.Should().Contain("href=\"/en/renter\"");
+        // El nav principal del header solo tiene los 3 links públicos: rent, landlords, about.
+        body.Should().NotContain(">My Portal<");
     }
 }

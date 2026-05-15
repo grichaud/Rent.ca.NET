@@ -7,6 +7,12 @@ module.exports = {
     './Features/**/*.cs',
     './wwwroot/js/**/*.js'
   ],
+  // Paridad Next.js (city-card CITY_GRADIENTS): los gradientes por slug se interpolan
+  // en runtime desde Razor, así que Tailwind no los detecta en build-time. Safelist
+  // explícito para asegurar que se incluyan en el CSS final.
+  safelist: [
+    { pattern: /^(from|via|to)-(brand|cyan|purple|amber|green|indigo|teal|orange|slate)-(800|900|950)$/ },
+  ],
   theme: {
     extend: {
       colors: {

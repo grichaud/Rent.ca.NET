@@ -10,6 +10,7 @@
     const clearBtn = document.getElementById("ai-chat-clear");
     const messagesEl = document.getElementById("ai-chat-messages");
     const emptyEl = document.getElementById("ai-chat-empty");
+    const suggestionsEl = document.getElementById("ai-chat-suggestions");
     const form = document.getElementById("ai-chat-form");
     const input = document.getElementById("ai-chat-input");
     const sendBtn = document.getElementById("ai-chat-send");
@@ -48,10 +49,14 @@
         const hasMessages = messagesEl.children.length > 0;
         if (hasMessages) {
             emptyEl.classList.add("hidden");
+            if (suggestionsEl) suggestionsEl.classList.add("hidden");
             messagesEl.classList.remove("hidden");
+            if (clearBtn) clearBtn.classList.remove("hidden");
         } else {
             emptyEl.classList.remove("hidden");
+            if (suggestionsEl) suggestionsEl.classList.remove("hidden");
             messagesEl.classList.add("hidden");
+            if (clearBtn) clearBtn.classList.add("hidden");
         }
     }
 
@@ -284,7 +289,7 @@
         }
     });
 
-    document.querySelectorAll("#ai-chat-empty [data-suggestion]").forEach(btn => {
+    document.querySelectorAll("[data-suggestion]").forEach(btn => {
         btn.addEventListener("click", () => sendMessage(btn.textContent.trim()));
     });
 

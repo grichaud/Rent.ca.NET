@@ -7,6 +7,25 @@
     if (culture != "en" && culture != "fr") { culture = "en"; }
 
     var quickCities = new[] { "Toronto", "Vancouver", "Montreal", "Calgary", "Ottawa", "Edmonton" };
+
+    // Paridad Next.js (city-card.tsx CITY_GRADIENTS): gradiente fallback único por slug
+    // cuando una ciudad no tiene foto. 12 ciudades + default.
+    var cityGradients = new Dictionary<string, string>
+    {
+        ["toronto"] = "from-brand-900 via-brand-800 to-purple-900",
+        ["vancouver"] = "from-cyan-900 via-teal-800 to-brand-900",
+        ["montreal"] = "from-purple-900 via-brand-900 to-indigo-900",
+        ["calgary"] = "from-amber-900 via-orange-900 to-brand-900",
+        ["edmonton"] = "from-green-900 via-teal-900 to-brand-900",
+        ["ottawa"] = "from-brand-950 via-brand-900 to-purple-900",
+        ["winnipeg"] = "from-indigo-900 via-brand-900 to-cyan-900",
+        ["quebec-city"] = "from-purple-950 via-purple-900 to-brand-900",
+        ["hamilton"] = "from-slate-800 via-brand-900 to-teal-900",
+        ["saskatoon"] = "from-amber-950 via-brand-900 to-orange-900",
+        ["london"] = "from-brand-900 via-indigo-900 to-purple-900",
+        ["halifax"] = "from-cyan-950 via-brand-900 to-teal-900",
+    };
+    string GradientFor(string slug) => cityGradients.TryGetValue(slug, out var g) ? g : "from-brand-900 to-purple-900";
 }
 
 <div class="space-y-24">
@@ -14,7 +33,7 @@
     <section aria-labelledby="popular-cities-heading">
         <div class="mb-10 flex items-end justify-between">
             <div>
-                <p class="text-sm font-medium text-brand-600 dark:text-brand-400 uppercase tracking-widest mb-2">@L["cities.sectionLabel"]</p>
+                <p class="text-sm font-medium text-brand-400 uppercase tracking-widest mb-2">@L["cities.sectionLabel"]</p>
                 <h2 id="popular-cities-heading" class="font-sans font-bold tracking-tight text-3xl sm:text-4xl text-slate-900 dark:text-white">@L["cities.sectionTitle"]</h2>
             </div>
             <p class="hidden sm:block text-slate-400 dark:text-white/50 text-sm">@string.Format(L["cities.available"].Value, Model.FeaturedCities.Count)</p>
@@ -33,8 +52,8 @@
                             }
                             else
                             {
-                                <div class="h-full w-full bg-gradient-to-br from-brand-500 to-cyan-500 flex items-center justify-center">
-                                    <span class="text-4xl font-bold text-white/80">@city.Name.Substring(0, 1)</span>
+                                <div class="h-full w-full bg-gradient-to-br @GradientFor(city.Slug) flex items-center justify-center">
+                                    <span class="text-4xl font-bold text-white/80 select-none">@city.Name.Substring(0, 1)</span>
                                 </div>
                             }
                             <div aria-hidden="true" class="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/10 to-transparent pointer-events-none"></div>
@@ -54,10 +73,11 @@
         <section aria-labelledby="new-listings-heading">
             <div class="flex items-end justify-between mb-8">
                 <div>
-                    <p class="text-sm font-medium text-brand-600 dark:text-brand-400 uppercase tracking-widest mb-2">@L["listings.justAdded"]</p>
+                    <p class="text-sm font-medium text-brand-400 uppercase tracking-widest mb-2">@L["listings.justAdded"]</p>
                     <h2 id="new-listings-heading" class="font-sans font-bold tracking-tight text-3xl sm:text-4xl text-slate-900 dark:text-white">@L["listings.newListings"]</h2>
                 </div>
-                <a href="/@culture/toronto" class="glass-button px-4 py-2 text-sm font-medium text-slate-600 dark:text-white/70 hover:text-slate-900 dark:hover:text-white inline-flex items-center gap-1.5">
+                @* Paridad Next.js: `ROUTES.city('canada')` agrega todas las propiedades del país. *@
+                <a href="/@culture/canada" class="glass-button !px-4 py-2 text-sm font-medium text-slate-600 dark:text-white/70 hover:text-slate-900 dark:hover:text-white inline-flex items-center gap-1.5">
                     <span>@L["common.viewAll"]</span>
                     <icon name="arrow-right" class="h-4 w-4" />
                 </a>
@@ -73,7 +93,7 @@
                 <div id="listings-track" class="flex gap-5 overflow-x-auto scroll-smooth pb-4 snap-x snap-mandatory" style="scrollbar-width:none" role="list" aria-label="New rental listings">
                     @foreach (var p in Model.LatestListings)
                     {
-                        <div role="listitem" class="snap-start min-w-[280px] sm:min-w-[320px] max-w-[320px] flex-shrink-0">
+                        <div role="listitem" class="snap-start w-[300px] sm:w-[320px] flex-shrink-0">
                             <partial name="/Features/Search/Partials/_PropertyCard.cshtml" model="p" />
                         </div>
                     }
@@ -88,16 +108,21 @@
         </section>
     }
 
-    <section aria-labelledby="stats-heading">
+    @* Paridad Next.js stats-banner.tsx: count-up animation con IntersectionObserver.
+       Valores hardcoded para coincidir con Next.js (10000, 200, 50000). El JS
+       (`stats-counter.js`) anima 0 → target con easing cuando el bloque entra al viewport. *@
+    <section id="stats-banner" aria-labelledby="stats-heading">
         <h2 id="stats-heading" class="sr-only">@L["stats.title"]</h2>
         <div class="grid gap-6 grid-cols-1 sm:grid-cols-3">
             <div class="glass-card-premium p-8 flex flex-col items-center text-center gap-4">
                 <span class="glass-highlight"></span>
                 <div class="h-14 w-14 rounded-2xl flex items-center justify-center bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10">
-                    <icon name="building-2" class="h-7 w-7 text-brand-500 dark:text-brand-400" />
+                    <icon name="building-2" class="h-7 w-7 text-brand-400" />
                 </div>
                 <div>
-                    <p class="text-4xl sm:text-5xl font-bold text-slate-900 dark:text-white tabular-nums">0<span class="ml-0.5 text-brand-500 dark:text-brand-400">K+</span></p>
+                    <p class="text-4xl sm:text-5xl font-bold text-slate-900 dark:text-white tabular-nums">
+                        <span data-stat-counter data-target="10000" data-format="thousands">0</span><span class="ml-0.5 text-brand-400">K+</span>
+                    </p>
                     <p class="mt-1 text-lg font-semibold text-slate-700 dark:text-white/90">@L["stats.activeListings"]</p>
                     <p class="mt-1 text-sm text-slate-400 dark:text-white/40">@L["stats.activeListingsDesc"]</p>
                 </div>
@@ -106,10 +131,12 @@
             <div class="glass-card-premium p-8 flex flex-col items-center text-center gap-4">
                 <span class="glass-highlight"></span>
                 <div class="h-14 w-14 rounded-2xl flex items-center justify-center bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10">
-                    <icon name="map-pin" class="h-7 w-7 text-cyan-500 dark:text-cyan-400" />
+                    <icon name="map-pin" class="h-7 w-7 text-cyan-400" />
                 </div>
                 <div>
-                    <p class="text-4xl sm:text-5xl font-bold text-slate-900 dark:text-white tabular-nums">0<span class="ml-0.5 text-cyan-500 dark:text-cyan-400">+</span></p>
+                    <p class="text-4xl sm:text-5xl font-bold text-slate-900 dark:text-white tabular-nums">
+                        <span data-stat-counter data-target="200" data-format="raw">0</span><span class="ml-0.5 text-cyan-400">+</span>
+                    </p>
                     <p class="mt-1 text-lg font-semibold text-slate-700 dark:text-white/90">@L["stats.citiesCovered"]</p>
                     <p class="mt-1 text-sm text-slate-400 dark:text-white/40">@L["stats.citiesCoveredDesc"]</p>
                 </div>
@@ -118,10 +145,12 @@
             <div class="glass-card-premium p-8 flex flex-col items-center text-center gap-4">
                 <span class="glass-highlight"></span>
                 <div class="h-14 w-14 rounded-2xl flex items-center justify-center bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10">
-                    <icon name="users" class="h-7 w-7 text-purple-500 dark:text-purple-400" />
+                    <icon name="users" class="h-7 w-7 text-purple-400" />
                 </div>
                 <div>
-                    <p class="text-4xl sm:text-5xl font-bold text-slate-900 dark:text-white tabular-nums">0<span class="ml-0.5 text-purple-500 dark:text-purple-400">K+</span></p>
+                    <p class="text-4xl sm:text-5xl font-bold text-slate-900 dark:text-white tabular-nums">
+                        <span data-stat-counter data-target="50000" data-format="thousands">0</span><span class="ml-0.5 text-purple-400">K+</span>
+                    </p>
                     <p class="mt-1 text-lg font-semibold text-slate-700 dark:text-white/90">@L["stats.happyRenters"]</p>
                     <p class="mt-1 text-sm text-slate-400 dark:text-white/40">@L["stats.happyRentersDesc"]</p>
                 </div>
@@ -130,13 +159,15 @@
     </section>
 
     <section aria-labelledby="ai-cta-heading">
+        @* Paridad Next.js ai-cta.tsx: background gradient extra + orb -top-20 -right-20 + animate-glow en icono. *@
         <div class="glass-card-premium p-10 sm:p-14 relative overflow-hidden">
             <span class="glass-highlight"></span>
-            <div aria-hidden="true" class="pointer-events-none absolute -top-32 left-1/2 -translate-x-1/2 h-64 w-64 rounded-full bg-brand-500/10 dark:bg-brand-500/15 blur-3xl"></div>
+            <div aria-hidden="true" class="absolute inset-0 rounded-3xl bg-gradient-to-br from-brand-500/10 via-transparent to-purple-500/10 pointer-events-none"></div>
+            <div aria-hidden="true" class="pointer-events-none absolute -top-20 -right-20 h-64 w-64 rounded-full bg-brand-500/10 blur-3xl"></div>
 
             <div class="relative z-10 flex flex-col items-center text-center gap-6 max-w-2xl mx-auto">
-                <div class="h-16 w-16 rounded-2xl flex items-center justify-center bg-gradient-to-br from-brand-500/30 to-cyan-500/30 border border-gray-300 dark:border-white/20 shadow-xl shadow-brand-500/20">
-                    <icon name="sparkles" class="h-8 w-8 text-brand-500 dark:text-brand-400" />
+                <div class="h-16 w-16 rounded-2xl flex items-center justify-center bg-gradient-to-br from-brand-500/30 to-cyan-500/30 border border-gray-300 dark:border-white/20 shadow-xl shadow-brand-500/20 animate-glow">
+                    <icon name="sparkles" class="h-8 w-8 text-brand-400" />
                 </div>
 
                 <div>
@@ -144,13 +175,13 @@
                     <p class="text-base sm:text-lg leading-relaxed text-slate-500 dark:text-white/60">@L["aiChat.cantFindDesc"]</p>
                 </div>
 
-                <button type="button" id="ai-cta-button" class="glass-button-primary group inline-flex items-center gap-3 px-8 py-4 text-base font-semibold text-white">
-                    <icon name="sparkles" class="h-5 w-5 text-brand-100" />
+                <button type="button" id="ai-cta-button" class="glass-button-primary group inline-flex items-center gap-3 !px-8 !py-4 text-base font-semibold text-white">
+                    <icon name="sparkles" class="h-5 w-5 text-brand-300 shrink-0" />
                     <span>@L["aiChat.chatButton"]</span>
-                    <icon name="arrow-right" class="h-4 w-4 text-white/80 transition-transform duration-300 group-hover:translate-x-1" />
+                    <icon name="arrow-right" class="h-4 w-4 text-white/60 transition-transform duration-300 group-hover:translate-x-1" />
                 </button>
 
-                <div class="flex items-center gap-4 sm:gap-6 text-xs sm:text-sm text-slate-400 dark:text-white/40">
+                <div class="flex items-center gap-6 text-sm text-gray-400 dark:text-white/40">
                     <span>@L["aiChat.freeToUse"]</span>
                     <span class="h-px w-4 bg-gray-300 dark:bg-white/20"></span>
                     <span>@L["aiChat.noSignup"]</span>
@@ -179,7 +210,8 @@
 </div>
 
 @section Hero {
-    <section class="relative overflow-hidden min-h-[80vh] flex items-center" aria-label="@L["hero.title"] @L["hero.titleHighlight"]">
+    @* Paridad Next.js: hero `min-h-[90vh]` con padding generoso. *@
+    <section class="relative overflow-hidden min-h-[90vh] flex flex-col items-center justify-center px-4 py-24" aria-label="@L["hero.title"] @L["hero.titleHighlight"]">
         <div class="absolute inset-0 z-0">
             <img src="https://images.unsplash.com/photo-1517935706615-2717063c2225?w=1920&amp;h=1080&amp;fit=crop&amp;q=80"
                  alt=""
@@ -196,7 +228,7 @@
             <div class="absolute bottom-[5%] left-[30%] h-[400px] w-[400px] rounded-full bg-cyan-500/10 dark:bg-cyan-500/15 blur-[80px] animate-pulse-slow [animation-delay:4s]"></div>
         </div>
 
-        <div aria-hidden="true" class="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-gray-50 dark:from-slate-900 to-transparent pointer-events-none z-[2]"></div>
+        <div aria-hidden="true" class="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-gray-50 dark:from-slate-950 to-transparent pointer-events-none z-[2]"></div>
 
         <div class="relative z-10 w-full max-w-4xl mx-auto px-4 py-16 sm:py-24 text-center">
             <div class="glass-badge mx-auto mb-8 inline-flex">
@@ -210,24 +242,26 @@
             </h1>
             <p class="text-lg sm:text-xl text-slate-600 dark:text-white/70 mt-6 max-w-2xl mx-auto">@L["hero.subtitle"]</p>
 
-            <form id="hero-search" class="mt-10 max-w-2xl mx-auto glass-card p-2 flex items-center gap-2" role="search">
-                <label for="hero-city" class="pl-3 text-slate-400 dark:text-white/40">
-                    <icon name="search" class="h-5 w-5" />
-                </label>
+            @* Paridad Next.js hero-section.tsx: search bar `glass-base` (no `glass-card`),
+               padding generoso `px-6 py-4`, sombras 2xl, sin segundo icono en el botón. *@
+            <form id="hero-search" class="mt-10 max-w-2xl mx-auto glass-base flex items-center gap-3 px-6 py-4 focus-within:border-brand-500/40 dark:focus-within:border-white/40 transition-all duration-300 shadow-2xl shadow-black/10 dark:shadow-black/30" role="search">
+                <icon name="search" class="h-5 w-5 shrink-0 text-gray-400 dark:text-white/40" />
                 <input type="search" id="hero-city" name="q" required autocomplete="off"
                        placeholder="@L["hero.searchPlaceholder"]"
                        aria-label="@L["hero.searchPlaceholder"]"
-                       class="flex-1 bg-transparent border-0 outline-none text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-white/40 text-base py-3 focus:ring-0" />
-                <button type="submit" class="glass-button-primary inline-flex items-center gap-2 shrink-0">
+                       class="flex-1 bg-transparent border-0 outline-none text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-white/40 text-base focus:ring-0 px-4 py-1" />
+                <button type="submit" class="glass-button-primary !px-5 !py-2.5 text-sm font-semibold shrink-0" aria-label="Search rentals">
                     <span>@L["common.search"]</span>
-                    <icon name="search" class="h-4 w-4" />
                 </button>
             </form>
 
-            <button type="button" id="hero-ai-cta" class="mt-6 inline-flex items-center gap-2 glass-badge hover:scale-105 transition-transform text-sm">
-                <icon name="sparkles" class="h-3.5 w-3.5 text-brand-600 dark:text-brand-300" />
-                <span class="font-medium text-slate-700 dark:text-white/80">@L["hero.aiCta"]</span>
-            </button>
+            @* Paridad Next.js: AI CTA como `glass-button` (rounded-xl + px-5 py-2.5), no como badge. *@
+            <div class="mt-4 flex justify-center">
+                <button type="button" id="hero-ai-cta" class="glass-button group inline-flex items-center gap-2 !px-5 !py-2.5 text-sm text-slate-600 hover:text-slate-900 dark:text-white/70 dark:hover:text-white" aria-label="@L["hero.aiCta"]">
+                    <icon name="sparkles" class="h-4 w-4 text-brand-500 dark:text-brand-400 group-hover:text-cyan-500 dark:group-hover:text-cyan-400 transition-colors duration-300" />
+                    <span>@L["hero.aiCta"]</span>
+                </button>
+            </div>
 
             <nav class="mt-10 flex flex-wrap justify-center gap-2" aria-label="Popular cities">
                 @foreach (var name in quickCities)

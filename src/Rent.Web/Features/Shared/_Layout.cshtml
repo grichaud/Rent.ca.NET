@@ -74,39 +74,30 @@
     <script src="~/js/ai-chat.js" asp-append-version="true" defer></script>
     <script src="~/js/maps.js" asp-append-version="true" defer></script>
     <script src="~/js/search-filters.js" asp-append-version="true" defer></script>
+    <script src="~/js/stats-counter.js" asp-append-version="true" defer></script>
 </head>
 <body class="h-full font-sans text-slate-800 dark:text-white/90 antialiased mesh-background">
 
     <header class="sticky top-0 z-40 glass-navbar">
         <div class="max-w-7xl mx-auto h-16 px-4 sm:px-6 flex items-center justify-between gap-4">
-            <a href="/@culture" class="flex items-center gap-1 group">
-                <span class="text-2xl font-bold tracking-tight bg-gradient-to-r from-brand-500 to-cyan-500 bg-clip-text text-transparent">Rent</span>
-                <span class="text-2xl font-bold tracking-tight bg-gradient-to-r from-brand-500 to-cyan-500 bg-clip-text text-transparent">.ca</span>
+            <a href="/@culture" class="inline-flex items-baseline select-none group" aria-label="Rent.ca - Home">
+                <span class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Rent</span>
+                <span class="text-2xl font-bold tracking-tight bg-gradient-to-r from-brand-400 to-cyan-400 bg-clip-text text-transparent">.ca</span>
                 <span class="ml-2 text-[10px] font-bold tracking-widest text-brand-600 dark:text-brand-400 border border-brand-500/40 rounded px-1.5 py-0.5">.NET</span>
             </a>
 
-            <nav class="hidden md:flex items-center gap-1 text-sm">
-                <a href="/@culture" class="px-3 py-2 rounded-lg text-slate-700 dark:text-white/80 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">@L["common.rent"]</a>
-                <a href="/@culture/landlords" class="px-3 py-2 rounded-lg text-slate-700 dark:text-white/80 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">@L["common.landlords"]</a>
-                <a href="/@culture/about" class="px-3 py-2 rounded-lg text-slate-700 dark:text-white/80 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">@L["common.about"]</a>
-                @if (isAdmin)
-                {
-                    <a href="/@culture/admin" class="px-3 py-2 rounded-lg text-amber-600 dark:text-amber-300 font-medium hover:bg-amber-500/10 transition-colors">@L["admin.linkAdmin"]</a>
-                }
-                else if (isLandlord)
-                {
-                    <a href="/@culture/landlord" class="px-3 py-2 rounded-lg text-slate-700 dark:text-white/80 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">@L["common.dashboard"]</a>
-                }
-                else if (isRenter)
-                {
-                    <a href="/@culture/renter" class="px-3 py-2 rounded-lg text-slate-700 dark:text-white/80 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">@L["common.myPortal"]</a>
-                }
+            @* Paridad Next.js: el nav principal sólo lleva los 3 links públicos.
+               El link al portal del usuario logueado vive dentro del bloque de auth (derecha). *@
+            <nav class="hidden md:flex items-center gap-1 text-sm" aria-label="Main navigation">
+                <a href="/@culture" class="px-4 py-2 rounded-xl text-slate-700 dark:text-white/80 hover:text-slate-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10 transition-all duration-200 font-medium">@L["common.rent"]</a>
+                <a href="/@culture/landlords" class="px-4 py-2 rounded-xl text-slate-700 dark:text-white/80 hover:text-slate-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10 transition-all duration-200 font-medium">@L["common.landlords"]</a>
+                <a href="/@culture/about" class="px-4 py-2 rounded-xl text-slate-700 dark:text-white/80 hover:text-slate-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10 transition-all duration-200 font-medium">@L["common.about"]</a>
             </nav>
 
             <div class="flex items-center gap-2">
                 @* Mobile: dark toggle lives inside the hamburger drawer below. Keep this one
                    visible only from sm+ to declutter the mobile top bar (matches Next.js). *@
-                <button type="button" data-theme-toggle class="hidden sm:inline-flex items-center justify-center h-9 w-9 rounded-xl bg-gray-100 hover:bg-gray-200 dark:bg-white/10 dark:hover:bg-white/20 backdrop-blur-md border border-gray-200 dark:border-white/25 text-slate-600 dark:text-white/70 transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" title="@L["common.themeToggleTitle"]" aria-label="Toggle dark mode">
+                <button type="button" data-theme-toggle class="hidden sm:inline-flex items-center justify-center glass-button !p-2 !px-2 text-slate-600 dark:text-white/70" title="@L["common.themeToggleTitle"]" aria-label="Toggle dark mode">
                     <icon name="sun" class="h-4 w-4 hidden dark:inline-block" />
                     <icon name="moon" class="h-4 w-4 inline-block dark:hidden" />
                 </button>
@@ -114,35 +105,36 @@
                     @Html.AntiForgeryToken()
                     <input type="hidden" name="culture" value="@altCulture" />
                     <input type="hidden" name="returnUrl" value="@returnUrl" />
-                    <button type="submit" class="inline-flex items-center justify-center gap-1.5 h-9 px-3 rounded-xl bg-gray-100 hover:bg-gray-200 dark:bg-white/10 dark:hover:bg-white/20 backdrop-blur-md border border-gray-200 dark:border-white/25 text-sm font-medium text-slate-600 dark:text-white/70 transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" title="@L["common.languageSwitcherTitle"]" aria-label="@L["common.languageSwitcherTitle"]">
-                        <icon name="languages" class="h-4 w-4" />
-                        <span class="text-xs font-bold tracking-wider">@altCulture.ToUpper()</span>
+                    <button type="submit" class="glass-button inline-flex items-center gap-1.5 !px-3 py-2 text-sm font-semibold text-slate-700 dark:text-white/80 hover:text-slate-900 dark:hover:text-white" title="@L["common.languageSwitcherTitle"]" aria-label="@L["common.languageSwitcherTitle"]">
+                        <icon name="languages" class="h-3.5 w-3.5" />
+                        <span class="tracking-wider">@altCulture.ToUpper()</span>
                     </button>
                 </form>
 
                 @if (SignInManager.IsSignedIn(User))
                 {
-                    <a href="@portalHref" class="hidden sm:inline-flex items-center gap-2 glass-button text-sm font-medium text-slate-700 dark:text-white">
+                    @* UserMenu de paridad: link al portal con avatar + nombre, seguido de Sign Out como otro glass-button (paridad Next.js). *@
+                    <a href="@portalHref" class="hidden sm:inline-flex items-center gap-2 glass-button !px-3 py-2 text-sm font-medium text-slate-700 dark:text-white cursor-pointer">
                         <span class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-brand-500/20 border border-brand-400/40">
                             <icon name="user" class="h-4 w-4 text-brand-600 dark:text-brand-400" />
                         </span>
-                        <span class="max-w-[120px] truncate">@displayName</span>
+                        <span class="max-w-[120px] truncate text-slate-700 dark:text-white/80">@displayName</span>
                     </a>
-                    <form method="post" action="/logout" class="hidden sm:inline">
+                    <form method="post" action="/logout" class="hidden sm:inline-flex">
                         @Html.AntiForgeryToken()
-                        <button type="submit" class="inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-700 dark:text-white/80 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
+                        <button type="submit" class="glass-button inline-flex items-center gap-2 !px-3 py-2 text-sm font-medium text-slate-600 dark:text-white/70 hover:text-slate-900 dark:hover:text-white" aria-label="@L["common.logout"]">
                             <icon name="log-out" class="h-4 w-4" />
-                            <span>@L["common.logout"]</span>
+                            <span class="hidden lg:inline">@L["common.logout"]</span>
                         </button>
                     </form>
                 }
                 else
                 {
-                    <a href="/@culture/login" class="hidden sm:inline-flex items-center gap-2 glass-button text-sm font-medium text-slate-700 dark:text-white">
+                    <a href="/@culture/login" class="hidden sm:inline-flex items-center gap-2 glass-button !px-4 py-2 text-sm font-medium text-slate-700 dark:text-white">
                         <icon name="log-in" class="h-4 w-4" />
                         <span>@L["common.signIn"]</span>
                     </a>
-                    <a href="/@culture/signup" class="hidden sm:inline-flex items-center gap-2 glass-button-primary text-sm">
+                    <a href="/@culture/signup" class="hidden sm:inline-flex items-center gap-2 glass-button-primary !px-4 py-2 text-sm font-medium">
                         <icon name="user-plus" class="h-4 w-4" />
                         <span>@L["common.signUp"]</span>
                     </a>
@@ -161,9 +153,9 @@
         <aside class="absolute top-0 right-0 bottom-0 w-72 max-w-[85vw] bg-white/95 dark:bg-slate-950/95 backdrop-blur-2xl border-l border-gray-200 dark:border-white/10 shadow-2xl translate-x-full transition-transform duration-300 ease-out flex flex-col" data-mobile-menu-panel>
             <div class="relative flex items-center justify-between p-5 border-b border-gray-200 dark:border-white/10">
                 <span class="glass-highlight"></span>
-                <a href="/@culture" class="flex items-center gap-1">
-                    <span class="text-xl font-bold tracking-tight bg-gradient-to-r from-brand-500 to-cyan-500 bg-clip-text text-transparent">Rent</span>
-                    <span class="text-xl font-bold tracking-tight bg-gradient-to-r from-brand-500 to-cyan-500 bg-clip-text text-transparent">.ca</span>
+                <a href="/@culture" class="inline-flex items-baseline select-none" aria-label="Rent.ca - Home">
+                    <span class="text-xl font-bold tracking-tight text-gray-900 dark:text-white">Rent</span>
+                    <span class="text-xl font-bold tracking-tight bg-gradient-to-r from-brand-400 to-cyan-400 bg-clip-text text-transparent">.ca</span>
                     <span class="ml-2 text-[10px] font-bold tracking-widest text-brand-600 dark:text-brand-400 border border-brand-500/40 rounded px-1.5 py-0.5">.NET</span>
                 </a>
                 <button type="button" data-mobile-menu-close class="inline-flex items-center justify-center h-9 w-9 rounded-lg text-slate-600 dark:text-white/70 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors" aria-label="@L["navbar.close"]">
@@ -171,78 +163,59 @@
                 </button>
             </div>
 
+            @* Paridad Next.js mobile-nav: solo links públicos (rent/landlords/about). El admin link
+               se mantiene como excepción .NET-only fuera del alcance de paridad. *@
             <nav class="flex flex-col gap-1 p-4" aria-label="Mobile">
-                <a href="/@culture" class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-700 dark:text-white/80 hover:text-slate-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
+                <a href="/@culture" class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-700 dark:text-white/80 hover:text-slate-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10 transition-all duration-200">
                     <icon name="home" class="h-4 w-4 shrink-0" />
                     <span class="font-medium">@L["common.rent"]</span>
                 </a>
-                <a href="/@culture/landlords" class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-700 dark:text-white/80 hover:text-slate-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
+                <a href="/@culture/landlords" class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-700 dark:text-white/80 hover:text-slate-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10 transition-all duration-200">
                     <icon name="building" class="h-4 w-4 shrink-0" />
                     <span class="font-medium">@L["common.landlords"]</span>
                 </a>
-                <a href="/@culture/about" class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-700 dark:text-white/80 hover:text-slate-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
+                <a href="/@culture/about" class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-700 dark:text-white/80 hover:text-slate-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10 transition-all duration-200">
                     <icon name="info" class="h-4 w-4 shrink-0" />
                     <span class="font-medium">@L["common.about"]</span>
                 </a>
                 @if (isAdmin)
                 {
-                    <a href="/@culture/admin" class="flex items-center gap-3 rounded-xl px-4 py-3 text-amber-600 dark:text-amber-300 font-medium hover:bg-amber-500/10 transition-colors">
+                    <a href="/@culture/admin" class="flex items-center gap-3 rounded-xl px-4 py-3 text-amber-600 dark:text-amber-300 font-medium hover:bg-amber-500/10 transition-all duration-200">
                         <icon name="sparkles" class="h-4 w-4 shrink-0" />
                         <span>@L["admin.linkAdmin"]</span>
-                    </a>
-                }
-                @if (isLandlord)
-                {
-                    <a href="/@culture/landlord" class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-700 dark:text-white/80 hover:text-slate-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
-                        <icon name="user" class="h-4 w-4 shrink-0" />
-                        <span class="font-medium">@L["common.dashboard"]</span>
-                    </a>
-                    <a href="/@culture/landlord/inbox" class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-700 dark:text-white/80 hover:text-slate-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
-                        <icon name="mail" class="h-4 w-4 shrink-0" />
-                        <span class="font-medium">@L["landlord.inboxTitle"]</span>
-                    </a>
-                }
-                else if (isRenter)
-                {
-                    <a href="/@culture/renter" class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-700 dark:text-white/80 hover:text-slate-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
-                        <icon name="layout-dashboard" class="h-4 w-4 shrink-0" />
-                        <span class="font-medium">@L["common.myPortal"]</span>
-                    </a>
-                    <a href="/@culture/renter/favorites" class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-700 dark:text-white/80 hover:text-slate-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
-                        <icon name="heart" class="h-4 w-4 shrink-0" />
-                        <span class="font-medium">@L["renter.favoritesTitle"]</span>
-                    </a>
-                    <a href="/@culture/renter/alerts" class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-700 dark:text-white/80 hover:text-slate-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
-                        <icon name="bell" class="h-4 w-4 shrink-0" />
-                        <span class="font-medium">@L["renter.alertsTitle"]</span>
                     </a>
                 }
             </nav>
 
             <div class="mt-auto p-4 border-t border-gray-200 dark:border-white/10 flex flex-col gap-2">
-                <div class="flex items-center gap-2">
-                    <button type="button" data-theme-toggle class="glass-button inline-flex items-center justify-center h-9 w-9 shrink-0" title="@L["common.themeToggleTitle"]" aria-label="Toggle dark mode">
-                        <icon name="sun" class="h-4 w-4 hidden dark:inline-block" />
-                        <icon name="moon" class="h-4 w-4 inline-block dark:hidden" />
+                @* Paridad Next.js: tema + idioma como toggle único en una fila *@
+                <div class="flex gap-2">
+                    <button type="button" data-theme-toggle class="glass-button inline-flex items-center justify-center !p-2 shrink-0" title="@L["common.themeToggleTitle"]" aria-label="Toggle dark mode">
+                        <icon name="sun" class="h-4 w-4 hidden dark:inline-block text-white/80" />
+                        <icon name="moon" class="h-4 w-4 inline-block dark:hidden text-gray-600" />
                     </button>
-                    <form method="post" action="/set-language" class="flex-1 flex gap-2">
+                    <form method="post" action="/set-language" class="flex-1">
                         @Html.AntiForgeryToken()
+                        <input type="hidden" name="culture" value="@altCulture" />
                         <input type="hidden" name="returnUrl" value="@returnUrl" />
-                        <button type="submit" name="culture" value="en" class="flex-1 glass-button text-xs font-bold tracking-wider @(culture == "en" ? "ring-2 ring-brand-500" : string.Empty)">EN</button>
-                        <button type="submit" name="culture" value="fr" class="flex-1 glass-button text-xs font-bold tracking-wider @(culture == "fr" ? "ring-2 ring-brand-500" : string.Empty)">FR</button>
+                        <button type="submit" class="glass-button w-full inline-flex items-center justify-center gap-2 !px-4 py-3 text-slate-700 dark:text-white font-medium" aria-label="@L["common.languageSwitcherTitle"]">
+                            <icon name="languages" class="h-4 w-4" />
+                            <span>@(culture == "en" ? "Français" : "English")</span>
+                        </button>
                     </form>
                 </div>
                 @if (SignInManager.IsSignedIn(User))
                 {
-                    <a href="@portalHref" class="glass-button w-full inline-flex items-center justify-center gap-2 text-sm font-medium">
-                        <span class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-brand-500/20 border border-brand-400/40">
+                    @* Paridad Next.js mobile: card glass-base con avatar + nombre (no clickable) seguida de Sign Out *@
+                    <div class="glass-base flex items-center gap-2 px-4 py-3">
+                        <div class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-brand-500/20 border border-brand-400/40 shrink-0">
                             <icon name="user" class="h-4 w-4 text-brand-600 dark:text-brand-400" />
-                        </span>
-                        <span class="max-w-[140px] truncate">@displayName</span>
-                    </a>
+                        </div>
+                        <span class="text-sm font-medium truncate text-gray-900 dark:text-white">@displayName</span>
+                    </div>
                     <form method="post" action="/logout">
                         @Html.AntiForgeryToken()
-                        <button type="submit" class="glass-button w-full inline-flex items-center justify-center gap-2">
+                        <button type="submit" class="glass-button w-full inline-flex items-center justify-center gap-2 !px-4 py-3 text-sm text-slate-700 dark:text-white font-medium">
                             <icon name="log-out" class="h-4 w-4" />
                             <span>@L["common.logout"]</span>
                         </button>
@@ -250,11 +223,11 @@
                 }
                 else
                 {
-                    <a href="/@culture/login" class="glass-button w-full inline-flex items-center justify-center gap-2">
+                    <a href="/@culture/login" class="glass-button w-full inline-flex items-center justify-center gap-2 !px-4 py-3 text-sm text-slate-700 dark:text-white font-medium">
                         <icon name="log-in" class="h-4 w-4" />
                         <span>@L["common.signIn"]</span>
                     </a>
-                    <a href="/@culture/signup" class="glass-button-primary w-full inline-flex items-center justify-center gap-2">
+                    <a href="/@culture/signup" class="glass-button-primary w-full inline-flex items-center justify-center gap-2 !px-4 py-3 text-sm font-medium">
                         <icon name="user-plus" class="h-4 w-4" />
                         <span>@L["common.signUp"]</span>
                     </a>
@@ -271,42 +244,50 @@
         @RenderBody()
     </main>
 
-    <footer class="mt-24 border-t border-gray-200 dark:border-white/10 bg-white/40 dark:bg-slate-900/40 backdrop-blur-md">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 grid grid-cols-2 md:grid-cols-4 gap-8 text-sm">
-            <div>
-                <h4 class="font-semibold text-slate-900 dark:text-white mb-3">@L["common.search"]</h4>
-                <ul class="space-y-2 text-slate-600 dark:text-white/60">
-                    <li><a href="/@culture" class="hover:text-brand-600 dark:hover:text-brand-400">@L["cities.sectionTitle"]</a></li>
-                    <li><a href="/@culture/toronto" class="hover:text-brand-600 dark:hover:text-brand-400">Toronto</a></li>
-                    <li><a href="/@culture/montreal" class="hover:text-brand-600 dark:hover:text-brand-400">Montreal</a></li>
-                    <li><a href="/@culture/vancouver" class="hover:text-brand-600 dark:hover:text-brand-400">Vancouver</a></li>
-                </ul>
+    @* Paridad Next.js: footer como card flotante de 3 columnas con bottom bar (Logo+tagline / Quick Links / For Landlords). *@
+    <footer class="glass-base mx-4 mb-4 rounded-3xl border-gray-200 dark:border-white/10 bg-white/80 dark:bg-black/20 mt-24" role="contentinfo">
+        <div class="mx-auto max-w-7xl px-6 py-12">
+            <div class="grid grid-cols-1 gap-10 sm:grid-cols-3">
+                @* Column 1 - Brand *@
+                <div class="flex flex-col gap-4">
+                    <a href="/@culture" class="inline-flex items-baseline select-none" aria-label="Rent.ca - Home">
+                        <span class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Rent</span>
+                        <span class="text-2xl font-bold tracking-tight bg-gradient-to-r from-brand-400 to-cyan-400 bg-clip-text text-transparent">.ca</span>
+                        <span class="ml-2 text-[10px] font-bold tracking-widest text-brand-600 dark:text-brand-400 border border-brand-500/40 rounded px-1.5 py-0.5">.NET</span>
+                    </a>
+                    <p class="text-sm leading-relaxed text-gray-600 dark:text-white/70">
+                        @L["footer.tagline"]
+                        <br />
+                        @L["footer.verified"]
+                    </p>
+                </div>
+
+                @* Column 2 - Quick Links *@
+                <div>
+                    <h3 class="text-sm font-semibold uppercase tracking-wider mb-4 text-gray-500 dark:text-white/60">@L["footer.quickLinks"]</h3>
+                    <ul class="flex flex-col gap-2" role="list">
+                        <li><a href="/@culture/about" class="text-sm text-gray-600 dark:text-white/70 hover:text-gray-900 dark:hover:text-white transition-colors duration-200">@L["footer.about"]</a></li>
+                        <li><a href="/@culture/privacy" class="text-sm text-gray-600 dark:text-white/70 hover:text-gray-900 dark:hover:text-white transition-colors duration-200">@L["footer.privacy"]</a></li>
+                        <li><a href="https://rent-ca.vercel.app/@culture" target="_blank" rel="noopener" class="text-sm text-gray-600 dark:text-white/70 hover:text-gray-900 dark:hover:text-white transition-colors duration-200">Next.js version</a></li>
+                        <li><a href="https://github.com/grichaud/Rent.ca.NET" target="_blank" rel="noopener" class="text-sm text-gray-600 dark:text-white/70 hover:text-gray-900 dark:hover:text-white transition-colors duration-200">Source on GitHub</a></li>
+                    </ul>
+                </div>
+
+                @* Column 3 - For Landlords *@
+                <div>
+                    <h3 class="text-sm font-semibold uppercase tracking-wider mb-4 text-gray-500 dark:text-white/60">@L["footer.forLandlords"]</h3>
+                    <ul class="flex flex-col gap-2" role="list">
+                        <li><a href="/@culture/landlords" class="text-sm text-gray-600 dark:text-white/70 hover:text-gray-900 dark:hover:text-white transition-colors duration-200">@L["footer.listProperty"]</a></li>
+                        <li><a href="/@culture/landlords#pricing" class="text-sm text-gray-600 dark:text-white/70 hover:text-gray-900 dark:hover:text-white transition-colors duration-200">@L["footer.pricing"]</a></li>
+                        <li><a href="/@culture/landlord" class="text-sm text-gray-600 dark:text-white/70 hover:text-gray-900 dark:hover:text-white transition-colors duration-200">@L["footer.dashboard"]</a></li>
+                    </ul>
+                </div>
             </div>
-            <div>
-                <h4 class="font-semibold text-slate-900 dark:text-white mb-3">@L["footer.forLandlords"]</h4>
-                <ul class="space-y-2 text-slate-600 dark:text-white/60">
-                    <li><a href="/@culture/landlords" class="hover:text-brand-600 dark:hover:text-brand-400">@L["footer.listProperty"]</a></li>
-                    <li><a href="/@culture/signup" class="hover:text-brand-600 dark:hover:text-brand-400">@L["auth.createAccount"]</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4 class="font-semibold text-slate-900 dark:text-white mb-3">@L["footer.about"]</h4>
-                <ul class="space-y-2 text-slate-600 dark:text-white/60">
-                    <li><a href="https://rent-ca.vercel.app/en" target="_blank" rel="noopener" class="hover:text-brand-600 dark:hover:text-brand-400">Next.js version</a></li>
-                    <li><a href="https://github.com/grichaud/Rent.ca.NET" target="_blank" rel="noopener" class="hover:text-brand-600 dark:hover:text-brand-400">Source on GitHub</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4 class="font-semibold text-slate-900 dark:text-white mb-3">@L["footer.terms"]</h4>
-                <ul class="space-y-2 text-slate-600 dark:text-white/60">
-                    <li><a href="/@culture/privacy" class="hover:text-brand-600 dark:hover:text-brand-400">@L["footer.privacy"]</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="border-t border-gray-200 dark:border-white/10">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6 text-xs text-slate-500 dark:text-white/50 flex flex-col sm:flex-row items-center justify-between gap-2">
-                <span>&copy; @DateTime.UtcNow.Year Rent.ca.NET &mdash; Portfolio build by Giovanni Richaud.</span>
-                <span>Same product, two stacks.</span>
+
+            @* Bottom bar *@
+            <div class="mt-10 border-t pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 border-gray-200 dark:border-white/15">
+                <p class="text-sm text-gray-500 dark:text-white/60">@L["footer.copyright"]</p>
+                <p class="text-xs text-gray-500 dark:text-white/60">@L["footer.builtWith"]</p>
             </div>
         </div>
     </footer>

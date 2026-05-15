@@ -26,8 +26,24 @@ public class SearchHandler
     {
         var citySlug = query.CitySlug?.ToLowerInvariant() ?? string.Empty;
 
-        var city = await _db.Cities
-            .FirstOrDefaultAsync(c => c.Slug == citySlug, ct);
+        // Paridad Next.js `ROUTES.city('canada')`: agregado nacional. Cuando el slug es "canada",
+        // saltamos el filtro de ciudad y mostramos todas las propiedades activas con una "ciudad"
+        // sintética centrada en Canadá. Se usa desde el "View All" del carousel del Home.
+        var isCanadaAggregate = citySlug == "canada";
+
+        City? city = isCanadaAggregate
+            ? new City
+            {
+                Slug = "canada",
+                Name = "Canada",
+                Province = "CA",
+                Latitude = 56.1304,   // Centro geográfico aproximado
+                Longitude = -106.3468,
+                ImageUrl = null,
+                ListingCount = 0,
+                IsFeatured = false,
+            }
+            : await _db.Cities.FirstOrDefaultAsync(c => c.Slug == citySlug, ct);
 
         if (city is null)
         {
@@ -36,7 +52,12 @@ public class SearchHandler
 
         var q = _db.Properties
             .AsNoTracking()
-            .Where(p => p.Status == ListingStatus.Active && p.City == city.Name);
+            .Where(p => p.Status == ListingStatus.Active);
+
+        if (!isCanadaAggregate)
+        {
+            q = q.Where(p => p.City == city.Name);
+        }
 
         if (query.MinPrice.HasValue)
             q = q.Where(p => p.Units.Any(u => u.Price >= query.MinPrice));
