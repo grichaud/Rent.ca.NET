@@ -1,4 +1,15 @@
 @model IEnumerable<Rent.Web.Domain.Unit>
+@{
+    var units = Model.ToList();
+}
+
+@if (units.Count == 0)
+{
+    <section class="glass-card p-6 text-center text-sm text-slate-500 dark:text-white/50">
+        @L["detail.noFloorPlans"]
+    </section>
+    return;
+}
 
 <section class="glass-card p-6">
     <h2 class="font-semibold text-slate-900 dark:text-white mb-4">@L["detail.availableUnits"]</h2>
@@ -15,15 +26,25 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200 dark:divide-white/10">
-                @foreach (var u in Model.OrderBy(u => u.Price))
+                @foreach (var u in units.OrderBy(u => u.Price))
                 {
-                    <tr class="text-slate-800 dark:text-white/90">
+                    var soldOut = u.AvailableUnits <= 0;
+                    <tr class="text-slate-800 dark:text-white/90 @(soldOut ? "opacity-60" : "")">
                         <td class="py-3 pr-4 font-medium">@(u.Name ?? (u.Bedrooms == 0 ? L["listings.beds.studio"].Value : $"{u.Bedrooms} BR"))</td>
                         <td class="py-3 pr-4">@(u.Bedrooms == 0 ? L["listings.beds.studio"].Value : u.Bedrooms.ToString())</td>
                         <td class="py-3 pr-4">@u.Bathrooms.ToString("0.#")</td>
                         <td class="py-3 pr-4">@(u.SqFt?.ToString("N0") ?? "—")</td>
                         <td class="py-3 pr-4 font-semibold text-brand-600 dark:text-brand-400">$@u.Price.ToString("N0")@(u.PriceMax.HasValue ? $"-{u.PriceMax.Value:N0}" : "")@L["listings.perMonth"]</td>
-                        <td class="py-3 pr-4 text-slate-600 dark:text-white/60">@(u.AvailableDate?.ToString("MMM d, yyyy") ?? L["detail.now"].Value)</td>
+                        <td class="py-3 pr-4">
+                            @if (soldOut)
+                            {
+                                <span class="inline-flex items-center rounded-full bg-slate-100 dark:bg-white/10 text-slate-500 dark:text-white/50 px-2 py-0.5 text-xs">@L["detail.unavailable"]</span>
+                            }
+                            else
+                            {
+                                <span class="text-slate-600 dark:text-white/60">@(u.AvailableDate?.ToString("MMM d, yyyy") ?? L["detail.now"].Value)</span>
+                            }
+                        </td>
                     </tr>
                 }
             </tbody>

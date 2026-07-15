@@ -1,0 +1,55 @@
+@model Rent.Web.Features.ListingDetail.Pages.DetailModel
+@{
+    var culture = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+    if (culture != "en" && culture != "fr") { culture = "en"; }
+
+    var landlord = Model.Property!.LandlordProfile;
+    var displayName = !string.IsNullOrWhiteSpace(landlord?.CompanyName)
+        ? landlord!.CompanyName!
+        : L["detail.privateLandlord"].Value;
+    var initials = string.Concat(displayName
+        .Split(' ', StringSplitOptions.RemoveEmptyEntries)
+        .Take(2)
+        .Select(w => char.ToUpperInvariant(w[0])));
+}
+
+<div class="glass-card p-5">
+    <h3 class="text-xs font-medium mb-4 uppercase tracking-wider text-slate-500 dark:text-white/50">@L["detail.managedBy"]</h3>
+
+    <div class="flex items-center gap-3">
+        @if (landlord is not null && !string.IsNullOrWhiteSpace(landlord.LogoUrl))
+        {
+            <img src="@landlord.LogoUrl" alt="@displayName"
+                 class="w-12 h-12 rounded-xl object-cover border border-gray-200 dark:border-white/20 shrink-0" />
+        }
+        else
+        {
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-brand-500/30 to-cyan-500/30 border border-gray-200 dark:border-white/20 flex items-center justify-center shrink-0">
+                @if (!string.IsNullOrEmpty(initials))
+                {
+                    <span class="text-sm font-bold text-slate-900 dark:text-white">@initials</span>
+                }
+                else
+                {
+                    <icon name="building-2" class="h-5 w-5 text-slate-700 dark:text-white/80" />
+                }
+            </div>
+        }
+
+        <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-1.5">
+                <p class="text-sm font-semibold text-slate-900 dark:text-white truncate">@displayName</p>
+                @if (landlord?.IsVerified == true)
+                {
+                    <icon name="shield-check" class="h-4 w-4 text-emerald-500 dark:text-emerald-400 shrink-0" />
+                }
+            </div>
+        </div>
+    </div>
+
+    <a href="/@culture/@Model.CitySlug"
+       class="glass-button mt-4 w-full inline-flex items-center justify-center gap-2 py-2 text-xs font-medium text-slate-500 dark:text-white/60 hover:text-slate-900 dark:hover:text-white">
+        <icon name="external-link" class="h-3.5 w-3.5" />
+        @string.Format(L["detail.viewAllIn"].Value, Model.Property!.City)
+    </a>
+</div>

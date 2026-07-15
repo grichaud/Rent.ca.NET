@@ -47,6 +47,7 @@ public class DetailModel : PageModel
             .Include(p => p.Units)
             .Include(p => p.Amenities)
             .Include(p => p.RentSpecials)
+            .Include(p => p.LandlordProfile)
             .FirstOrDefaultAsync(p =>
                 p.Slug == propertySlug &&
                 p.City == city.Name &&

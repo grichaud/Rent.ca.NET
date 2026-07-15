@@ -125,24 +125,37 @@
             var map = new google.maps.Map(el, {
                 center: { lat: lat, lng: lng },
                 zoom: 15,
-                mapId: 'RENTCA_DETAIL_MAP',
+                // No mapId on purpose: Google ignores the JS `styles` array when a
+                // mapId is set, and we theme the map (dark/light) via `styles`.
+                // Consequence: use a legacy google.maps.Marker (AdvancedMarkerElement
+                // requires a mapId). Same pattern as initSearchMap below.
+                styles: currentMapStyles(),
                 gestureHandling: 'cooperative',
                 clickableIcons: false,
                 streetViewControl: false,
                 mapTypeControl: false,
                 fullscreenControl: true
             });
-            var pin = new google.maps.marker.PinElement({
-                background: '#338dff',
-                borderColor: '#142857',
-                glyphColor: '#ffffff',
-                scale: 1.1
+
+            // Re-theme the map when the site theme toggles (html.dark class).
+            observeThemeChanges(function () {
+                map.setOptions({ styles: currentMapStyles() });
             });
-            new google.maps.marker.AdvancedMarkerElement({
+
+            new google.maps.Marker({
                 map: map,
                 position: { lat: lat, lng: lng },
                 title: title,
-                content: pin
+                icon: {
+                    // Teardrop pin in brand blue (matches the search-map markers).
+                    path: 'M12 0C7.03 0 3 4.03 3 9c0 6.75 9 15 9 15s9-8.25 9-15c0-4.97-4.03-9-9-9z',
+                    fillColor: '#338dff',
+                    fillOpacity: 1,
+                    strokeColor: '#ffffff',
+                    strokeWeight: 1.5,
+                    scale: 1.4,
+                    anchor: new google.maps.Point(12, 24)
+                }
             });
         }).catch(function () {
             showMessage(el, 'Map could not be loaded.');

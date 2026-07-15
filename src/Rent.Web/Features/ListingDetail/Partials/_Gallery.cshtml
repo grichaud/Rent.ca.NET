@@ -1,24 +1,112 @@
-@model IReadOnlyList<Rent.Web.Domain.PropertyImage>
+@model Rent.Web.Domain.Property
+@{
+    var images = Model.Images
+        .OrderByDescending(i => i.IsPrimary)
+        .ThenBy(i => i.DisplayOrder)
+        .ToList();
+    var title = Model.Title;
+}
 
-@if (Model.Count == 0)
+@if (images.Count == 0)
 {
-    <div class="glass-card p-10 text-center text-slate-500 dark:text-white/60">No photos yet.</div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+        <div class="glass-card p-10 text-center text-slate-500 dark:text-white/60">@L["gallery.noPhotos"]</div>
+    </div>
     return;
 }
 
 @{
-    var hero = Model.First();
-    var rest = Model.Skip(1).Take(4).ToList();
+    // Pad the visible mosaic to 5 slots (1 hero + 4 thumbs) with gradient
+    // placeholders, matching the Next.js full-bleed gallery. The lightbox
+    // cycles only through the real images.
+    var gradients = new[]
+    {
+        "from-brand-900 via-purple-900 to-slate-900",
+        "from-cyan-900 via-teal-900 to-slate-900",
+        "from-purple-900 via-indigo-900 to-slate-900",
+        "from-blue-900 via-brand-900 to-slate-900",
+        "from-teal-900 via-cyan-900 to-slate-900",
+    };
+    var hero = images[0];
+    var thumbs = Enumerable.Range(1, 4).Select(i => i < images.Count ? images[i] : null).ToList();
+    string SlotAlt(Rent.Web.Domain.PropertyImage? img, int idx) =>
+        img is not null && !string.IsNullOrWhiteSpace(img.AltText)
+            ? img.AltText
+            : idx == 0 ? $"{title} — main photo" : $"{title} — photo {idx + 1}";
 }
 
-<section class="grid sm:grid-cols-4 gap-2 aspect-[16/9] overflow-hidden rounded-3xl ring-1 ring-gray-200 dark:ring-white/10">
-    <div class="relative sm:col-span-2 sm:row-span-2 bg-gradient-to-br from-brand-200 to-cyan-200 dark:from-brand-900/40 dark:to-cyan-900/40 group">
-        <img src="@hero.Url" alt="@hero.AltText" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+<section class="w-full relative" role="region" aria-label="@L["gallery.regionLabel"]">
+    <div class="h-[420px] md:h-[520px] grid grid-cols-4 grid-rows-2 gap-1">
+        @* Hero — spans 2 cols / 2 rows on desktop, full width on mobile *@
+        <button type="button" data-gallery-slot data-gallery-index="0"
+                class="col-span-4 md:col-span-2 row-span-2 relative overflow-hidden group cursor-pointer border-0 p-0 md:rounded-l-2xl bg-gradient-to-br @gradients[0]"
+                aria-label="@($"View photo 1: {SlotAlt(hero, 0)}")">
+            <img src="@hero.Url" alt="@SlotAlt(hero, 0)"
+                 class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+            <span class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300"></span>
+        </button>
+
+        @for (var i = 0; i < thumbs.Count; i++)
+        {
+            var img = thumbs[i];
+            var slotIndex = i + 1;
+            var corner = i == 1 ? "rounded-tr-2xl" : i == 3 ? "rounded-br-2xl" : "";
+            <button type="button" data-gallery-slot data-gallery-index="@slotIndex"
+                    class="hidden md:block relative overflow-hidden group cursor-pointer border-0 p-0 @corner bg-gradient-to-br @gradients[slotIndex % gradients.Length]"
+                    aria-label="@($"View photo {slotIndex + 1}: {SlotAlt(img, slotIndex)}")"
+                    disabled="@(img is null ? "disabled" : null)">
+                @if (img is not null)
+                {
+                    <img src="@img.Url" alt="@SlotAlt(img, slotIndex)" loading="lazy"
+                         class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                    <span class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300"></span>
+                }
+                else
+                {
+                    <span aria-hidden="true" class="absolute inset-0 opacity-10"
+                          style="background-image:radial-gradient(circle at 20% 50%, white 1px, transparent 1px),radial-gradient(circle at 75% 25%, white 1px, transparent 1px);background-size:60px 60px;"></span>
+                }
+            </button>
+        }
     </div>
-    @foreach (var img in rest)
-    {
-        <div class="relative bg-gradient-to-br from-purple-200 to-pink-200 dark:from-purple-900/40 dark:to-pink-900/40 hidden sm:block group">
-            <img src="@img.Url" alt="@img.AltText" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" />
-        </div>
-    }
+
+    @* View-all overlay button *@
+    <div class="absolute bottom-4 right-4 z-10">
+        <button type="button" data-gallery-open
+                class="glass-button inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-700 dark:text-white">
+            <icon name="maximize-2" class="h-4 w-4 shrink-0" />
+            @string.Format(L["gallery.viewAll"].Value, images.Count)
+        </button>
+    </div>
 </section>
+
+@* Real image URLs for the lightbox (wired by the gallery script in Detail.cshtml) *@
+<script type="application/json" id="gallery-images">
+    @Html.Raw(System.Text.Json.JsonSerializer.Serialize(images.Select(i => new { url = i.Url, alt = string.IsNullOrWhiteSpace(i.AltText) ? title : i.AltText })))
+</script>
+
+@* Lightbox modal (hidden until opened) *@
+<div id="gallery-lightbox" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/95 backdrop-blur-2xl p-4"
+     role="dialog" aria-modal="true" aria-label="@L["gallery.regionLabel"]">
+    <button type="button" data-gallery-close
+            class="absolute top-4 right-4 h-11 w-11 rounded-full flex items-center justify-center bg-white/10 hover:bg-white/20 border border-white/20 text-white transition-colors"
+            aria-label="@L["gallery.close"]">
+        <icon name="x" class="h-5 w-5" />
+    </button>
+    <div class="relative w-full max-w-5xl aspect-video">
+        <img id="gallery-lightbox-img" src="" alt="" class="w-full h-full object-contain rounded-2xl" />
+        <button type="button" data-gallery-prev
+                class="absolute left-3 top-1/2 -translate-y-1/2 h-11 w-11 rounded-full flex items-center justify-center bg-white/10 hover:bg-white/20 border border-white/20 text-white transition-colors"
+                aria-label="@L["gallery.previous"]">
+            <icon name="chevron-left" class="h-6 w-6" />
+        </button>
+        <button type="button" data-gallery-next
+                class="absolute right-3 top-1/2 -translate-y-1/2 h-11 w-11 rounded-full flex items-center justify-center bg-white/10 hover:bg-white/20 border border-white/20 text-white transition-colors"
+                aria-label="@L["gallery.next"]">
+            <icon name="chevron-right" class="h-6 w-6" />
+        </button>
+        <div class="absolute bottom-3 left-1/2 -translate-x-1/2 pointer-events-none">
+            <span class="glass-badge text-white/80 text-xs"><span data-gallery-counter>1</span> / @images.Count</span>
+        </div>
+    </div>
+</div>

@@ -627,4 +627,34 @@
   <data name="About_Card3Body" xml:space="preserve"><value>Couverture dans toutes les grandes villes canadiennes, en expansion continue pour servir chaque communauté.</value></data>
   <data name="About_Card4Title" xml:space="preserve"><value>Communauté de confiance</value></data>
   <data name="About_Card4Body" xml:space="preserve"><value>Propriétaires vérifiés, annonces transparentes et engagement envers un logement équitable.</value></data>
+  <!-- Area 4 parity: listing detail (Block M) -->
+  <data name="detail.noAmenities" xml:space="preserve"><value>Aucune information sur les commodités.</value></data>
+  <data name="detail.noFloorPlans" xml:space="preserve"><value>Aucun plan disponible pour le moment.</value></data>
+  <data name="detail.unavailable" xml:space="preserve"><value>Indisponible</value></data>
+  <data name="detail.share" xml:space="preserve"><value>Partager l'annonce</value></data>
+  <data name="detail.linkCopied" xml:space="preserve"><value>Lien copié !</value></data>
+  <data name="detail.privateLandlord" xml:space="preserve"><value>Propriétaire privé</value></data>
+  <data name="detail.tablistLabel" xml:space="preserve"><value>Détails de l'annonce</value></data>
+  <data name="detail.prefillMessage" xml:space="preserve"><value>Bonjour, je suis intéressé(e) par {0}. Est-elle toujours disponible ?</value></data>
+  <data name="detail.factType" xml:space="preserve"><value>Type de propriété</value></data>
+  <data name="detail.factUnits" xml:space="preserve"><value>Unités</value></data>
+  <data name="detail.factProvince" xml:space="preserve"><value>Province</value></data>
+  <data name="detail.factParking" xml:space="preserve"><value>Stationnement</value></data>
+  <data name="detail.factLeaseTerm" xml:space="preserve"><value>Durée du bail</value></data>
+  <data name="detail.factYearBuilt" xml:space="preserve"><value>Année de construction</value></data>
+  <data name="detail.lease.monthToMonth" xml:space="preserve"><value>Au mois</value></data>
+  <data name="detail.lease.sixMonths" xml:space="preserve"><value>6 mois</value></data>
+  <data name="detail.lease.oneYear" xml:space="preserve"><value>1 an</value></data>
+  <data name="detail.lease.twoYears" xml:space="preserve"><value>2 ans</value></data>
+  <data name="detail.lease.flexible" xml:space="preserve"><value>Flexible</value></data>
+  <data name="detail.amenityCat.building" xml:space="preserve"><value>Commodités de l'immeuble</value></data>
+  <data name="detail.amenityCat.unit" xml:space="preserve"><value>Caractéristiques de l'unité</value></data>
+  <data name="detail.amenityCat.nearby" xml:space="preserve"><value>À proximité</value></data>
+  <data name="detail.amenityCat.other" xml:space="preserve"><value>Autres</value></data>
+  <data name="gallery.noPhotos" xml:space="preserve"><value>Aucune photo pour le moment.</value></data>
+  <data name="gallery.viewAll" xml:space="preserve"><value>Voir les {0} photos</value></data>
+  <data name="gallery.regionLabel" xml:space="preserve"><value>Galerie de photos de la propriété</value></data>
+  <data name="gallery.previous" xml:space="preserve"><value>Photo précédente</value></data>
+  <data name="gallery.next" xml:space="preserve"><value>Photo suivante</value></data>
+  <data name="gallery.close" xml:space="preserve"><value>Fermer</value></data>
 </root>

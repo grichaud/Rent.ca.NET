@@ -1,6 +1,6 @@
 @model Rent.Web.Features.ListingDetail.Pages.DetailModel
 @{
-    var prefilledMessage = $"Hi, I'm interested in {Model.Property!.Title}. Is it still available?";
+    var prefilledMessage = string.Format(L["detail.prefillMessage"].Value, Model.Property!.Title);
 }
 
 @if (TempData["InquirySuccess"] as string is string success)
