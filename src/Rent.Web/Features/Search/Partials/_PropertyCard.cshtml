@@ -19,7 +19,7 @@
         if (Model.MinBedrooms == 0 && (!Model.MaxBedrooms.HasValue || Model.MaxBedrooms == 0))
             return L["listings.beds.studio"].Value;
         if (Model.MaxBedrooms.HasValue && Model.MaxBedrooms.Value > Model.MinBedrooms)
-            return $"{Model.MinBedrooms}–{Model.MaxBedrooms} bd";
+            return string.Format(L["listings.beds.many"].Value, $"{Model.MinBedrooms}–{Model.MaxBedrooms}");
         return Model.MinBedrooms == 1
             ? L["listings.beds.one"].Value
             : string.Format(L["listings.beds.many"].Value, Model.MinBedrooms);
@@ -68,7 +68,9 @@
             else
             {
                 <div class="absolute inset-0 bg-gradient-to-br from-brand-500/20 via-purple-500/15 to-cyan-500/20 flex items-center justify-center">
-                    <icon name="map-pin" class="h-7 w-7 text-white/40" />
+                    <div class="w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center">
+                        <icon name="map-pin" class="h-7 w-7 text-white/40" />
+                    </div>
                 </div>
             }
             <div class="absolute inset-0 bg-gradient-to-r from-transparent to-black/20" aria-hidden="true"></div>
@@ -94,7 +96,7 @@
                         aria-label="@(Model.IsFavorited ? "Remove from favorites" : "Add to favorites")"
                         aria-pressed="@(Model.IsFavorited ? "true" : "false")"
                         class="shrink-0 h-8 w-8 rounded-full inline-flex items-center justify-center bg-gray-100 dark:bg-white/10 hover:bg-gray-200 dark:hover:bg-white/20 backdrop-blur-md border border-gray-200 dark:border-white/20 transition-all duration-200 hover:scale-110">
-                    <icon name="heart" class="@(Model.IsFavorited ? "h-4 w-4 text-rose-400" : "h-4 w-4 text-gray-500 dark:text-white/60")"
+                    <icon name="heart" class="@(Model.IsFavorited ? "h-4 w-4 text-red-400" : "h-4 w-4 text-gray-500 dark:text-white/60")"
                           fill="@(Model.IsFavorited ? "currentColor" : null)" />
                 </button>
             </div>
@@ -172,7 +174,7 @@
                     aria-label="@(Model.IsFavorited ? "Remove from favorites" : "Add to favorites")"
                     aria-pressed="@(Model.IsFavorited ? "true" : "false")"
                     class="h-8 w-8 rounded-full inline-flex items-center justify-center bg-black/30 hover:bg-black/50 backdrop-blur-md border border-white/20 transition-all duration-200 hover:scale-110">
-                <icon name="heart" class="@(Model.IsFavorited ? "h-4 w-4 text-rose-400" : "h-4 w-4 text-white/80")"
+                <icon name="heart" class="@(Model.IsFavorited ? "h-4 w-4 text-red-400" : "h-4 w-4 text-white/80")"
                       fill="@(Model.IsFavorited ? "currentColor" : null)" />
             </button>
             @if (Model.IsVerified)
@@ -200,6 +202,9 @@
             <span class="truncate">@LocationLabel()</span>
         </p>
 
+        @* Grid specs stay text-xs (deliberate .NET compact grid: keeps the row on one line
+           even for long property-type labels like "Townhouse"/"Apartment"). List variant
+           matches Next.js text-sm. *@
         <div class="flex items-center gap-2 text-xs text-gray-600 dark:text-white/70">
             <span class="inline-flex items-center gap-1"><icon name="bed" class="h-3 w-3" />@BedsLabel()</span>
             <span class="text-gray-300 dark:text-white/20">·</span>

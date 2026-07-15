@@ -25,7 +25,7 @@
 @if (!isMap)
 {
     <header class="mb-6">
-        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-1">
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-1">
             @L["listings.rentalsIn"]
             <span class="bg-gradient-to-r from-brand-500 to-cyan-500 dark:from-brand-400 dark:to-cyan-400 bg-clip-text text-transparent">
                 @Model.Result.City.Name
@@ -44,7 +44,17 @@
        No permanent sidebar. Filters open via slide-over from a button on the controls bar.
        Layout is a 2-col split (map LEFT, cards panel RIGHT) at lg+; stacked on mobile. *@
     <div class="flex flex-col gap-3 min-w-0">
-        <div class="flex items-center gap-2 flex-wrap px-4 sm:px-6 pt-4">
+        @* Compact header for map view: title + search bar (parity with Next.js map header). *@
+        <div class="flex items-center justify-between gap-3 px-4 sm:px-6 pt-4">
+            <h1 class="text-lg font-bold text-gray-900 dark:text-white truncate min-w-0">
+                @L["listings.rentalsIn"]
+                <span class="bg-gradient-to-r from-brand-500 to-cyan-500 dark:from-brand-400 dark:to-cyan-400 bg-clip-text text-transparent">@Model.Result.City.Name</span>
+            </h1>
+            <div class="hidden sm:block w-full max-w-xs shrink-0">
+                <partial name="/Features/Search/Partials/_SearchBarCompact.cshtml" model="@Model.Result.City.Name" />
+            </div>
+        </div>
+        <div class="flex items-center gap-2 flex-wrap px-4 sm:px-6">
             <button type="button"
                     data-mobile-filter-open
                     class="glass-button inline-flex items-center justify-center gap-2 px-4 py-2 text-sm text-gray-800 dark:text-white/80 shrink-0">

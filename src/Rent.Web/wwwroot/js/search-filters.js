@@ -148,13 +148,32 @@
     }
 
     /* ---------------------------------------------------------------------- *
-     *  Search bar clear button
+     *  Search bar: clear button + slugify-and-navigate submit
      * ---------------------------------------------------------------------- */
+    function slugify(text) {
+        return text.toLowerCase()
+            .normalize('NFD').replace(/[̀-ͯ]/g, '')
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/(^-|-$)+/g, '');
+    }
+
     function initSearchBar() {
         document.querySelectorAll('[data-search-bar]').forEach(function (form) {
             var input = form.querySelector('[data-search-input]');
             var clear = form.querySelector('[data-search-clear]');
-            if (!input || !clear) return;
+            if (!input) return;
+
+            // Intercept submit: navigate to /{culture}/{slug} of the typed city
+            // (mirrors the hero search on the home page).
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                var culture = form.getAttribute('data-culture') ||
+                    (window.location.pathname.split('/')[1] || 'en');
+                var slug = slugify((input.value || '').trim());
+                if (slug) window.location.href = '/' + culture + '/' + slug;
+            });
+
+            if (!clear) return;
             function sync() { clear.classList.toggle('hidden', !input.value); }
             input.addEventListener('input', sync);
             clear.addEventListener('click', function () {

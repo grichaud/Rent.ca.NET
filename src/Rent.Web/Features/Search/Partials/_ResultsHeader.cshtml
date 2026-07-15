@@ -20,9 +20,16 @@
         (Rent.Web.Features.Search.SearchView.Map,  "map",      L["filters.viewMap"].Value),
     };
 
-    var resultsText = totalCount == 1
-        ? string.Format(L["results.headerCountSingular"].Value, cityName)
-        : string.Format(L["results.headerCountPlural"].Value, totalCount.ToString("N0"), cityName);
+    // Build the count line with typographic hierarchy: number emphasized, connector muted
+    // (inherited from the <p>), city medium. Values are HTML-encoded; the format template
+    // comes from the trusted resource file, so Html.Raw on the composed string is safe.
+    var numberSpan = "<span class=\"font-semibold text-base text-gray-900 dark:text-white\">"
+                     + System.Net.WebUtility.HtmlEncode(totalCount.ToString("N0")) + "</span>";
+    var citySpan = "<span class=\"font-medium text-gray-900 dark:text-white\">"
+                   + System.Net.WebUtility.HtmlEncode(cityName) + "</span>";
+    var resultsHtml = totalCount == 1
+        ? string.Format(L["results.headerCountSingular"].Value, citySpan)
+        : string.Format(L["results.headerCountPlural"].Value, numberSpan, citySpan);
 }
 
 <div class="glass-base flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 py-3"
@@ -30,8 +37,8 @@
      data-results-header
      data-base-url="/@culture/@Model.Query.CitySlug">
 
-    <p class="text-sm text-gray-900 dark:text-white font-medium">
-        @resultsText
+    <p class="text-sm text-gray-600 dark:text-white/70">
+        @Html.Raw(resultsHtml)
     </p>
 
     <div class="flex flex-wrap items-center justify-end gap-2 sm:flex-nowrap sm:flex-shrink-0">

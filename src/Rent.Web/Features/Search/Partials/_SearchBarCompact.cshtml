@@ -1,9 +1,14 @@
 @model string
+@{
+    var culture = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+    if (culture != "en" && culture != "fr") { culture = "en"; }
+}
 @*
     Compact search bar for the city/results page header.
-    Submits via GET to "/" handler which redirects to the matching city.
+    JS (search-filters.js initSearchBar) intercepts submit: slugifies the input and
+    navigates to /{culture}/{slug}. The action is only a graceful no-JS fallback.
 *@
-<form action="/search" method="get" role="search" class="relative w-full max-w-lg" data-search-bar>
+<form action="/@culture" method="get" role="search" class="relative w-full max-w-lg" data-search-bar data-culture="@culture">
     <div class="glass-base flex items-center gap-2 px-5 py-3 transition-all duration-300 focus-within:border-brand-500 dark:focus-within:border-white/40 shadow-xl shadow-black/5 dark:shadow-black/20">
         <icon name="search" class="h-4 w-4 shrink-0 text-gray-400 dark:text-white/40" />
         <input type="search"

@@ -63,6 +63,50 @@
         return s;
     }
 
+    /* ---------------------------------------------------------------------- *
+     *  Map theme (dark/light) — ported from the Next.js map-styles.ts.
+     *  Applied via JS `styles` (which requires NO mapId), so the search map
+     *  uses legacy markers instead of AdvancedMarkerElement.
+     * ---------------------------------------------------------------------- */
+    var DARK_MAP_STYLES = [
+        { elementType: 'geometry', stylers: [{ color: '#1e293b' }] },
+        { elementType: 'labels.text.stroke', stylers: [{ color: '#0f172a' }] },
+        { elementType: 'labels.text.fill', stylers: [{ color: '#64748b' }] },
+        { featureType: 'administrative.locality', elementType: 'labels.text.fill', stylers: [{ color: '#94a3b8' }] },
+        { featureType: 'poi', elementType: 'labels.text.fill', stylers: [{ color: '#64748b' }] },
+        { featureType: 'poi.park', elementType: 'geometry', stylers: [{ color: '#1a3a2a' }] },
+        { featureType: 'poi.park', elementType: 'labels.text.fill', stylers: [{ color: '#4ade80' }] },
+        { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#334155' }] },
+        { featureType: 'road', elementType: 'geometry.stroke', stylers: [{ color: '#1e293b' }] },
+        { featureType: 'road.highway', elementType: 'geometry', stylers: [{ color: '#475569' }] },
+        { featureType: 'road.highway', elementType: 'geometry.stroke', stylers: [{ color: '#334155' }] },
+        { featureType: 'road.highway', elementType: 'labels.text.fill', stylers: [{ color: '#94a3b8' }] },
+        { featureType: 'transit', elementType: 'geometry', stylers: [{ color: '#334155' }] },
+        { featureType: 'transit.station', elementType: 'labels.text.fill', stylers: [{ color: '#64748b' }] },
+        { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#0c1a2e' }] },
+        { featureType: 'water', elementType: 'labels.text.fill', stylers: [{ color: '#475569' }] }
+    ];
+    var LIGHT_MAP_STYLES = [
+        { featureType: 'poi', elementType: 'labels', stylers: [{ visibility: 'off' }] },
+        { featureType: 'transit', elementType: 'labels.icon', stylers: [{ visibility: 'off' }] }
+    ];
+
+    function isDarkMode() {
+        return document.documentElement.classList.contains('dark');
+    }
+    function currentMapStyles() {
+        return isDarkMode() ? DARK_MAP_STYLES : LIGHT_MAP_STYLES;
+    }
+    function observeThemeChanges(cb) {
+        if (typeof MutationObserver === 'undefined') return;
+        var last = isDarkMode();
+        var obs = new MutationObserver(function () {
+            var now = isDarkMode();
+            if (now !== last) { last = now; cb(); }
+        });
+        obs.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    }
+
     function showMessage(container, msg) {
         container.innerHTML = '<div class="flex items-center justify-center h-full text-sm text-slate-500 dark:text-white/60 p-6 text-center">' +
             escapeHtml(msg) + '</div>';
@@ -151,7 +195,9 @@
                 mapInstance = new google.maps.Map(container, {
                     center: center,
                     zoom: 11,
-                    mapId: 'RENTCA_SEARCH_MAP',
+                    // No mapId on purpose: Google ignores JS `styles` when a mapId is set,
+                    // and we theme the map (dark/light) via `styles`. Uses legacy markers.
+                    styles: currentMapStyles(),
                     gestureHandling: 'greedy',
                     clickableIcons: false,
                     streetViewControl: false,
@@ -159,6 +205,11 @@
                     fullscreenControl: true
                 });
                 infoWindow = new google.maps.InfoWindow({ maxWidth: 260 });
+
+                // Re-theme the map when the site theme toggles.
+                observeThemeChanges(function () {
+                    if (mapInstance) mapInstance.setOptions({ styles: currentMapStyles() });
+                });
 
                 var url = '/api/maps/' + encodeURIComponent(citySlug) + window.location.search;
                 fetch(url, { credentials: 'same-origin', headers: { 'Accept': 'application/json' } })
@@ -171,18 +222,21 @@
                         var gMarkers = markers.map(function (m) {
                             var pos = { lat: m.lat, lng: m.lng };
                             bounds.extend(pos);
-                            var pin = new google.maps.marker.PinElement({
-                                background: m.tier === 'Featured' ? '#06b6d4' : '#338dff',
-                                borderColor: '#142857',
-                                glyphColor: '#ffffff'
-                            });
-                            var marker = new google.maps.marker.AdvancedMarkerElement({
+                            var marker = new google.maps.Marker({
                                 position: pos,
                                 title: m.title,
-                                content: pin,
-                                gmpClickable: true
+                                icon: {
+                                    // Teardrop pin, colored per tier (Featured = cyan, else brand).
+                                    path: 'M12 0C7.03 0 3 4.03 3 9c0 6.75 9 15 9 15s9-8.25 9-15c0-4.97-4.03-9-9-9z',
+                                    fillColor: m.tier === 'Featured' ? '#06b6d4' : '#338dff',
+                                    fillOpacity: 1,
+                                    strokeColor: '#ffffff',
+                                    strokeWeight: 1.5,
+                                    scale: 1.4,
+                                    anchor: new google.maps.Point(12, 24)
+                                }
                             });
-                            marker.addListener('gmp-click', function () {
+                            marker.addListener('click', function () {
                                 infoWindow.setContent(buildPopupHtml(m));
                                 infoWindow.open({ anchor: marker, map: mapInstance });
                             });
@@ -190,7 +244,7 @@
                         });
 
                         if (markers.length === 1) {
-                            mapInstance.setCenter(gMarkers[0].position);
+                            mapInstance.setCenter(gMarkers[0].getPosition());
                             mapInstance.setZoom(14);
                         } else {
                             mapInstance.fitBounds(bounds, 60);
@@ -203,10 +257,10 @@
                                     markers: gMarkers
                                 });
                             } else {
-                                gMarkers.forEach(function (m) { m.map = mapInstance; });
+                                gMarkers.forEach(function (m) { m.setMap(mapInstance); });
                             }
                         }).catch(function () {
-                            gMarkers.forEach(function (m) { m.map = mapInstance; });
+                            gMarkers.forEach(function (m) { m.setMap(mapInstance); });
                         });
                     })
                     .catch(function () {

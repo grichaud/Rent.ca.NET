@@ -41,3 +41,5 @@ Thumbs.db
 # Local-only test artefacts
 /.playwright-mcp/
 /slice*-*.png
+# Screenshots sueltos en la raiz (parity/azure/home/etc.) — no ensuciar git status
+/*.png
