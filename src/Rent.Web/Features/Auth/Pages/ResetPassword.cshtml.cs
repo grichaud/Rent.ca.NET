@@ -30,13 +30,43 @@ public class ResetPasswordModel : PageModel
     [BindProperty]
     public InputModel Input { get; set; } = new();
 
-    public IActionResult OnGet(string? email, string? token)
+    // When set, the view renders a "Link expired / request a new one" recovery
+    // card instead of the reset form (parity with the Next.js reset page).
+    public bool TokenInvalid { get; private set; }
+
+    public async Task<IActionResult> OnGetAsync(string? email, string? token)
     {
         if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(token))
-            return Redirect(this.Localized("/login"));
+        {
+            TokenInvalid = true;
+            return Page();
+        }
 
         Input.Email = email;
         Input.Token = token;
+
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user is null)
+        {
+            TokenInvalid = true;
+            return Page();
+        }
+
+        try
+        {
+            var decoded = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(token));
+            var valid = await _userManager.VerifyUserTokenAsync(
+                user,
+                _userManager.Options.Tokens.PasswordResetTokenProvider,
+                "ResetPassword",
+                decoded);
+            if (!valid) TokenInvalid = true;
+        }
+        catch (FormatException)
+        {
+            TokenInvalid = true;
+        }
+
         return Page();
     }
 
@@ -65,13 +95,20 @@ public class ResetPasswordModel : PageModel
         }
         catch (FormatException)
         {
-            ModelState.AddModelError(string.Empty, "Reset link is invalid or expired.");
+            TokenInvalid = true;
             return Page();
         }
 
         var result = await _userManager.ResetPasswordAsync(user, decodedToken, Input.Password);
         if (!result.Succeeded)
         {
+            // An invalid/expired token gets the friendly recovery card; other
+            // failures (e.g. password policy) stay on the form with the error.
+            if (result.Errors.Any(e => e.Code.Contains("Token", StringComparison.OrdinalIgnoreCase)))
+            {
+                TokenInvalid = true;
+                return Page();
+            }
             foreach (var e in result.Errors)
                 ModelState.AddModelError(string.Empty, e.Description);
             return Page();

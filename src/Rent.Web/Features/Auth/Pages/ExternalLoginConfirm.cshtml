@@ -11,18 +11,28 @@
         </p>
 
         <form method="post" class="mt-8 space-y-4">
-            <div asp-validation-summary="ModelOnly" class="text-sm text-red-600 dark:text-red-400"></div>
+            <div asp-validation-summary="ModelOnly" role="alert" class="text-sm text-red-600 dark:text-red-400"></div>
 
             <div>
-                <label class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["auth.email"]</label>
-                <input value="@Model.Email" class="glass-input opacity-70 cursor-not-allowed" disabled />
+                <label for="confirmEmail" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["auth.email"]</label>
+                <div class="relative">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-white/40">
+                        <icon name="mail" class="h-4 w-4" />
+                    </span>
+                    <input id="confirmEmail" value="@Model.Email" class="glass-input !pl-10 opacity-70 cursor-not-allowed" disabled />
+                </div>
                 <p class="text-xs text-slate-500 dark:text-white/50 mt-1">@string.Format(L["auth.externalConfirmVerifiedBy"].Value, Model.Provider)</p>
             </div>
 
             <div>
                 <label asp-for="Input.FullName" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["auth.fullName"]</label>
-                <input asp-for="Input.FullName" class="glass-input" autocomplete="name" />
-                <span asp-validation-for="Input.FullName" class="text-xs text-red-600 dark:text-red-400"></span>
+                <div class="relative">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-white/40">
+                        <icon name="user" class="h-4 w-4" />
+                    </span>
+                    <input asp-for="Input.FullName" class="glass-input !pl-10" autocomplete="name" />
+                </div>
+                <span asp-validation-for="Input.FullName" role="alert" class="text-xs text-red-600 dark:text-red-400"></span>
             </div>
 
             <fieldset class="pt-2">
@@ -30,7 +40,7 @@
                 <div class="grid grid-cols-2 gap-3">
                     <label class="glass-base p-4 flex flex-col items-start cursor-pointer has-[:checked]:border-brand-500 has-[:checked]:bg-brand-50 dark:has-[:checked]:bg-brand-500/20 transition-colors">
                         <input type="radio" asp-for="Input.Role" value="Renter" class="sr-only" />
-                        <icon name="user" class="h-5 w-5 text-brand-500 mb-2" />
+                        <icon name="home" class="h-5 w-5 text-brand-500 mb-2" />
                         <span class="font-semibold text-slate-900 dark:text-white">@L["auth.renterRole"]</span>
                         <span class="text-xs text-slate-500 dark:text-white/60 mt-1">@L["auth.renterCardLooking"]</span>
                     </label>
@@ -41,7 +51,7 @@
                         <span class="text-xs text-slate-500 dark:text-white/60 mt-1">@L["auth.landlordCardPosting"]</span>
                     </label>
                 </div>
-                <span asp-validation-for="Input.Role" class="text-xs text-red-600 dark:text-red-400"></span>
+                <span asp-validation-for="Input.Role" role="alert" class="text-xs text-red-600 dark:text-red-400"></span>
             </fieldset>
 
             <button type="submit" class="glass-button-primary w-full mt-2 inline-flex items-center justify-center gap-2">

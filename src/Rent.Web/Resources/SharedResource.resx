@@ -244,8 +244,6 @@
   <data name="auth.resetDesc" xml:space="preserve"><value>Enter your new password below.</value></data>
   <data name="auth.resetSubmit" xml:space="preserve"><value>Update password</value></data>
   <data name="auth.resetSuccess" xml:space="preserve"><value>Password updated. You can now sign in.</value></data>
-  <data name="auth.externalConfirmTitle" xml:space="preserve"><value>Almost there</value></data>
-  <data name="auth.externalConfirmDesc" xml:space="preserve"><value>Choose how you plan to use Rent.ca.</value></data>
   <data name="auth.externalContinue" xml:space="preserve"><value>Continue</value></data>
   <data name="auth.signupQuick" xml:space="preserve"><value>Takes less than a minute.</value></data>
   <data name="auth.passwordHint" xml:space="preserve"><value>At least 8 characters, one uppercase, one digit.</value></data>
@@ -627,6 +625,13 @@
   <data name="About_Card3Body" xml:space="preserve"><value>Coverage across all major Canadian cities and growing to serve every community.</value></data>
   <data name="About_Card4Title" xml:space="preserve"><value>Trusted Community</value></data>
   <data name="About_Card4Body" xml:space="preserve"><value>Verified landlords, transparent listings, and a commitment to fair housing.</value></data>
+  <!-- Area 5 parity: auth (Block N) -->
+  <data name="auth.checkEmailTitle" xml:space="preserve"><value>Check your email</value></data>
+  <data name="auth.checkEmailBody" xml:space="preserve"><value>If an account exists for {0}, we've sent a password reset link. Check your inbox and spam folder.</value></data>
+  <data name="auth.linkExpiredTitle" xml:space="preserve"><value>Link expired</value></data>
+  <data name="auth.linkExpiredBody" xml:space="preserve"><value>This password reset link has expired or is invalid. Please request a new one.</value></data>
+  <data name="auth.requestNewLink" xml:space="preserve"><value>Request new link</value></data>
+  <data name="auth.confirmNewPassword" xml:space="preserve"><value>Confirm new password</value></data>
   <!-- Area 4 parity: listing detail (Block M) -->
   <data name="detail.noAmenities" xml:space="preserve"><value>No amenity information available.</value></data>
   <data name="detail.noFloorPlans" xml:space="preserve"><value>No floor plans available at this time.</value></data>

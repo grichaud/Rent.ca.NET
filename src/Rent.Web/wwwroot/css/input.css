@@ -117,6 +117,18 @@ html {
   }
 }
 
+/* Server-side validation summary (asp-validation-summary) — render populated
+   summaries as a styled red alert box so the primary auth error (e.g. invalid
+   credentials) matches the Next.js alert card instead of bare text. The
+   framework only applies .validation-summary-errors when there ARE errors, so
+   the empty/valid state stays boxless. */
+.validation-summary-errors {
+  @apply p-3 rounded-lg border border-red-300 bg-red-50 dark:border-red-500/40 dark:bg-red-500/10;
+}
+.validation-summary-errors ul {
+  @apply list-none m-0 p-0 space-y-1;
+}
+
 /* FAQ accordion (Landlords page) — native <details>/<summary> with rotating chevron */
 .faq-item > summary::-webkit-details-marker { display: none; }
 .faq-item[open] > summary > .faq-chevron { transform: rotate(180deg); }

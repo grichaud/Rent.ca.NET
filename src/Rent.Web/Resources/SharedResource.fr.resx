@@ -244,8 +244,6 @@
   <data name="auth.resetDesc" xml:space="preserve"><value>Entrez votre nouveau mot de passe ci-dessous.</value></data>
   <data name="auth.resetSubmit" xml:space="preserve"><value>Mettre à jour le mot de passe</value></data>
   <data name="auth.resetSuccess" xml:space="preserve"><value>Mot de passe mis à jour. Vous pouvez maintenant vous connecter.</value></data>
-  <data name="auth.externalConfirmTitle" xml:space="preserve"><value>Presque terminé</value></data>
-  <data name="auth.externalConfirmDesc" xml:space="preserve"><value>Choisissez comment vous comptez utiliser Rent.ca.</value></data>
   <data name="auth.externalContinue" xml:space="preserve"><value>Continuer</value></data>
   <data name="auth.signupQuick" xml:space="preserve"><value>Prend moins d'une minute.</value></data>
   <data name="auth.passwordHint" xml:space="preserve"><value>Au moins 8 caractères, une majuscule, un chiffre.</value></data>
@@ -627,6 +625,13 @@
   <data name="About_Card3Body" xml:space="preserve"><value>Couverture dans toutes les grandes villes canadiennes, en expansion continue pour servir chaque communauté.</value></data>
   <data name="About_Card4Title" xml:space="preserve"><value>Communauté de confiance</value></data>
   <data name="About_Card4Body" xml:space="preserve"><value>Propriétaires vérifiés, annonces transparentes et engagement envers un logement équitable.</value></data>
+  <!-- Area 5 parity: auth (Block N) -->
+  <data name="auth.checkEmailTitle" xml:space="preserve"><value>Vérifiez votre courriel</value></data>
+  <data name="auth.checkEmailBody" xml:space="preserve"><value>Si un compte existe pour {0}, nous avons envoyé un lien de réinitialisation. Vérifiez votre boîte de réception et vos pourriels.</value></data>
+  <data name="auth.linkExpiredTitle" xml:space="preserve"><value>Lien expiré</value></data>
+  <data name="auth.linkExpiredBody" xml:space="preserve"><value>Ce lien de réinitialisation a expiré ou est invalide. Veuillez en demander un nouveau.</value></data>
+  <data name="auth.requestNewLink" xml:space="preserve"><value>Demander un nouveau lien</value></data>
+  <data name="auth.confirmNewPassword" xml:space="preserve"><value>Confirmer le nouveau mot de passe</value></data>
   <!-- Area 4 parity: listing detail (Block M) -->
   <data name="detail.noAmenities" xml:space="preserve"><value>Aucune information sur les commodités.</value></data>
   <data name="detail.noFloorPlans" xml:space="preserve"><value>Aucun plan disponible pour le moment.</value></data>

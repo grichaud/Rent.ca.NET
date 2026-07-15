@@ -22,6 +22,9 @@ public class SignupValidator : AbstractValidator<SignupModel.InputModel>
             .Matches("[A-Z]").WithMessage("Password must contain an uppercase letter.")
             .Matches("[0-9]").WithMessage("Password must contain a digit.");
 
+        RuleFor(x => x.ConfirmPassword)
+            .Equal(x => x.Password).WithMessage("Passwords do not match.");
+
         RuleFor(x => x.Role)
             .NotEmpty()
             .Must(r => r == Roles.Renter || r == Roles.Landlord)

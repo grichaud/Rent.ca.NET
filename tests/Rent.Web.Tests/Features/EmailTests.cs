@@ -36,7 +36,9 @@ public class EmailTests : IClassFixture<RentAppFactory>
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         var body = await response.Content.ReadAsStringAsync();
-        body.Should().Contain("If an account with that email exists");
+        // Generic anti-enumeration confirmation card (same for known/unknown emails),
+        // which echoes the typed email without confirming whether an account exists.
+        body.Should().Contain("Check your email");
         _factory.EmailSender.PasswordResets.Should().BeEmpty();
     }
 
