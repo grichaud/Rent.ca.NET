@@ -257,7 +257,19 @@ if (!aiConfigured)
 
 if (!app.Environment.IsEnvironment("Testing"))
 {
-    await DatabaseSeeder.RunAsync(app.Services);
+    try
+    {
+        await DatabaseSeeder.RunAsync(app.Services);
+    }
+    catch (Exception ex)
+    {
+        // Never let a transient database problem (e.g. Azure SQL serverless still resuming from
+        // auto-pause) crash the process before it binds a port — that is what produces the
+        // ERR_CONNECTION_CLOSED seen after long idle. Start the app anyway: /health responds
+        // without the database, and per-request retries recover once the database is back.
+        app.Logger.LogError(ex,
+            "Database initialization failed during startup. Starting the app anyway so it can serve requests and recover once the database resumes.");
+    }
 }
 
 app.Run();
