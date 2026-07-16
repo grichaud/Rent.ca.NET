@@ -297,7 +297,6 @@
   <data name="renter.alertsFreqWeekly" xml:space="preserve"><value>Weekly digest</value></data>
   <data name="renter.alertsCreate2" xml:space="preserve"><value>Create alert</value></data>
   <data name="renter.alertsEmptyDesc" xml:space="preserve"><value>Create an alert to get notified when new properties matching your criteria become available.</value></data>
-  <data name="renter.alertsAnyCity" xml:space="preserve"><value>Any city</value></data>
   <data name="renter.alertsAnyProperty" xml:space="preserve"><value>Any property</value></data>
   <data name="renter.alertsActive" xml:space="preserve"><value>Active</value></data>
   <data name="renter.alertsPaused" xml:space="preserve"><value>Paused</value></data>
@@ -331,7 +330,6 @@
   <data name="renter.alertsCreateButton" xml:space="preserve"><value>Create alert</value></data>
   <data name="renter.alertsToggle" xml:space="preserve"><value>Toggle</value></data>
   <data name="renter.inquiriesTitle" xml:space="preserve"><value>My Inquiries</value></data>
-  <data name="renter.inquiriesEmpty" xml:space="preserve"><value>No inquiries sent yet</value></data>
   <data name="renter.accountTitle" xml:space="preserve"><value>Account Settings</value></data>
   <data name="renter.accountProfile" xml:space="preserve"><value>Profile</value></data>
   <data name="renter.accountPassword" xml:space="preserve"><value>Password</value></data>
@@ -662,4 +660,20 @@
   <data name="gallery.previous" xml:space="preserve"><value>Previous photo</value></data>
   <data name="gallery.next" xml:space="preserve"><value>Next photo</value></data>
   <data name="gallery.close" xml:space="preserve"><value>Close</value></data>
+  <data name="filters.other" xml:space="preserve"><value>Other</value></data>
+  <data name="renter.dashboardWelcomeNoName" xml:space="preserve"><value>Hi there</value></data>
+  <data name="renter.favoriteRemoved" xml:space="preserve"><value>Removed from favorites.</value></data>
+  <data name="detail.inquiryListingInactive" xml:space="preserve"><value>This listing is no longer accepting inquiries.</value></data>
+  <data name="renter.alertsFlashCreated" xml:space="preserve"><value>Alert created.</value></data>
+  <data name="renter.alertsFlashPaused" xml:space="preserve"><value>Alert paused.</value></data>
+  <data name="renter.alertsFlashResumed" xml:space="preserve"><value>Alert resumed.</value></data>
+  <data name="renter.alertsFlashDeleted" xml:space="preserve"><value>Alert deleted.</value></data>
+  <data name="renter.alertsNoPets" xml:space="preserve"><value>No pets</value></data>
+  <data name="renter.accountProfileSaved" xml:space="preserve"><value>Profile updated.</value></data>
+  <data name="renter.accountPasswordChanged" xml:space="preserve"><value>Password changed.</value></data>
+  <data name="renter.accountPhone" xml:space="preserve"><value>Phone</value></data>
+  <data name="renter.accountPhoneOptional" xml:space="preserve"><value>(optional)</value></data>
+  <data name="renter.accountPhonePlaceholder" xml:space="preserve"><value>(416) 555-0100</value></data>
+  <data name="renter.inquiryViewed" xml:space="preserve"><value>Viewed</value></data>
+  <data name="renter.inquiryPending" xml:space="preserve"><value>Pending</value></data>
 </root>

@@ -34,17 +34,39 @@
                 <article class="glass-card p-5">
                     <div class="flex items-start justify-between gap-3 flex-wrap">
                         <div class="min-w-0">
-                            <a href="/@culture/@inq.CitySlug/@inq.PropertySlug" class="font-semibold text-slate-900 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
-                                @inq.PropertyTitle
-                            </a>
+                            @if (!string.IsNullOrEmpty(inq.CitySlug))
+                            {
+                                <a href="/@culture/@inq.CitySlug/@inq.PropertySlug" class="font-semibold text-slate-900 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
+                                    @inq.PropertyTitle
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="font-semibold text-slate-900 dark:text-white">@inq.PropertyTitle</span>
+                            }
                             <div class="text-xs text-slate-500 dark:text-white/60 mt-0.5 inline-flex items-center gap-1">
                                 <icon name="map-pin" class="h-3 w-3" />
                                 @inq.PropertyCity
                             </div>
                         </div>
-                        <div class="text-xs text-slate-500 dark:text-white/50 inline-flex items-center gap-1.5 shrink-0">
-                            <icon name="calendar" class="h-3.5 w-3.5" />
-                            @string.Format(L["renter.inquiriesSentLabel"].Value, inq.CreatedAt.ToLocalTime().ToString("MMM d, yyyy"))
+                        <div class="flex items-center gap-2 shrink-0">
+                            @if (inq.IsRead)
+                            {
+                                <span class="text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 inline-flex items-center gap-1">
+                                    <icon name="check" class="h-3 w-3" />
+                                    @L["renter.inquiryViewed"]
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-md bg-slate-500/20 text-slate-600 dark:text-slate-300">
+                                    @L["renter.inquiryPending"]
+                                </span>
+                            }
+                            <div class="text-xs text-slate-500 dark:text-white/50 inline-flex items-center gap-1.5">
+                                <icon name="calendar" class="h-3.5 w-3.5" />
+                                @string.Format(L["renter.inquiriesSentLabel"].Value, Rent.Web.Features.Shared.DateFormat.Long(inq.CreatedAt))
+                            </div>
                         </div>
                     </div>
 
@@ -52,7 +74,7 @@
                     {
                         <div class="mt-2 text-xs text-slate-600 dark:text-white/70 inline-flex items-center gap-1.5">
                             <icon name="home" class="h-3.5 w-3.5" />
-                            @string.Format(L["renter.inquiriesMoveIn"].Value, inq.MoveInDate.Value.ToString("MMM d, yyyy"))
+                            @string.Format(L["renter.inquiriesMoveIn"].Value, Rent.Web.Features.Shared.DateFormat.Long(inq.MoveInDate.Value))
                         </div>
                     }
 

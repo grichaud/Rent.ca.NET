@@ -20,7 +20,7 @@ public class ToggleModel : PageModel
         _userManager = userManager;
     }
 
-    public IActionResult OnGet() => Redirect("/renter/favorites");
+    public IActionResult OnGet() => Redirect(this.Localized("/renter/favorites"));
 
     public async Task<IActionResult> OnPostAsync(
         [FromForm] Guid propertyId,
@@ -47,6 +47,7 @@ public class ToggleModel : PageModel
 
     public async Task<IActionResult> OnPostRemoveAsync(
         [FromForm] Guid propertyId,
+        [FromForm] string? returnUrl,
         CancellationToken ct)
     {
         if (propertyId == Guid.Empty) return BadRequest();
@@ -55,7 +56,12 @@ public class ToggleModel : PageModel
         if (!Guid.TryParse(userId, out var uid)) return Forbid();
 
         await _favorites.RemoveAsync(uid, propertyId, ct);
-        TempData["FavoriteSuccess"] = "Removed from favorites.";
+        // Esta ruta no lleva prefijo de cultura, asi que aqui CurrentUICulture no es de fiar:
+        // se guarda la clave y la resuelve la vista, que si se sirve bajo /{culture}.
+        TempData["FavoriteSuccess"] = "renter.favoriteRemoved";
+
+        if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+            return Redirect(returnUrl);
         return Redirect(this.Localized("/renter/favorites"));
     }
 }

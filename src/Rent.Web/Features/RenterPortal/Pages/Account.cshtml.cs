@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Localization;
 using Rent.Web.Domain;
 using Rent.Web.Infrastructure.Identity;
 using Rent.Web.Infrastructure.Localization;
@@ -17,19 +18,22 @@ public class AccountModel : PageModel
     private readonly IValidator<ProfileInput> _profileValidator;
     private readonly IValidator<PasswordInput> _passwordValidator;
     private readonly ILogger<AccountModel> _logger;
+    private readonly IStringLocalizer<SharedResource> _localizer;
 
     public AccountModel(
         UserManager<ApplicationUser> userManager,
         SignInManager<ApplicationUser> signInManager,
         IValidator<ProfileInput> profileValidator,
         IValidator<PasswordInput> passwordValidator,
-        ILogger<AccountModel> logger)
+        ILogger<AccountModel> logger,
+        IStringLocalizer<SharedResource> localizer)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _profileValidator = profileValidator;
         _passwordValidator = passwordValidator;
         _logger = logger;
+        _localizer = localizer;
     }
 
     [BindProperty]
@@ -50,6 +54,7 @@ public class AccountModel : PageModel
 
         Email = user.Email ?? string.Empty;
         Profile.FullName = user.FullName ?? string.Empty;
+        Profile.Phone = user.PhoneNumber;
         HasPassword = await _userManager.HasPasswordAsync(user);
 
         FlashSuccess = TempData["AccountSuccess"] as string;
@@ -74,16 +79,17 @@ public class AccountModel : PageModel
         }
 
         user.FullName = Profile.FullName.Trim();
+        user.PhoneNumber = string.IsNullOrWhiteSpace(Profile.Phone) ? null : Profile.Phone.Trim();
         user.UpdatedAt = DateTimeOffset.UtcNow;
         var update = await _userManager.UpdateAsync(user);
         if (!update.Succeeded)
         {
             foreach (var e in update.Errors)
-                ModelState.AddModelError(string.Empty, e.Description);
+                ModelState.AddModelError("Profile", e.Description);
             return Page();
         }
 
-        TempData["AccountSuccess"] = "Profile updated.";
+        TempData["AccountSuccess"] = _localizer["renter.accountProfileSaved"].Value;
         return Redirect(this.Localized("/renter/account"));
     }
 
@@ -94,12 +100,13 @@ public class AccountModel : PageModel
 
         Email = user.Email ?? string.Empty;
         Profile.FullName = user.FullName ?? string.Empty;
+        Profile.Phone = user.PhoneNumber;
         HasPassword = await _userManager.HasPasswordAsync(user);
 
         if (!HasPassword)
         {
             // Google OAuth user — no local password to change.
-            TempData["AccountError"] = "Your password is managed by Google.";
+            TempData["AccountError"] = _localizer["renter.accountGoogle"].Value;
             return Redirect(this.Localized("/renter/account"));
         }
 
@@ -115,19 +122,26 @@ public class AccountModel : PageModel
         if (!change.Succeeded)
         {
             foreach (var e in change.Errors)
-                ModelState.AddModelError(string.Empty, e.Description);
+            {
+                // PasswordMismatch es el unico caso que el usuario puede accionar: dale copy localizado.
+                var message = e.Code == "PasswordMismatch"
+                    ? _localizer["renter.accountIncorrectCurrent"].Value
+                    : e.Description;
+                ModelState.AddModelError("Password", message);
+            }
             return Page();
         }
 
         await _signInManager.RefreshSignInAsync(user);
         _logger.LogInformation("User {UserId} changed password.", user.Id);
-        TempData["AccountSuccess"] = "Password changed.";
+        TempData["AccountSuccess"] = _localizer["renter.accountPasswordChanged"].Value;
         return Redirect(this.Localized("/renter/account"));
     }
 
     public class ProfileInput
     {
         public string FullName { get; set; } = string.Empty;
+        public string? Phone { get; set; }
     }
 
     public class PasswordInput

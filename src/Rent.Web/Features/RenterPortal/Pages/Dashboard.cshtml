@@ -8,7 +8,7 @@
 
 <div class="space-y-8">
     <div>
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">@string.Format(L["renter.dashboardWelcome"].Value, Model.FirstName) 👋</h1>
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">@(Model.FirstName is null ? L["renter.dashboardWelcomeNoName"].Value : string.Format(L["renter.dashboardWelcome"].Value, Model.FirstName)) 👋</h1>
         <p class="mt-1 text-sm text-slate-600 dark:text-white/70">@L["renter.dashboardSubtitle"]</p>
     </div>
 

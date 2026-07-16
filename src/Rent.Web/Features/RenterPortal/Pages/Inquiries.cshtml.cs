@@ -35,6 +35,7 @@ public class InquiriesModel : PageModel
                 i.CreatedAt,
                 i.MoveInDate,
                 i.Message,
+                i.IsRead,
                 PropertyTitle = i.Property.Title,
                 PropertySlug = i.Property.Slug,
                 PropertyCity = i.Property.City,
@@ -56,6 +57,7 @@ public class InquiriesModel : PageModel
                 CitySlug = r.CitySlug,
                 Message = r.Message,
                 MoveInDate = r.MoveInDate,
+                IsRead = r.IsRead,
                 CreatedAt = r.CreatedAt
             })
             .ToList();
@@ -70,6 +72,7 @@ public class InquiriesModel : PageModel
         public string CitySlug { get; set; } = string.Empty;
         public string Message { get; set; } = string.Empty;
         public DateOnly? MoveInDate { get; set; }
+        public bool IsRead { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
     }
 }

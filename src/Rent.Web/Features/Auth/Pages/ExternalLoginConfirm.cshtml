@@ -16,7 +16,7 @@
             <div>
                 <label for="confirmEmail" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["auth.email"]</label>
                 <div class="relative">
-                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-white/40">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 z-10 text-slate-400 dark:text-white/40">
                         <icon name="mail" class="h-4 w-4" />
                     </span>
                     <input id="confirmEmail" value="@Model.Email" class="glass-input !pl-10 opacity-70 cursor-not-allowed" disabled />
@@ -27,7 +27,7 @@
             <div>
                 <label asp-for="Input.FullName" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["auth.fullName"]</label>
                 <div class="relative">
-                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-white/40">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 z-10 text-slate-400 dark:text-white/40">
                         <icon name="user" class="h-4 w-4" />
                     </span>
                     <input asp-for="Input.FullName" class="glass-input !pl-10" autocomplete="name" />

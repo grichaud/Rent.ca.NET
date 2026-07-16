@@ -4,8 +4,42 @@
     ViewData["Title"] = L["renter.favoritesTitle"].Value;
     var culture = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
     if (culture != "en" && culture != "fr") { culture = "en"; }
-    string BedsLabel(int n) => n == 0 ? L["listings.beds.studio"].Value : $"{n}+";
-    string BathsLabel(decimal n) => n <= 0m ? "—" : n == Math.Floor(n) ? n.ToString("0") : n.ToString("0.0");
+
+    string BedsLabel(int n) => n == 0
+        ? L["listings.beds.studio"].Value
+        : n == 1
+            ? L["listings.beds.one"].Value
+            : string.Format(L["listings.beds.many"].Value, n);
+
+    string BathsLabel(decimal n)
+    {
+        if (n <= 1m) return L["listings.baths.one"].Value;
+        return n == Math.Floor(n)
+            ? string.Format(L["listings.baths.many"].Value, (int)n)
+            : string.Format(L["listings.baths.many"].Value, n.ToString("0.0"));
+    }
+
+    string LocationLabel(Rent.Web.Features.Favorites.FavoriteCard c)
+    {
+        var parts = new List<string>();
+        if (!string.IsNullOrWhiteSpace(c.Neighbourhood)) parts.Add(c.Neighbourhood);
+        parts.Add(c.City);
+        parts.Add(c.Province);
+        return string.Join(", ", parts);
+    }
+
+    string PropertyTypeLabel(Rent.Web.Domain.PropertyType t) => t switch
+    {
+        Rent.Web.Domain.PropertyType.Apartment => L["filters.apartment"].Value,
+        Rent.Web.Domain.PropertyType.Condo => L["filters.condo"].Value,
+        Rent.Web.Domain.PropertyType.House => L["filters.house"].Value,
+        Rent.Web.Domain.PropertyType.Townhouse => L["filters.townhouse"].Value,
+        Rent.Web.Domain.PropertyType.Basement => L["filters.basement"].Value,
+        Rent.Web.Domain.PropertyType.Studio => L["filters.studio"].Value,
+        Rent.Web.Domain.PropertyType.Loft => L["filters.loft"].Value,
+        Rent.Web.Domain.PropertyType.Duplex => L["filters.duplex"].Value,
+        _ => L["filters.other"].Value
+    };
 }
 
 <div class="space-y-6">
@@ -16,20 +50,20 @@
 
     @if (Model.FlashSuccess is not null)
     {
-        <div class="p-3 rounded-lg border border-emerald-300 bg-emerald-50 dark:border-emerald-500/40 dark:bg-emerald-500/10 text-sm text-emerald-700 dark:text-emerald-300 inline-flex items-center gap-2">
+        <div role="status" class="p-3 rounded-lg border border-emerald-300 bg-emerald-50 dark:border-emerald-500/40 dark:bg-emerald-500/10 text-sm text-emerald-700 dark:text-emerald-300 inline-flex items-center gap-2">
             <icon name="check-circle" class="h-4 w-4" />
-            @Model.FlashSuccess
+            @L[Model.FlashSuccess]
         </div>
     }
 
     @if (!Model.Favorites.Any())
     {
         <div class="glass-card p-10 text-center">
-            <div class="inline-flex h-14 w-14 rounded-2xl bg-pink-500/20 items-center justify-center mb-4">
+            <div class="inline-flex h-16 w-16 rounded-2xl bg-pink-500/15 items-center justify-center mb-4">
                 <icon name="heart" class="h-7 w-7 text-pink-500 dark:text-pink-300" />
             </div>
             <h2 class="font-sans font-bold tracking-tight text-2xl text-slate-900 dark:text-white">@L["renter.favoritesEmpty"]</h2>
-            <p class="text-slate-500 dark:text-white/60 mt-2">@L["renter.favoritesEmptyDesc"]</p>
+            <p class="text-slate-500 dark:text-white/60 mt-2 max-w-sm mx-auto">@L["renter.favoritesEmptyDesc"]</p>
             <a href="/@culture" class="glass-button-primary inline-flex items-center gap-2 mt-6">
                 <icon name="search" class="h-4 w-4" />
                 @L["renter.browseListings"]
@@ -41,8 +75,10 @@
         <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             @foreach (var fav in Model.Favorites)
             {
+                var hasLink = !string.IsNullOrEmpty(fav.CitySlug);
+                var detailUrl = $"/{culture}/{fav.CitySlug}/{fav.Slug}";
                 <div class="group glass-card overflow-hidden flex flex-col p-0 hover:shadow-2xl hover:shadow-pink-500/10 transition-all duration-300">
-                    <a href="/@culture/@fav.CitySlug/@fav.Slug" class="relative aspect-[4/3] w-full overflow-hidden bg-gradient-to-br from-brand-200 via-purple-200 to-cyan-200 dark:from-brand-900/40 dark:via-purple-900/40 dark:to-cyan-900/40 block">
+                    <div class="relative aspect-[4/3] w-full overflow-hidden bg-gradient-to-br from-brand-200 via-purple-200 to-cyan-200 dark:from-brand-900/40 dark:via-purple-900/40 dark:to-cyan-900/40">
                         @if (!string.IsNullOrEmpty(fav.PrimaryImageUrl))
                         {
                             <img src="@fav.PrimaryImageUrl" alt="@fav.Title" loading="lazy"
@@ -55,37 +91,72 @@
                             </div>
                         }
                         <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/0 pointer-events-none"></div>
-                        @if (fav.FromPrice.HasValue)
+
+                        @if (hasLink)
                         {
-                            <div class="absolute bottom-3 left-3 text-white">
-                                <div class="text-[10px] uppercase tracking-wider opacity-80">@L["detail.fromLabel"]</div>
-                                <div class="font-sans font-bold tracking-tight text-2xl leading-none">$@fav.FromPrice.Value.ToString("N0")<span class="text-xs opacity-80">@L["listings.perMonth"]</span></div>
+                            <a href="@detailUrl" class="absolute inset-0" aria-label="@fav.Title"></a>
+                        }
+
+                        @* Tier badges top-left *@
+                        <div class="absolute top-3 left-3 flex flex-wrap gap-1.5 pointer-events-none">
+                            @{ await Html.RenderPartialAsync("/Features/Search/Partials/_PropertyBadges.cshtml", fav.EffectiveTier); }
+                        </div>
+
+                        @* Verified top-right *@
+                        @if (fav.IsVerified)
+                        {
+                            <div class="absolute top-3 right-3 pointer-events-none">
+                                <span class="inline-flex items-center gap-1 bg-emerald-500/90 backdrop-blur-md text-white text-[10px] uppercase tracking-wider font-bold px-2 py-1 rounded-md">
+                                    <icon name="check" class="h-3 w-3" />
+                                    @L["detail.verified"]
+                                </span>
                             </div>
                         }
-                    </a>
+
+                        <div class="absolute bottom-3 left-3 text-white pointer-events-none">
+                            @if (fav.FromPrice.HasValue)
+                            {
+                                <div class="text-[10px] uppercase tracking-wider opacity-80">@L["detail.fromLabel"]</div>
+                                <div class="font-sans font-bold tracking-tight text-2xl leading-none">$@fav.FromPrice.Value.ToString("N0")<span class="text-xs opacity-80">@L["listings.perMonth"]</span></div>
+                            }
+                            else
+                            {
+                                <div class="font-sans font-bold tracking-tight text-lg leading-none">@L["detail.contactLandlord"]</div>
+                            }
+                        </div>
+                    </div>
 
                     <div class="p-4 flex-1 flex flex-col">
-                        <a href="/@culture/@fav.CitySlug/@fav.Slug" class="font-semibold text-slate-900 dark:text-white line-clamp-1 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">@fav.Title</a>
+                        @if (hasLink)
+                        {
+                            <a href="@detailUrl" class="font-semibold text-slate-900 dark:text-white line-clamp-1 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">@fav.Title</a>
+                        }
+                        else
+                        {
+                            <span class="font-semibold text-slate-900 dark:text-white line-clamp-1">@fav.Title</span>
+                        }
                         <div class="mt-1 text-xs text-slate-500 dark:text-white/60 inline-flex items-center gap-1">
                             <icon name="map-pin" class="h-3 w-3 shrink-0" />
-                            <span class="truncate">@(fav.Neighbourhood ?? fav.City), @fav.City</span>
+                            <span class="truncate">@LocationLabel(fav)</span>
                         </div>
                         <div class="mt-3 pt-3 border-t border-gray-200 dark:border-white/10 flex items-center gap-4 text-xs text-slate-600 dark:text-white/70">
                             <span class="inline-flex items-center gap-1">
-                                <icon name="bed" class="h-3.5 w-3.5" /> @BedsLabel(fav.MinBedrooms) bd
+                                <icon name="bed" class="h-3.5 w-3.5" /> @BedsLabel(fav.MinBedrooms)
                             </span>
                             <span class="inline-flex items-center gap-1">
-                                <icon name="bath" class="h-3.5 w-3.5" /> @BathsLabel(fav.MinBathrooms) ba
+                                <icon name="bath" class="h-3.5 w-3.5" /> @BathsLabel(fav.MinBathrooms)
                             </span>
                             <span class="ml-auto inline-flex items-center gap-1 text-slate-500 dark:text-white/50">
-                                <icon name="home" class="h-3.5 w-3.5" /> @fav.PropertyType
+                                <icon name="home" class="h-3.5 w-3.5" /> @PropertyTypeLabel(fav.PropertyType)
                             </span>
                         </div>
 
                         <form method="post" action="/renter/favorites/toggle?handler=Remove" class="mt-3">
                             @Html.AntiForgeryToken()
                             <input type="hidden" name="propertyId" value="@fav.PropertyId" />
-                            <button type="submit" class="glass-button w-full inline-flex items-center justify-center gap-2 text-sm text-rose-500 hover:text-rose-600 dark:text-rose-400 dark:hover:text-rose-300">
+                            <input type="hidden" name="returnUrl" value="/@culture/renter/favorites" />
+                            <button type="submit" aria-label="@($"{L["detail.removeFromFavorites"].Value}: {fav.Title}")"
+                                    class="glass-button w-full inline-flex items-center justify-center gap-2 text-sm text-rose-500 hover:text-rose-600 dark:text-rose-400 dark:hover:text-rose-300">
                                 <icon name="trash-2" class="h-4 w-4" />
                                 @L["renter.removeFavorite"]
                             </button>

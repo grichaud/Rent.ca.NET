@@ -17,7 +17,14 @@
         Rent.Web.Domain.PropertyType.Studio => L["filters.studio"].Value,
         Rent.Web.Domain.PropertyType.Loft => L["filters.loft"].Value,
         Rent.Web.Domain.PropertyType.Duplex => L["filters.duplex"].Value,
-        _ => t.ToString()
+        _ => L["filters.other"].Value
+    };
+
+    // El AI chat puede crear alertas con Other; el select solo ofrece los tipos curados.
+    var selectableTypes = new[]
+    {
+        PropertyType.Apartment, PropertyType.Condo, PropertyType.House, PropertyType.Townhouse,
+        PropertyType.Basement, PropertyType.Studio, PropertyType.Loft, PropertyType.Duplex
     };
 
     string Summarize(Rent.Web.Domain.Alert a)
@@ -25,11 +32,17 @@
         var parts = new List<string>();
         if (a.PriceMin.HasValue || a.PriceMax.HasValue)
         {
-            parts.Add(string.Format("{0}–{1}", FormatPrice(a.PriceMin), FormatPrice(a.PriceMax)));
+            parts.Add(string.Format("{0}–{1}{2}", FormatPrice(a.PriceMin), FormatPrice(a.PriceMax), L["listings.perMonth"].Value));
         }
-        if (a.BedroomsMin.HasValue) parts.Add($"{a.BedroomsMin}+ bd");
+        if (a.BedroomsMin.HasValue)
+        {
+            parts.Add(a.BedroomsMin.Value == 0
+                ? L["listings.beds.studio"].Value
+                : string.Format(L["listings.beds.many"].Value, $"{a.BedroomsMin}+"));
+        }
         if (a.PropertyType.HasValue) parts.Add(TypeLabel(a.PropertyType.Value));
         if (a.PetsAllowed == true) parts.Add(L["renter.alertsPetFriendly"].Value);
+        else if (a.PetsAllowed == false) parts.Add(L["renter.alertsNoPets"].Value);
         return parts.Count == 0 ? L["renter.alertsAnyProperty"].Value : string.Join(" • ", parts);
     }
 }
@@ -49,7 +62,7 @@
 
     @if (Model.FlashSuccess is not null)
     {
-        <div class="p-3 rounded-lg border border-emerald-300 bg-emerald-50 dark:border-emerald-500/40 dark:bg-emerald-500/10 text-sm text-emerald-700 dark:text-emerald-300 inline-flex items-center gap-2">
+        <div role="status" class="p-3 rounded-lg border border-emerald-300 bg-emerald-50 dark:border-emerald-500/40 dark:bg-emerald-500/10 text-sm text-emerald-700 dark:text-emerald-300 inline-flex items-center gap-2">
             <icon name="check-circle" class="h-4 w-4" />
             @Model.FlashSuccess
         </div>
@@ -60,48 +73,48 @@
         <section class="glass-card p-6">
             <h2 class="font-semibold text-slate-900 dark:text-white mb-4">@L["renter.alertsCreateSection"]</h2>
             <form method="post" asp-page-handler="Create" class="grid gap-4 sm:grid-cols-2">
-                <div asp-validation-summary="ModelOnly" class="text-sm text-red-600 dark:text-red-400 sm:col-span-2"></div>
+                <div asp-validation-summary="ModelOnly" role="alert" class="text-sm text-red-600 dark:text-red-400 sm:col-span-2"></div>
 
                 <div>
                     <label asp-for="Input.City" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["renter.alertsCity"]</label>
-                    <select asp-for="Input.City" class="glass-input">
-                        <option value="">@L["renter.alertsSelectCity"]</option>
+                    <select asp-for="Input.City" class="glass-input" required>
+                        <option value="" disabled selected>@L["renter.alertsSelectCity"]</option>
                         @foreach (var city in Model.Cities)
                         {
                             <option value="@city.Name">@city.Name, @city.Province</option>
                         }
                     </select>
-                    <span asp-validation-for="Input.City" class="text-xs text-red-600 dark:text-red-400"></span>
+                    <span asp-validation-for="Input.City" role="alert" class="text-xs text-red-600 dark:text-red-400"></span>
                 </div>
 
                 <div>
                     <label asp-for="Input.PropertyType" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["filters.propertyType"]</label>
                     <select asp-for="Input.PropertyType" class="glass-input">
                         <option value="">@L["renter.alertsTypeAny"]</option>
-                        @foreach (var t in Enum.GetValues<PropertyType>())
+                        @foreach (var t in selectableTypes)
                         {
                             <option value="@t">@TypeLabel(t)</option>
                         }
                     </select>
-                    <span asp-validation-for="Input.PropertyType" class="text-xs text-red-600 dark:text-red-400"></span>
+                    <span asp-validation-for="Input.PropertyType" role="alert" class="text-xs text-red-600 dark:text-red-400"></span>
                 </div>
 
                 <div>
                     <label asp-for="Input.PriceMin" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["renter.alertsMinPrice"]</label>
                     <input asp-for="Input.PriceMin" type="number" step="50" min="0" class="glass-input" placeholder="@L["renter.alertsNoMin"]" />
-                    <span asp-validation-for="Input.PriceMin" class="text-xs text-red-600 dark:text-red-400"></span>
+                    <span asp-validation-for="Input.PriceMin" role="alert" class="text-xs text-red-600 dark:text-red-400"></span>
                 </div>
 
                 <div>
                     <label asp-for="Input.PriceMax" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["renter.alertsMaxPrice"]</label>
                     <input asp-for="Input.PriceMax" type="number" step="50" min="0" class="glass-input" placeholder="@L["renter.alertsNoMax"]" />
-                    <span asp-validation-for="Input.PriceMax" class="text-xs text-red-600 dark:text-red-400"></span>
+                    <span asp-validation-for="Input.PriceMax" role="alert" class="text-xs text-red-600 dark:text-red-400"></span>
                 </div>
 
                 <div>
                     <label asp-for="Input.BedroomsMin" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["renter.alertsBedroomsLabel"]</label>
                     <input asp-for="Input.BedroomsMin" type="number" step="1" min="0" max="10" class="glass-input" placeholder="@L["renter.alertsTypeAny"]" />
-                    <span asp-validation-for="Input.BedroomsMin" class="text-xs text-red-600 dark:text-red-400"></span>
+                    <span asp-validation-for="Input.BedroomsMin" role="alert" class="text-xs text-red-600 dark:text-red-400"></span>
                 </div>
 
                 <div>
@@ -111,7 +124,7 @@
                         <option value="true">@L["renter.alertsPetsYes"]</option>
                         <option value="false">@L["renter.alertsPetsNo"]</option>
                     </select>
-                    <span asp-validation-for="Input.PetsAllowed" class="text-xs text-red-600 dark:text-red-400"></span>
+                    <span asp-validation-for="Input.PetsAllowed" role="alert" class="text-xs text-red-600 dark:text-red-400"></span>
                 </div>
 
                 <div class="sm:col-span-2">
@@ -121,7 +134,7 @@
                         <option value="@AlertFrequency.Daily">@L["renter.alertsFreqDaily"]</option>
                         <option value="@AlertFrequency.Weekly">@L["renter.alertsFreqWeekly"]</option>
                     </select>
-                    <span asp-validation-for="Input.Frequency" class="text-xs text-red-600 dark:text-red-400"></span>
+                    <span asp-validation-for="Input.Frequency" role="alert" class="text-xs text-red-600 dark:text-red-400"></span>
                 </div>
 
                 <div class="sm:col-span-2 flex items-center gap-3">
@@ -140,7 +153,7 @@
     @if (!Model.Alerts.Any())
     {
         <div class="glass-card p-10 text-center">
-            <div class="inline-flex h-16 w-16 rounded-2xl bg-brand-500/10 items-center justify-center mb-4">
+            <div class="inline-flex h-16 w-16 rounded-2xl bg-brand-500/15 items-center justify-center mb-4">
                 <icon name="bell" class="h-7 w-7 text-brand-500 dark:text-brand-300" />
             </div>
             <h2 class="font-sans font-bold tracking-tight text-2xl text-slate-900 dark:text-white">@L["renter.alertsEmpty"]</h2>
@@ -156,13 +169,13 @@
         <div class="space-y-3">
             @foreach (var a in Model.Alerts)
             {
-                <div class="glass-card p-4 sm:p-5 flex items-center gap-4 flex-wrap">
-                    <div class="flex items-center justify-center h-12 w-12 rounded-2xl bg-brand-500/20 shrink-0">
-                        <icon name="bell" class="h-6 w-6 text-brand-500 dark:text-brand-300" />
+                <div class="glass-card p-4 sm:p-5 flex items-center gap-4 flex-wrap @(a.IsActive ? "" : "opacity-60")">
+                    <div class="flex items-center justify-center h-12 w-12 rounded-2xl shrink-0 @(a.IsActive ? "bg-brand-500/20" : "bg-slate-500/10")">
+                        <icon name="@(a.IsActive ? "bell" : "bell-off")" class="@(a.IsActive ? "h-6 w-6 text-brand-500 dark:text-brand-300" : "h-6 w-6 text-slate-400 dark:text-slate-400")" />
                     </div>
                     <div class="flex-1 min-w-0">
                         <div class="flex items-center gap-2 flex-wrap">
-                            <span class="font-semibold text-slate-900 dark:text-white truncate">@(a.City ?? L["renter.alertsAnyCity"].Value)</span>
+                            <span class="font-semibold text-slate-900 dark:text-white truncate">@a.City</span>
                             @if (a.IsActive)
                             {
                                 <span class="text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-700 dark:text-emerald-300">@L["renter.alertsActive"]</span>
@@ -183,7 +196,7 @@
                                 <icon name="@(a.IsActive ? "bell-off" : "bell")" class="h-4 w-4" />
                             </button>
                         </form>
-                        <form method="post" asp-page-handler="Delete" onsubmit="return confirm('@L["renter.alertsDeleteConfirm"]');">
+                        <form method="post" asp-page-handler="Delete" data-confirm="@L["renter.alertsDeleteConfirm"]">
                             @Html.AntiForgeryToken()
                             <input type="hidden" name="id" value="@a.Id" />
                             <button type="submit" class="h-9 w-9 inline-flex items-center justify-center rounded-lg text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-colors" title="@L["renter.alertsDelete"]" aria-label="@L["renter.alertsDelete"]">

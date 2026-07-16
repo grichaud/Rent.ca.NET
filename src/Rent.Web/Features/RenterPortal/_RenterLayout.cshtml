@@ -1,28 +1,31 @@
 @{
     Layout = "_Layout";
+    ViewData["FullBleed"] = true;
 }
 
 @section Scripts {
     <script src="~/js/renter-sidebar.js" asp-append-version="true" defer></script>
+    <script src="~/js/auth-password.js" asp-append-version="true" defer></script>
+    <script src="~/js/form-confirm.js" asp-append-version="true" defer></script>
 }
 
-<div class="-mt-8 sm:-mt-12 -mx-4 sm:-mx-6 grid lg:grid-cols-[16rem_1fr] min-h-[calc(100vh-4rem)]">
+<div class="grid lg:grid-cols-[16rem_1fr] min-h-[calc(100vh-4rem)]">
     <aside class="hidden lg:block sticky top-16 self-start h-[calc(100vh-4rem)] border-r border-gray-200 dark:border-white/10 bg-white/40 dark:bg-slate-950/40 backdrop-blur-xl">
         <partial name="/Features/RenterPortal/Partials/_RenterSidebar.cshtml" />
     </aside>
 
-    <div class="flex flex-col">
-        <div class="lg:hidden flex items-center justify-between px-4 sm:px-6 py-3 border-b border-gray-200 dark:border-white/10 bg-white/40 dark:bg-slate-950/40 backdrop-blur-xl">
+    <div class="flex flex-col min-w-0">
+        <div class="lg:hidden sticky top-16 z-30 flex items-center justify-between px-4 sm:px-6 py-3 border-b border-gray-200 dark:border-white/10 bg-white/40 dark:bg-slate-950/40 backdrop-blur-xl">
             <button type="button" data-renter-sidebar-open
                     class="inline-flex items-center gap-2 text-sm text-slate-700 dark:text-white/80 hover:text-slate-900 dark:hover:text-white"
-                    aria-label="@L["common.myPortal"]" aria-controls="renter-sidebar-drawer" aria-expanded="false">
+                    aria-controls="renter-sidebar-drawer" aria-expanded="false">
                 <icon name="menu" class="h-5 w-5" />
                 <span class="font-medium">@L["common.myPortal"]</span>
             </button>
             <span class="text-xs text-slate-500 dark:text-white/50">@L["renter.role"]</span>
         </div>
 
-        <main class="flex-1 px-4 sm:px-6 py-6 sm:py-8">
+        <main class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
             @RenderBody()
         </main>
     </div>

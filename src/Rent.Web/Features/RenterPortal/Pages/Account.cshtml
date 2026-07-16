@@ -6,13 +6,13 @@
 
 <div class="space-y-6 max-w-2xl">
     <header>
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">@L["renter.accountLink"]</h1>
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">@L["renter.accountTitle"]</h1>
         <p class="mt-1 text-sm text-slate-600 dark:text-white/70">@L["renter.accountSubtitle"]</p>
     </header>
 
     @if (Model.FlashSuccess is not null)
     {
-        <div class="p-3 rounded-lg border border-emerald-300 bg-emerald-50 dark:border-emerald-500/40 dark:bg-emerald-500/10 text-sm text-emerald-700 dark:text-emerald-300 inline-flex items-center gap-2">
+        <div role="status" class="p-3 rounded-lg border border-emerald-300 bg-emerald-50 dark:border-emerald-500/40 dark:bg-emerald-500/10 text-sm text-emerald-700 dark:text-emerald-300 inline-flex items-center gap-2">
             <icon name="check-circle" class="h-4 w-4" />
             @Model.FlashSuccess
         </div>
@@ -20,7 +20,7 @@
 
     @if (Model.FlashError is not null)
     {
-        <div class="p-3 rounded-lg border border-red-300 bg-red-50 dark:border-red-500/40 dark:bg-red-500/10 text-sm text-red-700 dark:text-red-300 inline-flex items-center gap-2">
+        <div role="alert" class="p-3 rounded-lg border border-red-300 bg-red-50 dark:border-red-500/40 dark:bg-red-500/10 text-sm text-red-700 dark:text-red-300 inline-flex items-center gap-2">
             <icon name="alert-circle" class="h-4 w-4" />
             @Model.FlashError
         </div>
@@ -31,12 +31,31 @@
         <p class="text-sm text-slate-500 dark:text-white/60 mb-4">@L["renter.accountEmail"] <span class="text-slate-700 dark:text-white/80">@Model.Email</span></p>
 
         <form method="post" asp-page-handler="Profile" class="space-y-3">
-            <div asp-validation-summary="ModelOnly" class="text-sm text-red-600 dark:text-red-400"></div>
+            <span asp-validation-for="Profile" role="alert" class="block text-sm text-red-600 dark:text-red-400"></span>
 
             <div>
                 <label asp-for="Profile.FullName" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["auth.fullName"]</label>
-                <input asp-for="Profile.FullName" class="glass-input" autocomplete="name" />
-                <span asp-validation-for="Profile.FullName" class="text-xs text-red-600 dark:text-red-400"></span>
+                <div class="relative">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 z-10 text-slate-400 dark:text-white/40">
+                        <icon name="user" class="h-4 w-4" />
+                    </span>
+                    <input asp-for="Profile.FullName" class="glass-input !pl-10" autocomplete="name" placeholder="@L["auth.fullNamePlaceholder"]" />
+                </div>
+                <span asp-validation-for="Profile.FullName" role="alert" class="text-xs text-red-600 dark:text-red-400"></span>
+            </div>
+
+            <div>
+                <label asp-for="Profile.Phone" class="block text-sm text-slate-700 dark:text-white/80 mb-1">
+                    @L["renter.accountPhone"]
+                    <span class="text-slate-400 dark:text-white/40 font-normal">@L["renter.accountPhoneOptional"]</span>
+                </label>
+                <div class="relative">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 z-10 text-slate-400 dark:text-white/40">
+                        <icon name="phone" class="h-4 w-4" />
+                    </span>
+                    <input asp-for="Profile.Phone" type="tel" class="glass-input !pl-10" autocomplete="tel" placeholder="@L["renter.accountPhonePlaceholder"]" />
+                </div>
+                <span asp-validation-for="Profile.Phone" role="alert" class="text-xs text-red-600 dark:text-red-400"></span>
             </div>
 
             <button type="submit" class="glass-button-primary inline-flex items-center gap-2">
@@ -60,25 +79,59 @@
         {
             <p class="text-sm text-slate-500 dark:text-white/60 mb-4">@L["renter.accountPasswordHint"]</p>
 
-            <form method="post" asp-page-handler="Password" class="space-y-3" autocomplete="off">
-                <div asp-validation-summary="ModelOnly" class="text-sm text-red-600 dark:text-red-400"></div>
+            <form method="post" asp-page-handler="Password" class="space-y-3">
+                <span asp-validation-for="Password" role="alert" class="block text-sm text-red-600 dark:text-red-400"></span>
 
                 <div>
                     <label asp-for="Password.CurrentPassword" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["renter.accountCurrentPassword"]</label>
-                    <input asp-for="Password.CurrentPassword" type="password" class="glass-input" autocomplete="current-password" />
-                    <span asp-validation-for="Password.CurrentPassword" class="text-xs text-red-600 dark:text-red-400"></span>
+                    <div class="relative" data-password-wrap>
+                        <span class="absolute left-3 top-1/2 -translate-y-1/2 z-10 text-slate-400 dark:text-white/40">
+                            <icon name="lock" class="h-4 w-4" />
+                        </span>
+                        <input asp-for="Password.CurrentPassword" type="password" class="glass-input !pl-10 !pr-10" autocomplete="current-password" placeholder="@L["auth.passwordPlaceholder"]" />
+                        <button type="button" data-password-toggle aria-label="@L["auth.showPassword"]"
+                                data-show-label="@L["auth.showPassword"]" data-hide-label="@L["auth.hidePassword"]"
+                                class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-white/40 hover:text-slate-700 dark:hover:text-white/80">
+                            <span data-pw-icon="show"><icon name="eye" class="h-4 w-4" /></span>
+                            <span data-pw-icon="hide" class="hidden"><icon name="eye-off" class="h-4 w-4" /></span>
+                        </button>
+                    </div>
+                    <span asp-validation-for="Password.CurrentPassword" role="alert" class="text-xs text-red-600 dark:text-red-400"></span>
                 </div>
 
                 <div>
                     <label asp-for="Password.NewPassword" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["renter.accountNewPassword"]</label>
-                    <input asp-for="Password.NewPassword" type="password" class="glass-input" autocomplete="new-password" />
-                    <span asp-validation-for="Password.NewPassword" class="text-xs text-red-600 dark:text-red-400"></span>
+                    <div class="relative" data-password-wrap>
+                        <span class="absolute left-3 top-1/2 -translate-y-1/2 z-10 text-slate-400 dark:text-white/40">
+                            <icon name="lock" class="h-4 w-4" />
+                        </span>
+                        <input asp-for="Password.NewPassword" type="password" class="glass-input !pl-10 !pr-10" autocomplete="new-password" placeholder="@L["auth.passwordPlaceholder"]" />
+                        <button type="button" data-password-toggle aria-label="@L["auth.showPassword"]"
+                                data-show-label="@L["auth.showPassword"]" data-hide-label="@L["auth.hidePassword"]"
+                                class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-white/40 hover:text-slate-700 dark:hover:text-white/80">
+                            <span data-pw-icon="show"><icon name="eye" class="h-4 w-4" /></span>
+                            <span data-pw-icon="hide" class="hidden"><icon name="eye-off" class="h-4 w-4" /></span>
+                        </button>
+                    </div>
+                    <span asp-validation-for="Password.NewPassword" role="alert" class="text-xs text-red-600 dark:text-red-400"></span>
+                    <p class="text-xs text-slate-500 dark:text-white/50 mt-1">@L["auth.passwordHint"]</p>
                 </div>
 
                 <div>
                     <label asp-for="Password.ConfirmPassword" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["renter.accountConfirmPassword"]</label>
-                    <input asp-for="Password.ConfirmPassword" type="password" class="glass-input" autocomplete="new-password" />
-                    <span asp-validation-for="Password.ConfirmPassword" class="text-xs text-red-600 dark:text-red-400"></span>
+                    <div class="relative" data-password-wrap>
+                        <span class="absolute left-3 top-1/2 -translate-y-1/2 z-10 text-slate-400 dark:text-white/40">
+                            <icon name="lock" class="h-4 w-4" />
+                        </span>
+                        <input asp-for="Password.ConfirmPassword" type="password" class="glass-input !pl-10 !pr-10" autocomplete="new-password" placeholder="@L["auth.passwordPlaceholder"]" />
+                        <button type="button" data-password-toggle aria-label="@L["auth.showPassword"]"
+                                data-show-label="@L["auth.showPassword"]" data-hide-label="@L["auth.hidePassword"]"
+                                class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-white/40 hover:text-slate-700 dark:hover:text-white/80">
+                            <span data-pw-icon="show"><icon name="eye" class="h-4 w-4" /></span>
+                            <span data-pw-icon="hide" class="hidden"><icon name="eye-off" class="h-4 w-4" /></span>
+                        </button>
+                    </div>
+                    <span asp-validation-for="Password.ConfirmPassword" role="alert" class="text-xs text-red-600 dark:text-red-400"></span>
                 </div>
 
                 <button type="submit" class="glass-button-primary inline-flex items-center gap-2">

@@ -52,7 +52,7 @@ public class SubmitModel : PageModel
             .FirstOrDefaultAsync(p => p.Id == request.PropertyId && p.Status == ListingStatus.Active, ct);
         if (property is null)
         {
-            TempData["InquiryError"] = "This listing is no longer accepting inquiries.";
+            TempData["InquiryError"] = "detail.inquiryListingInactive";
             return RedirectBackToListing(request);
         }
 
@@ -113,14 +113,18 @@ public class SubmitModel : PageModel
             _logger.LogWarning(ex, "Failed to send inquiry email for property {PropertyId}", request.PropertyId);
         }
 
-        TempData["InquirySuccess"] = "Your message has been sent to the landlord.";
+        TempData["InquirySuccess"] = "detail.inquirySent";
         return RedirectBackToListing(request);
     }
 
+    // Esta ruta no lleva prefijo de cultura: this.Localized() caeria al idioma por defecto y
+    // expulsaria a /en a quien envio desde /fr. El formulario nos dice de donde vino.
     private IActionResult RedirectBackToListing(InquiryRequest req)
     {
+        var culture = req.ReturnCulture is "en" or "fr" ? req.ReturnCulture : LocalizationConfig.DefaultCulture;
+
         if (!string.IsNullOrEmpty(req.ReturnCitySlug) && !string.IsNullOrEmpty(req.ReturnPropertySlug))
-            return Redirect(this.Localized($"/{req.ReturnCitySlug}/{req.ReturnPropertySlug}"));
-        return Redirect(this.Localized("/"));
+            return Redirect($"/{culture}/{req.ReturnCitySlug}/{req.ReturnPropertySlug}");
+        return Redirect($"/{culture}");
     }
 }

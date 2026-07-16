@@ -1,17 +1,27 @@
 @model Rent.Web.Features.ListingDetail.Pages.DetailModel
 @{
     var prefilledMessage = string.Format(L["detail.prefillMessage"].Value, Model.Property!.Title);
+    var culture = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+    if (culture != "en" && culture != "fr") { culture = "en"; }
 }
 
+@* /inquiries/submit no lleva cultura, asi que manda la clave y la resolvemos aqui.
+   Los mensajes de FluentValidation no son claves: L[] los devuelve tal cual. *@
 @if (TempData["InquirySuccess"] as string is string success)
 {
-    <div class="bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-700/40 text-emerald-800 dark:text-emerald-200 text-sm rounded-xl p-3 mb-4">@success</div>
+    <div role="status" class="bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-700/40 text-emerald-800 dark:text-emerald-200 text-sm rounded-xl p-3 mb-4">@L[success]</div>
+}
+
+@if (TempData["InquiryError"] as string is string error)
+{
+    <div role="alert" class="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-700/40 text-red-800 dark:text-red-200 text-sm rounded-xl p-3 mb-4">@L[error]</div>
 }
 
 <form method="post" action="/inquiries/submit" class="space-y-3 text-sm">
     @Html.AntiForgeryToken()
     <input type="hidden" name="PropertyId" value="@Model.Property!.Id" />
     <input type="hidden" name="ReturnCitySlug" value="@Model.CitySlug" />
+    <input type="hidden" name="ReturnCulture" value="@culture" />
     <input type="hidden" name="ReturnPropertySlug" value="@Model.Property!.Slug" />
 
     <h3 class="font-semibold text-slate-900 dark:text-white inline-flex items-center gap-2">

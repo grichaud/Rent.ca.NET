@@ -20,7 +20,7 @@ public class DashboardModel : PageModel
         _db = db;
     }
 
-    public string FirstName { get; private set; } = "there";
+    public string? FirstName { get; private set; }
     public int SavedProperties { get; private set; }
     public int ActiveAlerts { get; private set; }
     public int InquiriesSent { get; private set; }
@@ -30,7 +30,7 @@ public class DashboardModel : PageModel
         var user = await _userManager.GetUserAsync(User);
         if (user is null) return;
 
-        FirstName = (user.FullName ?? user.Email ?? "there").Split(' ')[0];
+        FirstName = string.IsNullOrWhiteSpace(user.FullName) ? null : user.FullName.Trim().Split(' ')[0];
 
         SavedProperties = await _db.Favorites.CountAsync(f => f.UserId == user.Id, ct);
         ActiveAlerts = await _db.Alerts.CountAsync(a => a.UserId == user.Id && a.IsActive, ct);

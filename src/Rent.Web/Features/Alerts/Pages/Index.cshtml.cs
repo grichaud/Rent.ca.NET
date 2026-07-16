@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Rent.Web.Domain;
 using Rent.Web.Infrastructure.Data;
 using Rent.Web.Infrastructure.Identity;
@@ -17,12 +18,18 @@ public class IndexModel : PageModel
     private readonly AppDbContext _db;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IValidator<CreateAlertRequest> _validator;
+    private readonly IStringLocalizer<SharedResource> _localizer;
 
-    public IndexModel(AppDbContext db, UserManager<ApplicationUser> userManager, IValidator<CreateAlertRequest> validator)
+    public IndexModel(
+        AppDbContext db,
+        UserManager<ApplicationUser> userManager,
+        IValidator<CreateAlertRequest> validator,
+        IStringLocalizer<SharedResource> localizer)
     {
         _db = db;
         _userManager = userManager;
         _validator = validator;
+        _localizer = localizer;
     }
 
     [BindProperty]
@@ -79,7 +86,7 @@ public class IndexModel : PageModel
         });
         await _db.SaveChangesAsync(ct);
 
-        TempData["AlertSuccess"] = "Alert created.";
+        TempData["AlertSuccess"] = _localizer["renter.alertsFlashCreated"].Value;
         return Redirect(this.Localized("/renter/alerts"));
     }
 
@@ -95,7 +102,9 @@ public class IndexModel : PageModel
         alert.UpdatedAt = DateTimeOffset.UtcNow;
         await _db.SaveChangesAsync(ct);
 
-        TempData["AlertSuccess"] = alert.IsActive ? "Alert resumed." : "Alert paused.";
+        TempData["AlertSuccess"] = alert.IsActive
+            ? _localizer["renter.alertsFlashResumed"].Value
+            : _localizer["renter.alertsFlashPaused"].Value;
         return Redirect(this.Localized("/renter/alerts"));
     }
 
@@ -110,7 +119,7 @@ public class IndexModel : PageModel
         _db.Alerts.Remove(alert);
         await _db.SaveChangesAsync(ct);
 
-        TempData["AlertSuccess"] = "Alert deleted.";
+        TempData["AlertSuccess"] = _localizer["renter.alertsFlashDeleted"].Value;
         return Redirect(this.Localized("/renter/alerts"));
     }
 

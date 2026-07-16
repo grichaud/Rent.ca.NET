@@ -10,4 +10,5 @@ public class InquiryRequest
     public DateOnly? MoveInDate { get; set; }
     public string? ReturnCitySlug { get; set; }
     public string? ReturnPropertySlug { get; set; }
+    public string? ReturnCulture { get; set; }
 }

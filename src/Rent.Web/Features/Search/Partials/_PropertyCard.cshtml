@@ -80,7 +80,7 @@
                 @* List variant: only Featured tier + Verified badges. RentSpecial chip
                    is intentionally omitted to match Next.js map-view list cards (Block I). *@
                 <div class="flex flex-wrap gap-1.5">
-                    @{ await Html.RenderPartialAsync("/Features/Search/Partials/_PropertyBadges.cshtml", Model); }
+                    @{ await Html.RenderPartialAsync("/Features/Search/Partials/_PropertyBadges.cshtml", Model.EffectiveTier); }
                     @if (Model.IsVerified)
                     {
                         <span class="inline-flex items-center gap-1 bg-emerald-500/90 text-white text-[10px] uppercase tracking-wider font-bold px-2 py-1 rounded-md">
@@ -156,7 +156,7 @@
         @* Tier + Special badges top-left *@
         <div class="absolute top-3 left-3 flex flex-col gap-1.5 items-start">
             <div class="flex flex-wrap gap-1.5">
-                @{ await Html.RenderPartialAsync("/Features/Search/Partials/_PropertyBadges.cshtml", Model); }
+                @{ await Html.RenderPartialAsync("/Features/Search/Partials/_PropertyBadges.cshtml", Model.EffectiveTier); }
             </div>
             @if (!string.IsNullOrWhiteSpace(Model.SpecialTitle))
             {

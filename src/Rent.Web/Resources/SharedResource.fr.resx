@@ -297,14 +297,13 @@
   <data name="renter.alertsFreqWeekly" xml:space="preserve"><value>Résumé hebdomadaire</value></data>
   <data name="renter.alertsCreate2" xml:space="preserve"><value>Créer l'alerte</value></data>
   <data name="renter.alertsEmptyDesc" xml:space="preserve"><value>Créez une alerte pour être notifié quand de nouvelles propriétés correspondent à vos critères.</value></data>
-  <data name="renter.alertsAnyCity" xml:space="preserve"><value>Toute ville</value></data>
   <data name="renter.alertsAnyProperty" xml:space="preserve"><value>Tout type</value></data>
   <data name="renter.alertsActive" xml:space="preserve"><value>Active</value></data>
   <data name="renter.alertsPaused" xml:space="preserve"><value>En pause</value></data>
   <data name="renter.alertsPause" xml:space="preserve"><value>Mettre en pause</value></data>
   <data name="renter.alertsResume" xml:space="preserve"><value>Reprendre</value></data>
   <data name="renter.alertsDelete" xml:space="preserve"><value>Supprimer</value></data>
-  <data name="renter.alertsDeleteConfirm" xml:space="preserve"><value>Supprimer cette alerte?</value></data>
+  <data name="renter.alertsDeleteConfirm" xml:space="preserve"><value>Supprimer cette alerte ?</value></data>
   <data name="renter.alertsPetFriendly" xml:space="preserve"><value>Animaux acceptés</value></data>
   <data name="renter.inquiriesSubtitle" xml:space="preserve"><value>Messages envoyés aux propriétaires.</value></data>
   <data name="renter.inquiriesEmptyDesc" xml:space="preserve"><value>Quand vous contactez un propriétaire depuis une annonce, votre message apparaîtra ici.</value></data>
@@ -331,7 +330,6 @@
   <data name="renter.alertsCreateButton" xml:space="preserve"><value>Créer l'alerte</value></data>
   <data name="renter.alertsToggle" xml:space="preserve"><value>Activer/Désactiver</value></data>
   <data name="renter.inquiriesTitle" xml:space="preserve"><value>Mes demandes</value></data>
-  <data name="renter.inquiriesEmpty" xml:space="preserve"><value>Aucune demande envoyée pour l'instant</value></data>
   <data name="renter.accountTitle" xml:space="preserve"><value>Paramètres du compte</value></data>
   <data name="renter.accountProfile" xml:space="preserve"><value>Profil</value></data>
   <data name="renter.accountPassword" xml:space="preserve"><value>Mot de passe</value></data>
@@ -662,4 +660,20 @@
   <data name="gallery.previous" xml:space="preserve"><value>Photo précédente</value></data>
   <data name="gallery.next" xml:space="preserve"><value>Photo suivante</value></data>
   <data name="gallery.close" xml:space="preserve"><value>Fermer</value></data>
+  <data name="filters.other" xml:space="preserve"><value>Autre</value></data>
+  <data name="renter.dashboardWelcomeNoName" xml:space="preserve"><value>Bonjour</value></data>
+  <data name="renter.favoriteRemoved" xml:space="preserve"><value>Retiré des favoris.</value></data>
+  <data name="detail.inquiryListingInactive" xml:space="preserve"><value>Cette annonce n'accepte plus de demandes.</value></data>
+  <data name="renter.alertsFlashCreated" xml:space="preserve"><value>Alerte créée.</value></data>
+  <data name="renter.alertsFlashPaused" xml:space="preserve"><value>Alerte mise en pause.</value></data>
+  <data name="renter.alertsFlashResumed" xml:space="preserve"><value>Alerte reprise.</value></data>
+  <data name="renter.alertsFlashDeleted" xml:space="preserve"><value>Alerte supprimée.</value></data>
+  <data name="renter.alertsNoPets" xml:space="preserve"><value>Sans animaux</value></data>
+  <data name="renter.accountProfileSaved" xml:space="preserve"><value>Profil mis à jour.</value></data>
+  <data name="renter.accountPasswordChanged" xml:space="preserve"><value>Mot de passe modifié.</value></data>
+  <data name="renter.accountPhone" xml:space="preserve"><value>Téléphone</value></data>
+  <data name="renter.accountPhoneOptional" xml:space="preserve"><value>(facultatif)</value></data>
+  <data name="renter.accountPhonePlaceholder" xml:space="preserve"><value>(514) 555-0100</value></data>
+  <data name="renter.inquiryViewed" xml:space="preserve"><value>Vu</value></data>
+  <data name="renter.inquiryPending" xml:space="preserve"><value>En attente</value></data>
 </root>

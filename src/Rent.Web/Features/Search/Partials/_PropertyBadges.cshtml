@@ -1,12 +1,12 @@
-@model Rent.Web.Features.Search.PropertyCard
-@if (Model.EffectiveTier == Rent.Web.Domain.ListingTier.Featured)
+@model Rent.Web.Domain.ListingTier
+@if (Model == Rent.Web.Domain.ListingTier.Featured)
 {
     <span class="inline-flex items-center gap-1 bg-gradient-to-r from-amber-400 to-orange-500 text-white text-[10px] uppercase tracking-wider font-bold px-2 py-1 rounded-md shadow-lg shadow-amber-500/40">
         <icon name="sparkles" class="h-3 w-3" />
         @L["detail.featured"]
     </span>
 }
-else if (Model.EffectiveTier == Rent.Web.Domain.ListingTier.Promoted)
+else if (Model == Rent.Web.Domain.ListingTier.Promoted)
 {
     <span class="inline-flex items-center gap-1 bg-gradient-to-r from-brand-500 to-cyan-500 text-white text-[10px] uppercase tracking-wider font-bold px-2 py-1 rounded-md">
         <icon name="arrow-right" class="h-3 w-3" />
