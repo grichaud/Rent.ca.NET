@@ -210,9 +210,10 @@ public class LandlordManageTests : IClassFixture<RentAppFactory>
                 new KeyValuePair<string, string>("Input.CityName", "Toronto"),
                 new KeyValuePair<string, string>("Input.Province", "ON"),
                 new KeyValuePair<string, string>("Input.PostalCode", "M5H 2N2"),
-                new KeyValuePair<string, string>("Input.Bedrooms", "2"),
-                new KeyValuePair<string, string>("Input.Bathrooms", "1"),
-                new KeyValuePair<string, string>("Input.Price", "2100")
+                new KeyValuePair<string, string>("Input.Units[0].Bedrooms", "2"),
+                new KeyValuePair<string, string>("Input.Units[0].Bathrooms", "1"),
+                new KeyValuePair<string, string>("Input.Units[0].Price", "2100"),
+                new KeyValuePair<string, string>("Input.Units[0].AvailableUnits", "1")
             }));
 
         resp.StatusCode.Should().Be(HttpStatusCode.Redirect);
@@ -222,6 +223,36 @@ public class LandlordManageTests : IClassFixture<RentAppFactory>
         var created = await db.Properties.AsNoTracking().FirstOrDefaultAsync(p => p.Title == title);
         created.Should().NotBeNull();
         created!.LandlordProfileId.Should().Be(landlord.Id);
+    }
+
+    // Antes Edit solo exponia la unidad mas barata: las demas eran invisibles e ineditables
+    // para su dueño, aunque el detalle publico si las mostraba a los inquilinos.
+    [Fact]
+    public async Task Edit_MultiUnitListing_ShowsEveryUnitAndKeepsTheirIds()
+    {
+        var landlord = await CreateLandlordAsync("landlord-multiunit");
+        var property = await CreatePropertyAsync(landlord.Id, "Multi Unit Building", $"multiunit-{Guid.NewGuid():N}");
+
+        Guid[] unitIds;
+        using (var scope = _factory.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            var p = await db.Properties.Include(x => x.Units).FirstAsync(x => x.Id == property.Id);
+            // Add en el DbSet, no solo en la navegacion: Unit.Id ya viene con Guid.NewGuid() y EF
+            // tomaria la unidad por existente (UPDATE de una fila que no existe).
+            db.Units.Add(new Unit { Id = Guid.NewGuid(), PropertyId = p.Id, Bedrooms = 3, Bathrooms = 2m, Price = 3400m, AvailableUnits = 1 });
+            db.Units.Add(new Unit { Id = Guid.NewGuid(), PropertyId = p.Id, Bedrooms = 1, Bathrooms = 1m, Price = 1600m, AvailableUnits = 1 });
+            await db.SaveChangesAsync();
+            unitIds = await db.Units.Where(u => u.PropertyId == p.Id).Select(u => u.Id).ToArrayAsync();
+        }
+
+        using var client = await TestAuth.SignInAsync(_factory, landlord.Email!, TestAuth.DefaultPassword);
+        var body = await (await client.GetAsync($"/en/landlord/listings/edit/{property.Id}")).Content.ReadAsStringAsync();
+
+        // Las 3 unidades se renderizan, cada una con su Id para que el POST haga merge y no recree.
+        foreach (var id in unitIds)
+            body.Should().Contain(id.ToString());
+        body.Should().Contain("Input.Units[2].Price");
     }
 
     // Editar el titulo regeneraba el Slug -> la URL publica cambiaba sola y los links ya
@@ -243,9 +274,10 @@ public class LandlordManageTests : IClassFixture<RentAppFactory>
                 new KeyValuePair<string, string>("Input.CityName", "Toronto"),
                 new KeyValuePair<string, string>("Input.Province", "ON"),
                 new KeyValuePair<string, string>("Input.PostalCode", "M5V 1A1"),
-                new KeyValuePair<string, string>("Input.Bedrooms", "2"),
-                new KeyValuePair<string, string>("Input.Bathrooms", "1"),
-                new KeyValuePair<string, string>("Input.Price", "2000")
+                new KeyValuePair<string, string>("Input.Units[0].Bedrooms", "2"),
+                new KeyValuePair<string, string>("Input.Units[0].Bathrooms", "1"),
+                new KeyValuePair<string, string>("Input.Units[0].Price", "2000"),
+                new KeyValuePair<string, string>("Input.Units[0].AvailableUnits", "1")
             }));
         resp.StatusCode.Should().Be(HttpStatusCode.Redirect);
 

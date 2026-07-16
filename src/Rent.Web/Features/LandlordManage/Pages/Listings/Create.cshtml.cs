@@ -45,7 +45,7 @@ public class CreateModel : PageModel
 
     public async Task OnGetAsync(CancellationToken ct)
     {
-        Input.AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(30));
+        Input.Units = [new UnitInput { AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(30)) }];
         await LoadLookupsAsync(ct);
     }
 
@@ -94,17 +94,20 @@ public class CreateModel : PageModel
             foreach (var a in chosen) property.Amenities.Add(a);
         }
 
-        property.Units.Add(new Unit
+        foreach (var u in Input.Units)
         {
-            Id = Guid.NewGuid(),
-            PropertyId = property.Id,
-            Bedrooms = Input.Bedrooms,
-            Bathrooms = Input.Bathrooms,
-            SqFt = Input.SqFt,
-            Price = Input.Price,
-            AvailableDate = Input.AvailableDate,
-            AvailableUnits = 1
-        });
+            property.Units.Add(new Unit
+            {
+                Id = Guid.NewGuid(),
+                PropertyId = property.Id,
+                Bedrooms = u.Bedrooms,
+                Bathrooms = u.Bathrooms,
+                SqFt = u.SqFt,
+                Price = u.Price,
+                AvailableDate = u.AvailableDate,
+                AvailableUnits = u.AvailableUnits
+            });
+        }
 
         if (Input.NewImages is { Count: > 0 })
         {

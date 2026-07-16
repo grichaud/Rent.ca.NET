@@ -97,11 +97,11 @@
                             @item.CityName, @item.Province
                             @if (item.Price.HasValue)
                             {
-                                <text>&middot; @string.Format(L["listings.beds.many"].Value, item.Bedrooms) &middot; $@item.Price.Value.ToString("N0")@L["listings.perMonth"]</text>
+                                <text> &middot; @string.Format(L["listings.beds.many"].Value, item.Bedrooms) &middot; $@item.Price.Value.ToString("N0")@L["listings.perMonth"]</text>
                             }
                             @if (item.UnitCount > 1)
                             {
-                                <text>&middot; @string.Format(L["landlord.formUnitN"].Value, item.UnitCount)</text>
+                                <text> &middot; @string.Format(L["landlord.unitsCount"].Value, item.UnitCount)</text>
                             }
                         </p>
                         <p class="text-xs text-slate-400 dark:text-white/40 mt-1">

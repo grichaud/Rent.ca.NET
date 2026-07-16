@@ -763,4 +763,5 @@
   <data name="landlord.accountBrandSaved" xml:space="preserve"><value>Brand updated.</value></data>
   <data name="landlord.formTitlePlaceholder" xml:space="preserve"><value>Bright 2BR in downtown Toronto</value></data>
   <data name="landlord.backToListings" xml:space="preserve"><value>Back to listings</value></data>
+  <data name="landlord.unitsCount" xml:space="preserve"><value>{0} units</value></data>
 </root>

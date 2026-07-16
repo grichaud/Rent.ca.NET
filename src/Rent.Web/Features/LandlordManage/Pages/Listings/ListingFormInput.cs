@@ -26,11 +26,20 @@ public class ListingFormInput
 
     public List<Guid> AmenityIds { get; set; } = [];
 
+    public List<UnitInput> Units { get; set; } = [new UnitInput()];
+
+    public IFormFileCollection? NewImages { get; set; }
+}
+
+public class UnitInput
+{
+    /// <summary>Null para unidades nuevas. En Edit identifica la fila existente a actualizar.</summary>
+    public Guid? Id { get; set; }
+
     public int Bedrooms { get; set; } = 1;
     public decimal Bathrooms { get; set; } = 1;
     public int? SqFt { get; set; }
     public decimal Price { get; set; }
     public DateOnly? AvailableDate { get; set; }
-
-    public IFormFileCollection? NewImages { get; set; }
+    public int AvailableUnits { get; set; } = 1;
 }

@@ -65,7 +65,6 @@ public class EditModel : PageModel
 
         await LoadLookupsAsync(ct);
 
-        var unit = property.Units.OrderBy(u => u.Price).FirstOrDefault();
         Input = new ListingFormInput
         {
             Title = property.Title,
@@ -84,12 +83,24 @@ public class EditModel : PageModel
             YearBuilt = property.YearBuilt,
             TotalFloors = property.TotalFloors,
             AmenityIds = property.Amenities.Select(a => a.Id).ToList(),
-            Bedrooms = unit?.Bedrooms ?? 0,
-            Bathrooms = unit?.Bathrooms ?? 1m,
-            SqFt = unit?.SqFt,
-            Price = unit?.Price ?? 0m,
-            AvailableDate = unit?.AvailableDate
+            // TODAS las unidades: antes solo se exponia la mas barata y las demas eran
+            // invisibles e ineditables para su dueño, aunque los inquilinos si las veian.
+            Units = property.Units
+                .OrderBy(u => u.Price)
+                .Select(u => new UnitInput
+                {
+                    Id = u.Id,
+                    Bedrooms = u.Bedrooms,
+                    Bathrooms = u.Bathrooms,
+                    SqFt = u.SqFt,
+                    Price = u.Price,
+                    AvailableDate = u.AvailableDate,
+                    AvailableUnits = u.AvailableUnits
+                })
+                .ToList()
         };
+
+        if (Input.Units.Count == 0) Input.Units.Add(new UnitInput());
 
         ExistingImages = property.Images.OrderByDescending(i => i.IsPrimary).ThenBy(i => i.DisplayOrder).ToList();
         return Page();
@@ -154,14 +165,34 @@ public class EditModel : PageModel
         // El Slug NO se regenera: se fija al crear. Regenerarlo cambiaba la URL publica al
         // editar el titulo y dejaba en 404 los bookmarks y los links ya enviados por email.
 
-        var unit = property.Units.OrderBy(u => u.Price).FirstOrDefault();
-        if (unit is not null)
+        // Merge por Id: NO borrar-y-recrear. Recrear romperia las FK y perderia CreatedAt.
+        var keptIds = Input.Units.Where(u => u.Id.HasValue).Select(u => u.Id!.Value).ToHashSet();
+        foreach (var removed in property.Units.Where(u => !keptIds.Contains(u.Id)).ToList())
         {
-            unit.Bedrooms = Input.Bedrooms;
-            unit.Bathrooms = Input.Bathrooms;
-            unit.SqFt = Input.SqFt;
-            unit.Price = Input.Price;
-            unit.AvailableDate = Input.AvailableDate;
+            // Solo la coleccion: Unit.PropertyId es requerido, asi que EF borra el huerfano en
+            // cascada. Anadir tambien _db.Units.Remove emite un segundo DELETE de la misma fila
+            // y el segundo afecta 0 filas -> DbUpdateConcurrencyException.
+            property.Units.Remove(removed);
+        }
+
+        foreach (var input in Input.Units)
+        {
+            var unit = input.Id.HasValue ? property.Units.FirstOrDefault(u => u.Id == input.Id.Value) : null;
+            if (unit is null)
+            {
+                // Add explicito en el DbSet: Unit.Id se inicializa con Guid.NewGuid(), asi que al
+                // añadirla solo por la navegacion EF ve la clave puesta, la cree existente y emite
+                // UPDATE en vez de INSERT (0 filas -> DbUpdateConcurrencyException).
+                unit = new Unit { Id = Guid.NewGuid(), PropertyId = property.Id };
+                _db.Units.Add(unit);
+                property.Units.Add(unit);
+            }
+            unit.Bedrooms = input.Bedrooms;
+            unit.Bathrooms = input.Bathrooms;
+            unit.SqFt = input.SqFt;
+            unit.Price = input.Price;
+            unit.AvailableDate = input.AvailableDate;
+            unit.AvailableUnits = input.AvailableUnits;
             unit.UpdatedAt = DateTimeOffset.UtcNow;
         }
 

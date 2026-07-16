@@ -141,33 +141,56 @@
 
 <section class="glass-card p-6 space-y-4">
     <h2 class="font-semibold text-slate-900 dark:text-white">@L["landlord.formUnits"]</h2>
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div>
-            <label asp-for="Bedrooms" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["landlord.formBedrooms"]</label>
-            <input asp-for="Bedrooms" type="number" min="0" max="20" class="glass-input" />
-            <span asp-validation-for="Bedrooms" role="alert" class="text-xs text-red-600 dark:text-red-400"></span>
-        </div>
-        <div>
-            <label asp-for="Bathrooms" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["landlord.formBathrooms"]</label>
-            <input asp-for="Bathrooms" type="number" step="0.5" min="0.5" class="glass-input" />
-            <span asp-validation-for="Bathrooms" role="alert" class="text-xs text-red-600 dark:text-red-400"></span>
-        </div>
-        <div>
-            <label asp-for="SqFt" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["landlord.formSqFt"]</label>
-            <input asp-for="SqFt" type="number" min="0" class="glass-input" />
-            <span asp-validation-for="SqFt" role="alert" class="text-xs text-red-600 dark:text-red-400"></span>
-        </div>
-        <div>
-            <label asp-for="Price" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["landlord.formPrice"]</label>
-            <input asp-for="Price" type="number" step="50" min="0" class="glass-input" />
-            <span asp-validation-for="Price" role="alert" class="text-xs text-red-600 dark:text-red-400"></span>
-        </div>
+
+    @* Binding indexado: Input.Units[i].*. landlord-units.js renumera al agregar/quitar. *@
+    <div data-units-list data-legend-template="@L["landlord.formUnitN"]" class="space-y-3">
+        @for (var i = 0; i < Model.Units.Count; i++)
+        {
+            var u = Model.Units[i];
+            <fieldset data-unit-row class="rounded-xl border border-gray-200 dark:border-white/10 p-4">
+                <div class="flex items-center justify-between mb-3">
+                    <legend class="text-xs uppercase tracking-wider font-semibold text-slate-500 dark:text-white/50" data-unit-legend>
+                        @string.Format(L["landlord.formUnitN"].Value, i + 1)
+                    </legend>
+                    <button type="button" data-unit-remove
+                            class="text-xs text-red-600 dark:text-red-400 hover:underline @(Model.Units.Count == 1 ? "hidden" : "")">
+                        @L["landlord.formRemoveUnit"]
+                    </button>
+                </div>
+                <input type="hidden" name="Input.Units[@i].Id" value="@(u.Id?.ToString() ?? "")" data-unit-field="Id" />
+                <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                    <div>
+                        <label for="unit-@i-beds" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["landlord.formBedrooms"]</label>
+                        <input id="unit-@i-beds" name="Input.Units[@i].Bedrooms" data-unit-field="Bedrooms" value="@u.Bedrooms" type="number" min="0" max="20" class="glass-input" />
+                    </div>
+                    <div>
+                        <label for="unit-@i-baths" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["landlord.formBathrooms"]</label>
+                        <input id="unit-@i-baths" name="Input.Units[@i].Bathrooms" data-unit-field="Bathrooms" value="@u.Bathrooms" type="number" step="0.5" min="0.5" class="glass-input" />
+                    </div>
+                    <div>
+                        <label for="unit-@i-sqft" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["landlord.formSqFt"]</label>
+                        <input id="unit-@i-sqft" name="Input.Units[@i].SqFt" data-unit-field="SqFt" value="@u.SqFt" type="number" min="0" class="glass-input" />
+                    </div>
+                    <div>
+                        <label for="unit-@i-price" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["landlord.formPrice"]</label>
+                        <input id="unit-@i-price" name="Input.Units[@i].Price" data-unit-field="Price" value="@u.Price" type="number" step="50" min="0" class="glass-input" />
+                    </div>
+                    <div>
+                        <label for="unit-@i-avail" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["landlord.formAvailableDate"]</label>
+                        <input id="unit-@i-avail" name="Input.Units[@i].AvailableDate" data-unit-field="AvailableDate" value="@(u.AvailableDate?.ToString("yyyy-MM-dd"))" type="date" class="glass-input" />
+                    </div>
+                </div>
+                <input type="hidden" name="Input.Units[@i].AvailableUnits" value="@u.AvailableUnits" data-unit-field="AvailableUnits" />
+            </fieldset>
+        }
     </div>
-    <div class="grid sm:grid-cols-2 gap-3">
-        <div>
-            <label asp-for="AvailableDate" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["landlord.formAvailableDate"]</label>
-            <input asp-for="AvailableDate" type="date" class="glass-input" />
-        </div>
+
+    <button type="button" data-unit-add class="glass-button inline-flex items-center gap-2 text-sm">
+        <icon name="plus" class="h-4 w-4" />
+        @L["landlord.formAddUnit"]
+    </button>
+
+    <div class="grid sm:grid-cols-2 gap-3 pt-2 border-t border-gray-200 dark:border-white/10">
         <div>
             <label asp-for="LeaseTerm" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["landlord.formLeaseTerm"]</label>
             <select asp-for="LeaseTerm" class="glass-input">
