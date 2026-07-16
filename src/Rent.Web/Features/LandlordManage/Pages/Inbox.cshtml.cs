@@ -28,10 +28,12 @@ public class InboxModel : PageModel
     public IReadOnlyList<InquiryRow> Inquiries { get; private set; } = [];
     public int TotalCount { get; private set; }
     public int UnreadCount { get; private set; }
+    public string? FlashMessage { get; private set; }
 
     public async Task OnGetAsync(CancellationToken ct)
     {
         var userId = Guid.Parse(_userManager.GetUserId(User)!);
+        FlashMessage = TempData["InquiryAction"] as string;
 
         var baseQuery = _db.ContactInquiries
             .AsNoTracking()
@@ -42,8 +44,8 @@ public class InboxModel : PageModel
 
         var filtered = Filter == "unread" ? baseQuery.Where(i => !i.IsRead) : baseQuery;
 
-        Inquiries = await filtered
-            .OrderByDescending(i => i.CreatedAt)
+        // Over-fetch + sort in memory to avoid SQLite ORDER BY DateTimeOffset issue on tests.
+        var raw = await filtered
             .Select(i => new InquiryRow
             {
                 Id = i.Id,
@@ -59,6 +61,8 @@ public class InboxModel : PageModel
                 CreatedAt = i.CreatedAt
             })
             .ToListAsync(ct);
+
+        Inquiries = raw.OrderByDescending(i => i.CreatedAt).ToList();
     }
 
     public async Task<IActionResult> OnPostToggleAsync(Guid inquiryId, string? filter, CancellationToken ct)
@@ -72,7 +76,7 @@ public class InboxModel : PageModel
         {
             inquiry.IsRead = !inquiry.IsRead;
             await _db.SaveChangesAsync(ct);
-            TempData["InquiryAction"] = inquiry.IsRead ? "Marked as read." : "Marked as unread.";
+            TempData["InquiryAction"] = inquiry.IsRead ? "landlord.markedRead" : "landlord.markedUnread";
         }
 
         var q = string.IsNullOrEmpty(filter) ? "" : $"?filter={filter}";

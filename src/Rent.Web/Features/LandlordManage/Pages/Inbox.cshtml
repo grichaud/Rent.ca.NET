@@ -1,70 +1,98 @@
 @page "/{culture:locale}/landlord/inbox"
 @model Rent.Web.Features.LandlordManage.Pages.InboxModel
 @{
-    ViewData["Title"] = "Inbox";
+    ViewData["Title"] = L["landlord.inboxTitle"].Value;
+    var culture = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+    if (culture != "en" && culture != "fr") { culture = "en"; }
 }
 
-<section class="flex items-end justify-between mb-6">
-    <div>
-        <h1 class="font-sans font-bold tracking-tight text-3xl text-slate-900 dark:text-white">Inbox</h1>
-        <p class="text-slate-600 dark:text-white/70 mt-1">@Model.TotalCount inquir@(Model.TotalCount == 1 ? "y" : "ies") &middot; @Model.UnreadCount unread.</p>
+<div class="space-y-6">
+    <div class="flex items-end justify-between gap-3 flex-wrap">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">@L["landlord.inboxTitle"]</h1>
+            <p class="mt-1 text-sm text-slate-600 dark:text-white/70">
+                @string.Format(L["landlord.inboxCount"].Value, Model.TotalCount) &middot; @string.Format(L["landlord.inboxUnreadCount"].Value, Model.UnreadCount)
+            </p>
+        </div>
+        <div class="flex gap-2 text-sm">
+            <a href="/@culture/landlord/inbox" aria-current="@(Model.Filter != "unread" ? "page" : null)"
+               class="glass-button text-slate-700 dark:text-white/80 @(Model.Filter != "unread" ? "!bg-brand-500 !text-white" : "")">@L["landlord.filterAll"]</a>
+            <a href="/@culture/landlord/inbox?filter=unread" aria-current="@(Model.Filter == "unread" ? "page" : null)"
+               class="glass-button text-slate-700 dark:text-white/80 @(Model.Filter == "unread" ? "!bg-brand-500 !text-white" : "")">@L["landlord.filterUnread"]</a>
+        </div>
     </div>
-    <div class="flex gap-2 text-sm">
-        <a href="/landlord/inbox" class="glass-button text-slate-700 dark:text-white/80 @(Model.Filter == "all" ? "!bg-brand-500 !text-white" : "")">All</a>
-        <a href="/landlord/inbox?filter=unread" class="glass-button text-slate-700 dark:text-white/80 @(Model.Filter == "unread" ? "!bg-brand-500 !text-white" : "")">Unread</a>
-    </div>
-</section>
 
-@if (TempData["InquiryAction"] as string is string msg)
-{
-    <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm rounded-xl p-3 mb-6">@msg</div>
-}
+    @if (Model.FlashMessage is not null)
+    {
+        <div role="status" class="p-3 rounded-lg border border-emerald-300 bg-emerald-50 dark:border-emerald-500/40 dark:bg-emerald-500/10 text-sm text-emerald-700 dark:text-emerald-300 inline-flex items-center gap-2">
+            <icon name="check-circle" class="h-4 w-4" />
+            @L[Model.FlashMessage]
+        </div>
+    }
 
-@if (Model.Inquiries.Count == 0)
-{
-    <div class="glass-card p-10 text-center">
-        <p class="text-slate-600 dark:text-white/70">No inquiries @(Model.Filter == "unread" ? "unread" : "yet").</p>
-    </div>
-}
-else
-{
-    <div class="space-y-3">
-        @foreach (var i in Model.Inquiries)
-        {
-            <article class="glass-card p-5 @(!i.IsRead ? "border-l-4 border-l-brand-500" : "")">
-                <div class="flex items-start justify-between gap-4">
-                    <div class="min-w-0 flex-1">
-                        <div class="flex items-center gap-2 flex-wrap">
-                            <span class="font-semibold text-slate-900 dark:text-white">@i.SenderName</span>
-                            <a href="mailto:@i.SenderEmail" class="text-sm text-brand-600 hover:underline">@i.SenderEmail</a>
-                            @if (!string.IsNullOrEmpty(i.SenderPhone))
-                            {
-                                <span class="text-sm text-slate-500 dark:text-white/50">&middot; @i.SenderPhone</span>
-                            }
-                            @if (!i.IsRead)
-                            {
-                                <span class="text-[10px] uppercase font-semibold bg-brand-50 text-brand-700 border border-brand-200 px-1.5 py-0.5 rounded">New</span>
-                            }
+    @if (Model.Inquiries.Count == 0)
+    {
+        <div class="glass-card p-10 text-center">
+            <div class="inline-flex h-16 w-16 rounded-2xl bg-cyan-500/15 items-center justify-center mb-4">
+                <icon name="message-square" class="h-7 w-7 text-cyan-500 dark:text-cyan-300" />
+            </div>
+            <h2 class="font-sans font-bold tracking-tight text-2xl text-slate-900 dark:text-white">
+                @(Model.Filter == "unread" ? L["landlord.inboxEmptyUnread"].Value : L["landlord.inboxEmpty"].Value)
+            </h2>
+            <p class="text-slate-500 dark:text-white/60 mt-2 max-w-sm mx-auto">@L["landlord.inboxEmptyDesc"]</p>
+        </div>
+    }
+    else
+    {
+        <div class="space-y-3">
+            @foreach (var i in Model.Inquiries)
+            {
+                <article class="glass-card p-5 @(!i.IsRead ? "border-l-4 border-l-brand-500" : "")">
+                    <div class="flex items-start justify-between gap-4">
+                        <div class="min-w-0 flex-1">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <span class="font-semibold text-slate-900 dark:text-white">@i.SenderName</span>
+                                <a href="mailto:@i.SenderEmail" class="text-sm text-brand-600 dark:text-brand-400 hover:underline">@i.SenderEmail</a>
+                                @if (!string.IsNullOrEmpty(i.SenderPhone))
+                                {
+                                    <span class="text-sm text-slate-500 dark:text-white/50">&middot; @i.SenderPhone</span>
+                                }
+                                @if (!i.IsRead)
+                                {
+                                    <span class="text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-md bg-brand-500/20 text-brand-700 dark:text-brand-300">@L["landlord.inboxNew"]</span>
+                                }
+                            </div>
+                            <div class="text-xs text-slate-500 dark:text-white/50 mt-1">
+                                @Rent.Web.Features.Shared.DateFormat.Long(i.CreatedAt) &middot; @L["landlord.inboxRe"]
+                                @if (!string.IsNullOrEmpty(i.CitySlug))
+                                {
+                                    <a href="/@culture/@i.CitySlug/@i.PropertySlug" class="hover:underline">@i.PropertyTitle</a>
+                                }
+                                else
+                                {
+                                    <span>@i.PropertyTitle</span>
+                                }
+                                @if (i.MoveInDate.HasValue)
+                                {
+                                    <span class="ml-2">@string.Format(L["landlord.inboxMoveIn"].Value, Rent.Web.Features.Shared.DateFormat.Long(i.MoveInDate.Value))</span>
+                                }
+                            </div>
+                            <p class="text-slate-700 dark:text-white/80 mt-3 whitespace-pre-line">@i.Message</p>
                         </div>
-                        <div class="text-xs text-slate-500 dark:text-white/50 mt-1">
-                            @i.CreatedAt.ToString("MMM d, yyyy h:mm tt") &middot; re: <a href="/@i.CitySlug/@i.PropertySlug" class="hover:underline">@i.PropertyTitle</a>
-                            @if (i.MoveInDate.HasValue)
-                            {
-                                <span class="ml-2">move-in @i.MoveInDate.Value.ToString("MMM d, yyyy")</span>
-                            }
-                        </div>
-                        <p class="text-slate-700 dark:text-white/80 mt-3 whitespace-pre-line">@i.Message</p>
+                        @* Sin action: postea a la URL actual, que ya lleva la cultura. Un action absoluto
+                           sin /{culture} no matchea la ruta y el middleware solo redirige GET -> 404. *@
+                        <form method="post" asp-page-handler="Toggle" class="flex-shrink-0">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="inquiryId" value="@i.Id" />
+                            <input type="hidden" name="filter" value="@Model.Filter" />
+                            <button type="submit" class="glass-button text-slate-700 dark:text-white/80 text-xs whitespace-nowrap"
+                                    aria-label="@string.Format(L[i.IsRead ? "landlord.markUnreadFor" : "landlord.markReadFor"].Value, i.SenderName)">
+                                @(i.IsRead ? L["landlord.inboxMarkUnread"].Value : L["landlord.inboxMarkRead"].Value)
+                            </button>
+                        </form>
                     </div>
-                    <form method="post" action="/landlord/inbox?handler=Toggle" class="flex-shrink-0">
-                        @Html.AntiForgeryToken()
-                        <input type="hidden" name="inquiryId" value="@i.Id" />
-                        <input type="hidden" name="filter" value="@Model.Filter" />
-                        <button type="submit" class="glass-button text-slate-700 dark:text-white/80 text-xs whitespace-nowrap">
-                            @(i.IsRead ? "Mark unread" : "Mark read")
-                        </button>
-                    </form>
-                </div>
-            </article>
-        }
-    </div>
-}
+                </article>
+            }
+        </div>
+    }
+</div>

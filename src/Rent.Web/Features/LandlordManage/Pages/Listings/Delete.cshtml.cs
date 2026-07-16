@@ -50,7 +50,7 @@ public class DeleteModel : PageModel
         prop.UpdatedAt = DateTimeOffset.UtcNow;
         await _db.SaveChangesAsync(ct);
 
-        TempData["ListingSuccess"] = $"\"{prop.Title}\" has been deactivated.";
+        TempData["ListingSuccess"] = "landlord.listingDeactivated";
         return Redirect(this.Localized("/landlord/listings"));
     }
 }

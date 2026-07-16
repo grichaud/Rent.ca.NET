@@ -104,7 +104,8 @@
                 <div class="flex items-start justify-between gap-3">
                     <h1 class="font-sans font-bold tracking-tight text-3xl md:text-4xl text-slate-900 dark:text-white">@p.Title</h1>
                     <div class="flex items-center gap-2 shrink-0">
-                        @if (Model.IsAuthenticated)
+                        @* El toggle exige rol Renter: mostrarselo a un landlord lo mandaba a /login estando logueado. *@
+                        @if (Model.IsAuthenticated && User.IsInRole(Rent.Web.Infrastructure.Identity.Roles.Renter))
                         {
                             <form method="post" action="/renter/favorites/toggle">
                                 @Html.AntiForgeryToken()
@@ -121,8 +122,10 @@
                                 </button>
                             </form>
                         }
-                        else
+                        else if (!Model.IsAuthenticated)
                         {
+                            @* Anonimo: el corazon invita a registrarse. Un landlord logueado no ve
+                               corazon: los favoritos son solo-Renter y el link lo mandaria a /login. *@
                             <a href="/@culture/login?returnUrl=@Uri.EscapeDataString($"/{culture}/{Model.CitySlug}/{p.Slug}")"
                                class="h-11 w-11 inline-flex items-center justify-center rounded-full bg-white/80 dark:bg-slate-900/60 backdrop-blur-md text-slate-700 dark:text-white/80 hover:text-rose-500 hover:scale-110 transition-all duration-200 shadow-sm border border-gray-200 dark:border-white/10"
                                aria-label="@L["detail.loginToSave"]" title="@L["detail.loginToSave"]">

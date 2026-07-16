@@ -1,0 +1,244 @@
+@using Rent.Web.Domain
+@model Rent.Web.Features.LandlordManage.Pages.Listings.ListingFormInput
+@{
+    var amenities = ViewData["Amenities"] as IReadOnlyList<Amenity> ?? [];
+    var isEdit = ViewData["IsEdit"] is true;
+
+    // Lista curada, igual que _SidebarFilters: Other no se ofrece (solo lo produce el AI chat).
+    var selectableTypes = new[]
+    {
+        PropertyType.Apartment, PropertyType.Condo, PropertyType.House, PropertyType.Townhouse,
+        PropertyType.Basement, PropertyType.Studio, PropertyType.Loft, PropertyType.Duplex
+    };
+
+    string TypeLabel(PropertyType t) => t switch
+    {
+        PropertyType.Apartment => L["filters.apartment"].Value,
+        PropertyType.Condo => L["filters.condo"].Value,
+        PropertyType.House => L["filters.house"].Value,
+        PropertyType.Townhouse => L["filters.townhouse"].Value,
+        PropertyType.Basement => L["filters.basement"].Value,
+        PropertyType.Studio => L["filters.studio"].Value,
+        PropertyType.Loft => L["filters.loft"].Value,
+        PropertyType.Duplex => L["filters.duplex"].Value,
+        _ => L["filters.other"].Value
+    };
+
+    string LeaseLabel(LeaseTerm t) => t switch
+    {
+        LeaseTerm.MonthToMonth => L["detail.lease.monthToMonth"].Value,
+        LeaseTerm.SixMonths => L["detail.lease.sixMonths"].Value,
+        LeaseTerm.OneYear => L["detail.lease.oneYear"].Value,
+        LeaseTerm.TwoYears => L["detail.lease.twoYears"].Value,
+        _ => L["detail.lease.flexible"].Value
+    };
+
+    string StatusLabel(ListingStatus s) => s switch
+    {
+        ListingStatus.Active => L["landlord.statusActive"].Value,
+        ListingStatus.Draft => L["landlord.statusDraft"].Value,
+        ListingStatus.Inactive => L["landlord.statusInactive"].Value,
+        _ => L["landlord.statusArchived"].Value
+    };
+
+    // Mismo fallback title-case que Detail.cshtml para categorias sin key (p. ej. "parking").
+    string CatLabel(string key) => key switch
+    {
+        "building" => L["detail.amenityCat.building"].Value,
+        "unit" => L["detail.amenityCat.unit"].Value,
+        "nearby" => L["detail.amenityCat.nearby"].Value,
+        "other" => L["detail.amenityCat.other"].Value,
+        _ => System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(key)
+    };
+
+    var provinces = new[] { "AB", "BC", "MB", "NB", "NL", "NS", "NT", "NU", "ON", "PE", "QC", "SK", "YT" };
+    var statuses = new[] { ListingStatus.Active, ListingStatus.Draft, ListingStatus.Inactive };
+}
+
+<section class="glass-card p-6 space-y-4">
+    <h2 class="font-semibold text-slate-900 dark:text-white">@L["landlord.formTitle"]</h2>
+    <div>
+        <label asp-for="Title" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["landlord.formTitle"]</label>
+        <input asp-for="Title" class="glass-input" placeholder="@L["landlord.formTitlePlaceholder"]" />
+        <span asp-validation-for="Title" role="alert" class="text-xs text-red-600 dark:text-red-400"></span>
+    </div>
+    <div>
+        <label asp-for="Description" class="block text-sm text-slate-700 dark:text-white/80 mb-1">
+            @L["landlord.formDescription"] <span class="text-slate-400 dark:text-white/40 font-normal">@L["landlord.formOptional"]</span>
+        </label>
+        <textarea asp-for="Description" rows="5" class="glass-input"></textarea>
+        <span asp-validation-for="Description" role="alert" class="text-xs text-red-600 dark:text-red-400"></span>
+    </div>
+    <div class="grid sm:grid-cols-2 gap-3">
+        <div>
+            <label asp-for="PropertyType" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["landlord.formType"]</label>
+            <select asp-for="PropertyType" class="glass-input">
+                @foreach (var t in selectableTypes)
+                {
+                    <option value="@t">@TypeLabel(t)</option>
+                }
+            </select>
+            <span asp-validation-for="PropertyType" role="alert" class="text-xs text-red-600 dark:text-red-400"></span>
+        </div>
+        <div>
+            <label asp-for="Status" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["landlord.formStatus"]</label>
+            <select asp-for="Status" class="glass-input">
+                @foreach (var s in statuses)
+                {
+                    <option value="@s">@StatusLabel(s)</option>
+                }
+            </select>
+            <p class="text-xs text-slate-500 dark:text-white/50 mt-1">@L["landlord.formStatusHint"]</p>
+        </div>
+    </div>
+</section>
+
+<section class="glass-card p-6 space-y-4">
+    <h2 class="font-semibold text-slate-900 dark:text-white">@L["landlord.formAddress"]</h2>
+    <div>
+        <label asp-for="StreetAddress" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["landlord.formAddress"]</label>
+        <input asp-for="StreetAddress" class="glass-input" />
+        <span asp-validation-for="StreetAddress" role="alert" class="text-xs text-red-600 dark:text-red-400"></span>
+    </div>
+    <div class="grid grid-cols-2 gap-3">
+        <div>
+            <label asp-for="CityName" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["landlord.formCity"]</label>
+            <input asp-for="CityName" class="glass-input" placeholder="Toronto" list="landlord-cities" />
+            <datalist id="landlord-cities">
+                @foreach (var c in (ViewData["Cities"] as IReadOnlyList<City> ?? []))
+                {
+                    <option value="@c.Name"></option>
+                }
+            </datalist>
+            <span asp-validation-for="CityName" role="alert" class="text-xs text-red-600 dark:text-red-400"></span>
+        </div>
+        <div>
+            <label asp-for="Province" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["landlord.formProvince"]</label>
+            <select asp-for="Province" class="glass-input">
+                <option value="" disabled selected>@L["landlord.formSelectProvince"]</option>
+                @foreach (var p in provinces)
+                {
+                    <option value="@p">@p</option>
+                }
+            </select>
+            <span asp-validation-for="Province" role="alert" class="text-xs text-red-600 dark:text-red-400"></span>
+        </div>
+    </div>
+    <div class="grid grid-cols-2 gap-3">
+        <div>
+            <label asp-for="PostalCode" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["landlord.formPostalCode"]</label>
+            <input asp-for="PostalCode" class="glass-input" />
+            <span asp-validation-for="PostalCode" role="alert" class="text-xs text-red-600 dark:text-red-400"></span>
+        </div>
+        <div>
+            <label asp-for="Neighbourhood" class="block text-sm text-slate-700 dark:text-white/80 mb-1">
+                @L["landlord.formNeighbourhood"] <span class="text-slate-400 dark:text-white/40 font-normal">@L["landlord.formOptional"]</span>
+            </label>
+            <input asp-for="Neighbourhood" class="glass-input" />
+        </div>
+    </div>
+</section>
+
+<section class="glass-card p-6 space-y-4">
+    <h2 class="font-semibold text-slate-900 dark:text-white">@L["landlord.formUnits"]</h2>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div>
+            <label asp-for="Bedrooms" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["landlord.formBedrooms"]</label>
+            <input asp-for="Bedrooms" type="number" min="0" max="20" class="glass-input" />
+            <span asp-validation-for="Bedrooms" role="alert" class="text-xs text-red-600 dark:text-red-400"></span>
+        </div>
+        <div>
+            <label asp-for="Bathrooms" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["landlord.formBathrooms"]</label>
+            <input asp-for="Bathrooms" type="number" step="0.5" min="0.5" class="glass-input" />
+            <span asp-validation-for="Bathrooms" role="alert" class="text-xs text-red-600 dark:text-red-400"></span>
+        </div>
+        <div>
+            <label asp-for="SqFt" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["landlord.formSqFt"]</label>
+            <input asp-for="SqFt" type="number" min="0" class="glass-input" />
+            <span asp-validation-for="SqFt" role="alert" class="text-xs text-red-600 dark:text-red-400"></span>
+        </div>
+        <div>
+            <label asp-for="Price" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["landlord.formPrice"]</label>
+            <input asp-for="Price" type="number" step="50" min="0" class="glass-input" />
+            <span asp-validation-for="Price" role="alert" class="text-xs text-red-600 dark:text-red-400"></span>
+        </div>
+    </div>
+    <div class="grid sm:grid-cols-2 gap-3">
+        <div>
+            <label asp-for="AvailableDate" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["landlord.formAvailableDate"]</label>
+            <input asp-for="AvailableDate" type="date" class="glass-input" />
+        </div>
+        <div>
+            <label asp-for="LeaseTerm" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["landlord.formLeaseTerm"]</label>
+            <select asp-for="LeaseTerm" class="glass-input">
+                @foreach (var t in Enum.GetValues<LeaseTerm>())
+                {
+                    <option value="@t">@LeaseLabel(t)</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="flex gap-6">
+        <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-white/80">
+            <input asp-for="PetsAllowed" type="checkbox" class="rounded border-gray-300 dark:border-white/20" />
+            @L["landlord.formPetsAllowed"]
+        </label>
+        <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-white/80">
+            <input asp-for="Furnished" type="checkbox" class="rounded border-gray-300 dark:border-white/20" />
+            @L["landlord.formFurnished"]
+        </label>
+    </div>
+</section>
+
+<section class="glass-card p-6 space-y-4">
+    <h2 class="font-semibold text-slate-900 dark:text-white">@L["detail.aboutProperty"]</h2>
+    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+        <div>
+            <label asp-for="ParkingType" class="block text-sm text-slate-700 dark:text-white/80 mb-1">
+                @L["landlord.formParkingType"] <span class="text-slate-400 dark:text-white/40 font-normal">@L["landlord.formOptional"]</span>
+            </label>
+            <input asp-for="ParkingType" class="glass-input" />
+            <span asp-validation-for="ParkingType" role="alert" class="text-xs text-red-600 dark:text-red-400"></span>
+        </div>
+        <div>
+            <label asp-for="YearBuilt" class="block text-sm text-slate-700 dark:text-white/80 mb-1">
+                @L["landlord.formYearBuilt"] <span class="text-slate-400 dark:text-white/40 font-normal">@L["landlord.formOptional"]</span>
+            </label>
+            <input asp-for="YearBuilt" type="number" min="1800" max="2100" class="glass-input" />
+            <span asp-validation-for="YearBuilt" role="alert" class="text-xs text-red-600 dark:text-red-400"></span>
+        </div>
+        <div>
+            <label asp-for="TotalFloors" class="block text-sm text-slate-700 dark:text-white/80 mb-1">
+                @L["landlord.formTotalFloors"] <span class="text-slate-400 dark:text-white/40 font-normal">@L["landlord.formOptional"]</span>
+            </label>
+            <input asp-for="TotalFloors" type="number" min="1" max="200" class="glass-input" />
+            <span asp-validation-for="TotalFloors" role="alert" class="text-xs text-red-600 dark:text-red-400"></span>
+        </div>
+    </div>
+</section>
+
+@if (amenities.Count > 0)
+{
+    <section class="glass-card p-6 space-y-4">
+        <h2 class="font-semibold text-slate-900 dark:text-white">@L["landlord.formAmenities"]</h2>
+        @foreach (var group in amenities.GroupBy(a => a.Category ?? "other"))
+        {
+            <fieldset>
+                <legend class="text-xs uppercase tracking-wider font-semibold text-slate-500 dark:text-white/50 mb-2">
+                    @CatLabel(group.Key)
+                </legend>
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                    @foreach (var a in group.OrderBy(x => x.Name))
+                    {
+                        <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-white/80">
+                            <input type="checkbox" name="Input.AmenityIds" value="@a.Id"
+                                   checked="@Model.AmenityIds.Contains(a.Id)"
+                                   class="rounded border-gray-300 dark:border-white/20" />
+                            <span>@a.Name</span>
+                        </label>
+                    }
+                </div>
+            </fieldset>
+        }
+    </section>
+}

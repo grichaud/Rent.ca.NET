@@ -1,58 +1,121 @@
 @page "/{culture:locale}/landlord/listings"
+@using Rent.Web.Domain
 @model Rent.Web.Features.LandlordManage.Pages.Listings.IndexModel
 @{
-    ViewData["Title"] = "My listings";
+    ViewData["Title"] = L["landlord.listingsTitle"].Value;
+    var culture = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+    if (culture != "en" && culture != "fr") { culture = "en"; }
+
+    string StatusLabel(ListingStatus s) => s switch
+    {
+        ListingStatus.Active => L["landlord.statusActive"].Value,
+        ListingStatus.Draft => L["landlord.statusDraft"].Value,
+        ListingStatus.Inactive => L["landlord.statusInactive"].Value,
+        ListingStatus.Archived => L["landlord.statusArchived"].Value,
+        _ => s.ToString()
+    };
+
+    string StatusClass(ListingStatus s) => s switch
+    {
+        ListingStatus.Active => "bg-emerald-500/20 text-emerald-700 dark:text-emerald-300",
+        ListingStatus.Draft => "bg-amber-500/20 text-amber-700 dark:text-amber-300",
+        ListingStatus.Archived => "bg-slate-500/20 text-slate-600 dark:text-slate-300",
+        _ => "bg-slate-500/20 text-slate-600 dark:text-slate-300"
+    };
 }
 
-<section class="flex items-end justify-between mb-6">
-    <div>
-        <h1 class="font-sans font-bold tracking-tight text-3xl text-slate-900 dark:text-white">My listings</h1>
-        <p class="text-slate-600 dark:text-white/70 mt-1">@Model.Listings.Count listing@(Model.Listings.Count == 1 ? "" : "s").</p>
+<div class="space-y-6">
+    <div class="flex items-end justify-between gap-3 flex-wrap">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">@L["landlord.listingsTitle"]</h1>
+            <p class="mt-1 text-sm text-slate-600 dark:text-white/70">@string.Format(L["landlord.listingsCount"].Value, Model.Listings.Count)</p>
+        </div>
+        <a href="/@culture/landlord/listings/create" class="glass-button-primary inline-flex items-center gap-2 text-sm">
+            <icon name="plus" class="h-4 w-4" />
+            @L["landlord.listingsCreate"]
+        </a>
     </div>
-    <a href="/landlord/listings/create" class="glass-button-primary">+ New listing</a>
-</section>
 
-@if (TempData["ListingSuccess"] as string is string success)
-{
-    <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm rounded-xl p-3 mb-6">@success</div>
-}
+    @if (Model.FlashSuccess is not null)
+    {
+        <div role="status" class="p-3 rounded-lg border border-emerald-300 bg-emerald-50 dark:border-emerald-500/40 dark:bg-emerald-500/10 text-sm text-emerald-700 dark:text-emerald-300 inline-flex items-center gap-2">
+            <icon name="check-circle" class="h-4 w-4" />
+            @L[Model.FlashSuccess]
+        </div>
+    }
 
-@if (Model.Listings.Count == 0)
-{
-    <div class="glass-card p-10 text-center">
-        <p class="text-slate-600 dark:text-white/70">You don&rsquo;t have any listings yet.</p>
-        <a href="/landlord/listings/create" class="glass-button-primary inline-block mt-4">Create your first listing</a>
-    </div>
-}
-else
-{
-    <div class="grid gap-4">
-        @foreach (var item in Model.Listings)
-        {
-            <article class="glass-card p-5 flex gap-4 items-center">
-                @if (!string.IsNullOrEmpty(item.PrimaryImageUrl))
-                {
-                    <img src="@item.PrimaryImageUrl" alt="" class="w-24 h-24 rounded-xl object-cover" />
-                }
-                else
-                {
-                    <div class="w-24 h-24 rounded-xl bg-slate-100 dark:bg-white/5 flex items-center justify-center text-xs text-slate-400 dark:text-white/40">No image</div>
-                }
-                <div class="flex-1 min-w-0">
-                    <div class="flex items-center gap-2">
-                        <a href="/@item.CitySlug/@item.Slug" class="font-semibold text-slate-900 dark:text-white hover:underline line-clamp-1">@item.Title</a>
-                        <span class="text-xs px-2 py-0.5 rounded-md @(item.Status == Rent.Web.Domain.ListingStatus.Active ? "bg-emerald-50 text-emerald-700 border border-emerald-200" : "bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-white/70 border border-slate-200")">
-                            @item.Status
-                        </span>
+    @if (Model.FlashWarning is not null)
+    {
+        <div role="alert" class="p-3 rounded-lg border border-amber-300 bg-amber-50 dark:border-amber-500/40 dark:bg-amber-500/10 text-sm text-amber-700 dark:text-amber-300 inline-flex items-center gap-2">
+            <icon name="alert-circle" class="h-4 w-4" />
+            @L[Model.FlashWarning]
+        </div>
+    }
+
+    @if (Model.Listings.Count == 0)
+    {
+        <div class="glass-card p-10 text-center">
+            <div class="inline-flex h-16 w-16 rounded-2xl bg-brand-500/15 items-center justify-center mb-4">
+                <icon name="building" class="h-7 w-7 text-brand-500 dark:text-brand-300" />
+            </div>
+            <h2 class="font-sans font-bold tracking-tight text-2xl text-slate-900 dark:text-white">@L["landlord.listingsEmpty"]</h2>
+            <p class="text-slate-500 dark:text-white/60 mt-2 max-w-sm mx-auto">@L["landlord.listingsEmptyDesc"]</p>
+            <a href="/@culture/landlord/listings/create" class="glass-button-primary inline-flex items-center gap-2 mt-6">
+                <icon name="plus" class="h-4 w-4" />
+                @L["landlord.listingsCreateFirst"]
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="grid gap-4">
+            @foreach (var item in Model.Listings)
+            {
+                var hasLink = !string.IsNullOrEmpty(item.CitySlug);
+                <article class="glass-card p-5 flex gap-4 items-center flex-wrap sm:flex-nowrap">
+                    @if (!string.IsNullOrEmpty(item.PrimaryImageUrl))
+                    {
+                        <img src="@item.PrimaryImageUrl" alt="" class="w-24 h-24 rounded-xl object-cover shrink-0" />
+                    }
+                    else
+                    {
+                        <div class="w-24 h-24 rounded-xl bg-slate-100 dark:bg-white/5 flex items-center justify-center text-xs text-slate-400 dark:text-white/40 shrink-0 text-center px-1">@L["landlord.noImage"]</div>
+                    }
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-2 flex-wrap">
+                            @if (hasLink)
+                            {
+                                <a href="/@culture/@item.CitySlug/@item.Slug" class="font-semibold text-slate-900 dark:text-white hover:underline line-clamp-1">@item.Title</a>
+                            }
+                            else
+                            {
+                                <span class="font-semibold text-slate-900 dark:text-white line-clamp-1">@item.Title</span>
+                            }
+                            <span class="text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-md @StatusClass(item.Status)">@StatusLabel(item.Status)</span>
+                        </div>
+                        <p class="text-sm text-slate-500 dark:text-white/50 mt-1">
+                            @item.CityName, @item.Province
+                            @if (item.Price.HasValue)
+                            {
+                                <text>&middot; @string.Format(L["listings.beds.many"].Value, item.Bedrooms) &middot; $@item.Price.Value.ToString("N0")@L["listings.perMonth"]</text>
+                            }
+                            @if (item.UnitCount > 1)
+                            {
+                                <text>&middot; @string.Format(L["landlord.formUnitN"].Value, item.UnitCount)</text>
+                            }
+                        </p>
+                        <p class="text-xs text-slate-400 dark:text-white/40 mt-1">
+                            @string.Format(L["landlord.viewsCount"].Value, item.ViewCount) &middot; @string.Format(L["landlord.leadsCount"].Value, item.LeadCount)
+                        </p>
                     </div>
-                    <p class="text-sm text-slate-500 dark:text-white/50 mt-1">@item.CityName, @item.Province &middot; @item.Bedrooms bed &middot; $@item.Price.ToString("N0")/mo</p>
-                    <p class="text-xs text-slate-400 dark:text-white/40 mt-1">@item.ViewCount views &middot; @item.LeadCount leads</p>
-                </div>
-                <div class="flex gap-2">
-                    <a href="/landlord/listings/edit/@item.Id" class="glass-button text-slate-700 dark:text-white/80">Edit</a>
-                    <a href="/landlord/listings/delete/@item.Id" class="glass-button text-red-600">Delete</a>
-                </div>
-            </article>
-        }
-    </div>
-}
+                    <div class="flex gap-2 shrink-0">
+                        <a href="/@culture/landlord/listings/edit/@item.Id" class="glass-button text-slate-700 dark:text-white/80 text-sm"
+                           aria-label="@($"{L["landlord.listingsEdit"].Value}: {item.Title}")">@L["common.edit"]</a>
+                        <a href="/@culture/landlord/listings/delete/@item.Id" class="glass-button text-red-600 dark:text-red-400 text-sm"
+                           aria-label="@($"{L["landlord.deleteTitle"].Value}: {item.Title}")">@L["landlord.deactivate"]</a>
+                    </div>
+                </article>
+            }
+        </div>
+    }
+</div>

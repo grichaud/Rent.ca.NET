@@ -1,28 +1,33 @@
 @page "/{culture:locale}/landlord/listings/delete/{id:guid}"
 @model Rent.Web.Features.LandlordManage.Pages.Listings.DeleteModel
 @{
-    ViewData["Title"] = "Delete listing";
+    ViewData["Title"] = L["landlord.deleteTitle"].Value;
+    var culture = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+    if (culture != "en" && culture != "fr") { culture = "en"; }
 }
 
 @if (Model.ListingMissing)
 {
     <section class="max-w-xl mx-auto glass-card p-10 text-center">
-        <h1 class="font-sans font-bold tracking-tight text-3xl text-slate-900 dark:text-white">Listing not found</h1>
-        <a href="/landlord/listings" class="glass-button-primary inline-block mt-6">Back to listings</a>
+        <h1 class="font-sans font-bold tracking-tight text-3xl text-slate-900 dark:text-white">@L["detail.notFound"]</h1>
+        <a href="/@culture/landlord/listings" class="glass-button-primary inline-block mt-6">@L["landlord.viewListings"]</a>
     </section>
     return;
 }
 
 <section class="max-w-xl mx-auto glass-card p-10">
-    <h1 class="font-sans font-bold tracking-tight text-3xl text-slate-900 dark:text-white">Remove this listing?</h1>
+    <div class="inline-flex h-12 w-12 rounded-2xl bg-red-500/15 items-center justify-center mb-4">
+        <icon name="alert-circle" class="h-6 w-6 text-red-500 dark:text-red-400" />
+    </div>
+    <h1 class="font-sans font-bold tracking-tight text-3xl text-slate-900 dark:text-white">@L["landlord.deleteTitle"]</h1>
     <p class="text-slate-600 dark:text-white/70 mt-3">
-        <strong>@Model.Title</strong> will be set to <em>Inactive</em> and hidden from search.
-        You can re-activate it later by editing (ship in slice 2).
+        <strong>@Model.Title</strong>
     </p>
+    <p class="text-slate-600 dark:text-white/70 mt-2">@L["landlord.deleteWarning"]</p>
 
     <form method="post" class="mt-6 flex gap-3">
         @Html.AntiForgeryToken()
-        <a href="/landlord/listings" class="glass-button flex-1 text-center">Cancel</a>
-        <button type="submit" class="flex-1 bg-red-600 hover:bg-red-700 text-white rounded-xl px-5 py-2 font-medium transition-all">Deactivate</button>
+        <a href="/@culture/landlord/listings" class="glass-button flex-1 text-center">@L["common.cancel"]</a>
+        <button type="submit" class="flex-1 bg-red-600 hover:bg-red-700 text-white rounded-xl px-5 py-2 font-medium transition-all">@L["landlord.deactivate"]</button>
     </form>
 </section>

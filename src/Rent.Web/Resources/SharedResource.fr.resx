@@ -676,4 +676,91 @@
   <data name="renter.accountPhonePlaceholder" xml:space="preserve"><value>(514) 555-0100</value></data>
   <data name="renter.inquiryViewed" xml:space="preserve"><value>Vu</value></data>
   <data name="renter.inquiryPending" xml:space="preserve"><value>En attente</value></data>
+  <data name="landlord.portal" xml:space="preserve"><value>Gestion</value></data>
+  <data name="landlord.role" xml:space="preserve"><value>Propriétaire</value></data>
+  <data name="landlord.navLabel" xml:space="preserve"><value>Navigation propriétaire</value></data>
+  <data name="landlord.dashboardLink" xml:space="preserve"><value>Tableau de bord</value></data>
+  <data name="landlord.viewSite" xml:space="preserve"><value>Voir le site</value></data>
+  <data name="landlord.dashboardSubtitle" xml:space="preserve"><value>Voici un aperçu de votre portefeuille locatif.</value></data>
+  <data name="landlord.totalViews" xml:space="preserve"><value>Vues totales</value></data>
+  <data name="landlord.quickActions" xml:space="preserve"><value>Actions rapides</value></data>
+  <data name="landlord.recentInquiries" xml:space="preserve"><value>Demandes récentes</value></data>
+  <data name="landlord.noRecentInquiries" xml:space="preserve"><value>Aucune demande pour l'instant.</value></data>
+  <data name="landlord.addListing" xml:space="preserve"><value>Ajouter une annonce</value></data>
+  <data name="landlord.addListingDesc" xml:space="preserve"><value>Publiez une propriété et commencez à recevoir des demandes.</value></data>
+  <data name="landlord.viewInboxDesc" xml:space="preserve"><value>Demandes de locataires potentiels.</value></data>
+  <data name="landlord.manageListingsDesc" xml:space="preserve"><value>Créez, modifiez et gérez vos propriétés.</value></data>
+  <data name="landlord.listingsCount" xml:space="preserve"><value>{0} annonce(s)</value></data>
+  <data name="landlord.listingsEmptyDesc" xml:space="preserve"><value>Créez votre première annonce pour commencer à recevoir des demandes.</value></data>
+  <data name="landlord.listingsCreateFirst" xml:space="preserve"><value>Créer votre première annonce</value></data>
+  <data name="landlord.noImage" xml:space="preserve"><value>Aucune image</value></data>
+  <data name="landlord.viewsCount" xml:space="preserve"><value>{0} vues</value></data>
+  <data name="landlord.leadsCount" xml:space="preserve"><value>{0} demandes</value></data>
+  <data name="landlord.statusActive" xml:space="preserve"><value>Active</value></data>
+  <data name="landlord.statusDraft" xml:space="preserve"><value>Brouillon</value></data>
+  <data name="landlord.statusInactive" xml:space="preserve"><value>Inactive</value></data>
+  <data name="landlord.statusArchived" xml:space="preserve"><value>Archivée</value></data>
+  <data name="landlord.deactivate" xml:space="preserve"><value>Désactiver</value></data>
+  <data name="landlord.inboxCount" xml:space="preserve"><value>{0} demande(s)</value></data>
+  <data name="landlord.inboxUnreadCount" xml:space="preserve"><value>{0} non lues</value></data>
+  <data name="landlord.filterAll" xml:space="preserve"><value>Toutes</value></data>
+  <data name="landlord.filterUnread" xml:space="preserve"><value>Non lues</value></data>
+  <data name="landlord.inboxEmptyUnread" xml:space="preserve"><value>Aucune demande non lue.</value></data>
+  <data name="landlord.inboxEmptyDesc" xml:space="preserve"><value>Les demandes des locataires potentiels apparaîtront ici.</value></data>
+  <data name="landlord.inboxNew" xml:space="preserve"><value>Nouveau</value></data>
+  <data name="landlord.inboxRe" xml:space="preserve"><value>à propos de :</value></data>
+  <data name="landlord.inboxMoveIn" xml:space="preserve"><value>emménagement {0}</value></data>
+  <data name="landlord.markedRead" xml:space="preserve"><value>Marquée comme lue.</value></data>
+  <data name="landlord.markedUnread" xml:space="preserve"><value>Marquée comme non lue.</value></data>
+  <data name="landlord.markReadFor" xml:space="preserve"><value>Marquer comme lue : {0}</value></data>
+  <data name="landlord.markUnreadFor" xml:space="preserve"><value>Marquer comme non lue : {0}</value></data>
+  <data name="landlord.formCreateTitle" xml:space="preserve"><value>Nouvelle annonce</value></data>
+  <data name="landlord.formNeighbourhood" xml:space="preserve"><value>Quartier</value></data>
+  <data name="landlord.formBedrooms" xml:space="preserve"><value>Chambres</value></data>
+  <data name="landlord.formBathrooms" xml:space="preserve"><value>Salles de bain</value></data>
+  <data name="landlord.formSqFt" xml:space="preserve"><value>Pieds carrés</value></data>
+  <data name="landlord.formPrice" xml:space="preserve"><value>Loyer mensuel</value></data>
+  <data name="landlord.formAvailableDate" xml:space="preserve"><value>Disponible à partir du</value></data>
+  <data name="landlord.formPetsAllowed" xml:space="preserve"><value>Animaux acceptés</value></data>
+  <data name="landlord.formFurnished" xml:space="preserve"><value>Meublé</value></data>
+  <data name="landlord.formLeaseTerm" xml:space="preserve"><value>Durée du bail</value></data>
+  <data name="landlord.formParkingType" xml:space="preserve"><value>Stationnement</value></data>
+  <data name="landlord.formYearBuilt" xml:space="preserve"><value>Année de construction</value></data>
+  <data name="landlord.formTotalFloors" xml:space="preserve"><value>Nombre d'étages</value></data>
+  <data name="landlord.formAmenities" xml:space="preserve"><value>Commodités</value></data>
+  <data name="landlord.formUnits" xml:space="preserve"><value>Unités</value></data>
+  <data name="landlord.formAddUnit" xml:space="preserve"><value>Ajouter une unité</value></data>
+  <data name="landlord.formRemoveUnit" xml:space="preserve"><value>Retirer</value></data>
+  <data name="landlord.formUnitN" xml:space="preserve"><value>Unité {0}</value></data>
+  <data name="landlord.formStatusHint" xml:space="preserve"><value>Les annonces inactives sont masquées de la recherche mais conservent leurs demandes.</value></data>
+  <data name="landlord.formPhotosHint" xml:space="preserve"><value>Jusqu'à 10 photos. JPG, PNG ou WebP.</value></data>
+  <data name="landlord.formPhotosLabel" xml:space="preserve"><value>Ajouter des photos</value></data>
+  <data name="landlord.formSelectType" xml:space="preserve"><value>Choisir un type...</value></data>
+  <data name="landlord.formSelectProvince" xml:space="preserve"><value>Choisir une province...</value></data>
+  <data name="landlord.formOptional" xml:space="preserve"><value>(facultatif)</value></data>
+  <data name="landlord.deletePhoto" xml:space="preserve"><value>Supprimer la photo</value></data>
+  <data name="landlord.deletePhotoConfirm" xml:space="preserve"><value>Supprimer cette photo ?</value></data>
+  <data name="landlord.makeCover" xml:space="preserve"><value>Définir comme photo principale</value></data>
+  <data name="landlord.coverPhoto" xml:space="preserve"><value>Principale</value></data>
+  <data name="landlord.currentPhotos" xml:space="preserve"><value>Photos actuelles</value></data>
+  <data name="landlord.listingCreated" xml:space="preserve"><value>Annonce créée.</value></data>
+  <data name="landlord.listingUpdated" xml:space="preserve"><value>Annonce mise à jour.</value></data>
+  <data name="landlord.listingDeactivated" xml:space="preserve"><value>Annonce désactivée.</value></data>
+  <data name="landlord.photoDeleted" xml:space="preserve"><value>Photo supprimée.</value></data>
+  <data name="landlord.imageRejected" xml:space="preserve"><value>Certaines photos ont été refusées. Utilisez JPG, PNG ou WebP de moins de 5 Mo.</value></data>
+  <data name="landlord.imageTooMany" xml:space="preserve"><value>Une annonce peut avoir au maximum 10 photos.</value></data>
+  <data name="landlord.deleteTitle" xml:space="preserve"><value>Désactiver l'annonce</value></data>
+  <data name="landlord.deleteWarning" xml:space="preserve"><value>Cette annonce sera masquée de la recherche et du site public. Vous pourrez la réactiver plus tard depuis son statut.</value></data>
+  <data name="landlord.accountTitle" xml:space="preserve"><value>Paramètres du compte</value></data>
+  <data name="landlord.accountSubtitle" xml:space="preserve"><value>Gérez votre profil, votre marque publique et votre mot de passe.</value></data>
+  <data name="landlord.accountBrand" xml:space="preserve"><value>Marque publique</value></data>
+  <data name="landlord.accountBrandHint" xml:space="preserve"><value>C'est ce que les locataires voient sur vos annonces.</value></data>
+  <data name="landlord.accountCompany" xml:space="preserve"><value>Nom de l'entreprise</value></data>
+  <data name="landlord.accountCompanyPlaceholder" xml:space="preserve"><value>Immobilier Maple Leaf</value></data>
+  <data name="landlord.accountWebsite" xml:space="preserve"><value>Site web</value></data>
+  <data name="landlord.accountBio" xml:space="preserve"><value>À propos</value></data>
+  <data name="landlord.accountBioPlaceholder" xml:space="preserve"><value>Parlez de vous ou de votre entreprise aux locataires.</value></data>
+  <data name="landlord.accountBrandSaved" xml:space="preserve"><value>Marque mise à jour.</value></data>
+  <data name="landlord.formTitlePlaceholder" xml:space="preserve"><value>Beau 2 chambres au centre-ville de Toronto</value></data>
+  <data name="landlord.backToListings" xml:space="preserve"><value>Retour aux annonces</value></data>
 </root>

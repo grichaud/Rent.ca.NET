@@ -1,0 +1,68 @@
+@{
+    var pagePath = Context.Request.Path.Value ?? "/landlord";
+    var culture = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+    if (culture != "en" && culture != "fr") { culture = "en"; }
+    var lRoot = "/" + culture + "/landlord";
+
+    bool IsActive(string href)
+    {
+        if (href == lRoot) return string.Equals(pagePath, lRoot, StringComparison.OrdinalIgnoreCase);
+        return pagePath.StartsWith(href, StringComparison.OrdinalIgnoreCase);
+    }
+
+    string Cls(string href, string active, string inactive) => IsActive(href) ? active : inactive;
+
+    var activeLink = "flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 bg-brand-500/20 text-brand-600 dark:text-brand-300 shadow-sm shadow-brand-500/10";
+    var inactiveLink = "flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 text-gray-600 dark:text-white/60 hover:bg-gray-100 dark:hover:bg-white/10 hover:text-gray-900 dark:hover:text-white/90";
+    var activeIcon = "h-4 w-4 shrink-0 text-brand-600 dark:text-brand-300";
+    var inactiveIcon = "h-4 w-4 shrink-0 text-gray-400 dark:text-white/40";
+
+    var items = new[]
+    {
+        (Href: lRoot, Icon: "layout-dashboard", Label: L["landlord.dashboardLink"].Value),
+        (Href: lRoot + "/listings", Icon: "building", Label: L["landlord.listingsTitle"].Value),
+        (Href: lRoot + "/inbox", Icon: "message-square", Label: L["landlord.inboxTitle"].Value),
+        (Href: lRoot + "/account", Icon: "user", Label: L["renter.accountLink"].Value)
+    };
+}
+
+<nav class="flex flex-col h-full" aria-label="@L["landlord.navLabel"]">
+    <div class="px-5 py-6 border-b border-gray-200 dark:border-white/10">
+        <a href="/@culture" class="flex items-center gap-2.5 group">
+            <div class="h-8 w-8 rounded-xl bg-gradient-to-br from-brand-500 to-cyan-500 flex items-center justify-center shadow-lg shadow-brand-500/30 shrink-0">
+                <icon name="building" class="h-4 w-4 text-white" />
+            </div>
+            <span class="min-w-0">
+                <span class="flex items-baseline gap-1">
+                    <span class="text-base font-bold text-gray-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">Rent.ca</span>
+                    <span class="text-[9px] font-bold tracking-widest text-brand-600 dark:text-brand-400 border border-brand-500/40 rounded px-1 py-0.5">.NET</span>
+                </span>
+                <span class="block text-xs text-slate-500 dark:text-white/50">@L["landlord.portal"]</span>
+            </span>
+        </a>
+    </div>
+
+    <ul class="flex flex-col gap-1 p-3 flex-1" role="list">
+        @foreach (var item in items)
+        {
+            <li>
+                <a href="@item.Href" aria-current="@(IsActive(item.Href) ? "page" : null)"
+                   class="@Cls(item.Href, activeLink, inactiveLink)">
+                    <icon name="@item.Icon" class="@(IsActive(item.Href) ? activeIcon : inactiveIcon)" />
+                    <span>@item.Label</span>
+                    @if (IsActive(item.Href))
+                    {
+                        <span class="ml-auto h-1.5 w-1.5 rounded-full bg-brand-500" aria-hidden="true"></span>
+                    }
+                </a>
+            </li>
+        }
+    </ul>
+
+    <div class="p-3 border-t border-gray-200 dark:border-white/10">
+        <a href="/@culture" class="glass-button w-full inline-flex items-center justify-center gap-2 text-sm">
+            <icon name="external-link" class="h-4 w-4 shrink-0" />
+            <span>@L["landlord.viewSite"]</span>
+        </a>
+    </div>
+</nav>

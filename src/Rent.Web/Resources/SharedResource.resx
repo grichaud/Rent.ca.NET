@@ -676,4 +676,91 @@
   <data name="renter.accountPhonePlaceholder" xml:space="preserve"><value>(416) 555-0100</value></data>
   <data name="renter.inquiryViewed" xml:space="preserve"><value>Viewed</value></data>
   <data name="renter.inquiryPending" xml:space="preserve"><value>Pending</value></data>
+  <data name="landlord.portal" xml:space="preserve"><value>Manage</value></data>
+  <data name="landlord.role" xml:space="preserve"><value>Landlord</value></data>
+  <data name="landlord.navLabel" xml:space="preserve"><value>Landlord navigation</value></data>
+  <data name="landlord.dashboardLink" xml:space="preserve"><value>Dashboard</value></data>
+  <data name="landlord.viewSite" xml:space="preserve"><value>View site</value></data>
+  <data name="landlord.dashboardSubtitle" xml:space="preserve"><value>Here's an overview of your rental portfolio.</value></data>
+  <data name="landlord.totalViews" xml:space="preserve"><value>Total views</value></data>
+  <data name="landlord.quickActions" xml:space="preserve"><value>Quick actions</value></data>
+  <data name="landlord.recentInquiries" xml:space="preserve"><value>Recent inquiries</value></data>
+  <data name="landlord.noRecentInquiries" xml:space="preserve"><value>No inquiries yet.</value></data>
+  <data name="landlord.addListing" xml:space="preserve"><value>Add a new listing</value></data>
+  <data name="landlord.addListingDesc" xml:space="preserve"><value>Publish a property and start receiving inquiries.</value></data>
+  <data name="landlord.viewInboxDesc" xml:space="preserve"><value>Inquiries from prospective renters.</value></data>
+  <data name="landlord.manageListingsDesc" xml:space="preserve"><value>Create, edit, and manage your properties.</value></data>
+  <data name="landlord.listingsCount" xml:space="preserve"><value>{0} listing(s)</value></data>
+  <data name="landlord.listingsEmptyDesc" xml:space="preserve"><value>Create your first listing to start receiving inquiries.</value></data>
+  <data name="landlord.listingsCreateFirst" xml:space="preserve"><value>Create your first listing</value></data>
+  <data name="landlord.noImage" xml:space="preserve"><value>No image</value></data>
+  <data name="landlord.viewsCount" xml:space="preserve"><value>{0} views</value></data>
+  <data name="landlord.leadsCount" xml:space="preserve"><value>{0} leads</value></data>
+  <data name="landlord.statusActive" xml:space="preserve"><value>Active</value></data>
+  <data name="landlord.statusDraft" xml:space="preserve"><value>Draft</value></data>
+  <data name="landlord.statusInactive" xml:space="preserve"><value>Inactive</value></data>
+  <data name="landlord.statusArchived" xml:space="preserve"><value>Archived</value></data>
+  <data name="landlord.deactivate" xml:space="preserve"><value>Deactivate</value></data>
+  <data name="landlord.inboxCount" xml:space="preserve"><value>{0} inquiry(ies)</value></data>
+  <data name="landlord.inboxUnreadCount" xml:space="preserve"><value>{0} unread</value></data>
+  <data name="landlord.filterAll" xml:space="preserve"><value>All</value></data>
+  <data name="landlord.filterUnread" xml:space="preserve"><value>Unread</value></data>
+  <data name="landlord.inboxEmptyUnread" xml:space="preserve"><value>No unread inquiries.</value></data>
+  <data name="landlord.inboxEmptyDesc" xml:space="preserve"><value>Inquiries from prospective renters will show up here.</value></data>
+  <data name="landlord.inboxNew" xml:space="preserve"><value>New</value></data>
+  <data name="landlord.inboxRe" xml:space="preserve"><value>re:</value></data>
+  <data name="landlord.inboxMoveIn" xml:space="preserve"><value>move-in {0}</value></data>
+  <data name="landlord.markedRead" xml:space="preserve"><value>Marked as read.</value></data>
+  <data name="landlord.markedUnread" xml:space="preserve"><value>Marked as unread.</value></data>
+  <data name="landlord.markReadFor" xml:space="preserve"><value>Mark as read: {0}</value></data>
+  <data name="landlord.markUnreadFor" xml:space="preserve"><value>Mark as unread: {0}</value></data>
+  <data name="landlord.formCreateTitle" xml:space="preserve"><value>New listing</value></data>
+  <data name="landlord.formNeighbourhood" xml:space="preserve"><value>Neighbourhood</value></data>
+  <data name="landlord.formBedrooms" xml:space="preserve"><value>Bedrooms</value></data>
+  <data name="landlord.formBathrooms" xml:space="preserve"><value>Bathrooms</value></data>
+  <data name="landlord.formSqFt" xml:space="preserve"><value>Square feet</value></data>
+  <data name="landlord.formPrice" xml:space="preserve"><value>Monthly rent</value></data>
+  <data name="landlord.formAvailableDate" xml:space="preserve"><value>Available from</value></data>
+  <data name="landlord.formPetsAllowed" xml:space="preserve"><value>Pets allowed</value></data>
+  <data name="landlord.formFurnished" xml:space="preserve"><value>Furnished</value></data>
+  <data name="landlord.formLeaseTerm" xml:space="preserve"><value>Lease term</value></data>
+  <data name="landlord.formParkingType" xml:space="preserve"><value>Parking</value></data>
+  <data name="landlord.formYearBuilt" xml:space="preserve"><value>Year built</value></data>
+  <data name="landlord.formTotalFloors" xml:space="preserve"><value>Total floors</value></data>
+  <data name="landlord.formAmenities" xml:space="preserve"><value>Amenities</value></data>
+  <data name="landlord.formUnits" xml:space="preserve"><value>Units</value></data>
+  <data name="landlord.formAddUnit" xml:space="preserve"><value>Add a unit</value></data>
+  <data name="landlord.formRemoveUnit" xml:space="preserve"><value>Remove</value></data>
+  <data name="landlord.formUnitN" xml:space="preserve"><value>Unit {0}</value></data>
+  <data name="landlord.formStatusHint" xml:space="preserve"><value>Inactive listings are hidden from search but keep their inquiries.</value></data>
+  <data name="landlord.formPhotosHint" xml:space="preserve"><value>Up to 10 photos. JPG, PNG or WebP.</value></data>
+  <data name="landlord.formPhotosLabel" xml:space="preserve"><value>Add photos</value></data>
+  <data name="landlord.formSelectType" xml:space="preserve"><value>Select a type...</value></data>
+  <data name="landlord.formSelectProvince" xml:space="preserve"><value>Select a province...</value></data>
+  <data name="landlord.formOptional" xml:space="preserve"><value>(optional)</value></data>
+  <data name="landlord.deletePhoto" xml:space="preserve"><value>Delete photo</value></data>
+  <data name="landlord.deletePhotoConfirm" xml:space="preserve"><value>Delete this photo?</value></data>
+  <data name="landlord.makeCover" xml:space="preserve"><value>Make cover photo</value></data>
+  <data name="landlord.coverPhoto" xml:space="preserve"><value>Cover</value></data>
+  <data name="landlord.currentPhotos" xml:space="preserve"><value>Current photos</value></data>
+  <data name="landlord.listingCreated" xml:space="preserve"><value>Listing created.</value></data>
+  <data name="landlord.listingUpdated" xml:space="preserve"><value>Listing updated.</value></data>
+  <data name="landlord.listingDeactivated" xml:space="preserve"><value>Listing deactivated.</value></data>
+  <data name="landlord.photoDeleted" xml:space="preserve"><value>Photo deleted.</value></data>
+  <data name="landlord.imageRejected" xml:space="preserve"><value>Some photos were not accepted. Use JPG, PNG or WebP under 5 MB.</value></data>
+  <data name="landlord.imageTooMany" xml:space="preserve"><value>A listing can have at most 10 photos.</value></data>
+  <data name="landlord.deleteTitle" xml:space="preserve"><value>Deactivate listing</value></data>
+  <data name="landlord.deleteWarning" xml:space="preserve"><value>This listing will be hidden from search and from the public site. You can re-activate it later from the listing's status.</value></data>
+  <data name="landlord.accountTitle" xml:space="preserve"><value>Account Settings</value></data>
+  <data name="landlord.accountSubtitle" xml:space="preserve"><value>Manage your profile, your public brand, and your password.</value></data>
+  <data name="landlord.accountBrand" xml:space="preserve"><value>Public brand</value></data>
+  <data name="landlord.accountBrandHint" xml:space="preserve"><value>This is what renters see on your listings.</value></data>
+  <data name="landlord.accountCompany" xml:space="preserve"><value>Company name</value></data>
+  <data name="landlord.accountCompanyPlaceholder" xml:space="preserve"><value>Maple Leaf Properties</value></data>
+  <data name="landlord.accountWebsite" xml:space="preserve"><value>Website</value></data>
+  <data name="landlord.accountBio" xml:space="preserve"><value>About</value></data>
+  <data name="landlord.accountBioPlaceholder" xml:space="preserve"><value>Tell renters about yourself or your company.</value></data>
+  <data name="landlord.accountBrandSaved" xml:space="preserve"><value>Brand updated.</value></data>
+  <data name="landlord.formTitlePlaceholder" xml:space="preserve"><value>Bright 2BR in downtown Toronto</value></data>
+  <data name="landlord.backToListings" xml:space="preserve"><value>Back to listings</value></data>
 </root>

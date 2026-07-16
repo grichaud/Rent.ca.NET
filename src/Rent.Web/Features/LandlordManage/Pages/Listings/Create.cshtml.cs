@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using Rent.Web.Domain;
 using Rent.Web.Features.Shared.Services;
 using Rent.Web.Infrastructure.Data;
@@ -39,9 +40,13 @@ public class CreateModel : PageModel
     [BindProperty]
     public ListingFormInput Input { get; set; } = new();
 
-    public void OnGet()
+    public IReadOnlyList<Amenity> Amenities { get; private set; } = [];
+    public IReadOnlyList<City> Cities { get; private set; } = [];
+
+    public async Task OnGetAsync(CancellationToken ct)
     {
         Input.AvailableDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(30));
+        await LoadLookupsAsync(ct);
     }
 
     public async Task<IActionResult> OnPostAsync(CancellationToken ct)
@@ -51,6 +56,7 @@ public class CreateModel : PageModel
         {
             foreach (var err in validation.Errors)
                 ModelState.AddModelError($"Input.{err.PropertyName}", err.ErrorMessage);
+            await LoadLookupsAsync(ct);
             return Page();
         }
 
@@ -66,7 +72,7 @@ public class CreateModel : PageModel
             Title = Input.Title.Trim(),
             Description = string.IsNullOrWhiteSpace(Input.Description) ? null : Input.Description.Trim(),
             PropertyType = Input.PropertyType,
-            Status = ListingStatus.Active,
+            Status = Input.Status,
             Tier = ListingTier.Limited,
             StreetAddress = Input.StreetAddress.Trim(),
             City = Input.CityName.Trim(),
@@ -76,8 +82,17 @@ public class CreateModel : PageModel
             Slug = slug,
             PetsAllowed = Input.PetsAllowed,
             Furnished = Input.Furnished,
-            LeaseTerm = Domain.LeaseTerm.OneYear
+            LeaseTerm = Input.LeaseTerm,
+            ParkingType = string.IsNullOrWhiteSpace(Input.ParkingType) ? null : Input.ParkingType.Trim(),
+            YearBuilt = Input.YearBuilt,
+            TotalFloors = Input.TotalFloors
         };
+
+        if (Input.AmenityIds.Count > 0)
+        {
+            var chosen = await _db.Amenities.Where(a => Input.AmenityIds.Contains(a.Id)).ToListAsync(ct);
+            foreach (var a in chosen) property.Amenities.Add(a);
+        }
 
         property.Units.Add(new Unit
         {
@@ -94,20 +109,32 @@ public class CreateModel : PageModel
         if (Input.NewImages is { Count: > 0 })
         {
             var order = 0;
+            var rejected = false;
             foreach (var file in Input.NewImages.Take(10))
             {
                 if (file.Length == 0) continue;
-                var url = await _storage.SaveAsync(property.Id, file, ct);
-                property.Images.Add(new PropertyImage
+                try
                 {
-                    Id = Guid.NewGuid(),
-                    PropertyId = property.Id,
-                    Url = url,
-                    AltText = property.Title,
-                    IsPrimary = order == 0,
-                    DisplayOrder = order++
-                });
+                    var url = await _storage.SaveAsync(property.Id, file, ct);
+                    property.Images.Add(new PropertyImage
+                    {
+                        Id = Guid.NewGuid(),
+                        PropertyId = property.Id,
+                        Url = url,
+                        AltText = property.Title,
+                        IsPrimary = order == 0,
+                        DisplayOrder = order++
+                    });
+                }
+                catch (Exception ex)
+                {
+                    // Un archivo rechazado por el storage no debe tumbar el alta entera:
+                    // el landlord perderia todo lo que escribio.
+                    _logger.LogWarning(ex, "Rejected image {FileName} for new property", file.FileName);
+                    rejected = true;
+                }
             }
+            if (rejected) TempData["ListingWarning"] = "landlord.imageRejected";
         }
 
         _db.Properties.Add(property);
@@ -115,7 +142,13 @@ public class CreateModel : PageModel
 
         _logger.LogInformation("Landlord {LandlordId} created property {PropertyId} ({Slug})", landlordId, property.Id, property.Slug);
 
-        TempData["ListingSuccess"] = $"&#10003; \"{property.Title}\" is live.";
+        TempData["ListingSuccess"] = "landlord.listingCreated";
         return Redirect(this.Localized("/landlord/listings"));
+    }
+
+    private async Task LoadLookupsAsync(CancellationToken ct)
+    {
+        Amenities = await _db.Amenities.AsNoTracking().OrderBy(a => a.Category).ThenBy(a => a.Name).ToListAsync(ct);
+        Cities = await _db.Cities.AsNoTracking().OrderBy(c => c.Name).ToListAsync(ct);
     }
 }

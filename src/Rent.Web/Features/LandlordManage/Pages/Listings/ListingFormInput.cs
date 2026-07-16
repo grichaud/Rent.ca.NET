@@ -8,6 +8,8 @@ public class ListingFormInput
     public string? Description { get; set; }
     public PropertyType PropertyType { get; set; } = PropertyType.Apartment;
 
+    public ListingStatus Status { get; set; } = ListingStatus.Active;
+
     public string StreetAddress { get; set; } = string.Empty;
     public string CityName { get; set; } = string.Empty;
     public string Province { get; set; } = string.Empty;
@@ -16,6 +18,13 @@ public class ListingFormInput
 
     public bool PetsAllowed { get; set; }
     public bool Furnished { get; set; }
+
+    public LeaseTerm? LeaseTerm { get; set; } = Domain.LeaseTerm.OneYear;
+    public string? ParkingType { get; set; }
+    public int? YearBuilt { get; set; }
+    public int? TotalFloors { get; set; }
+
+    public List<Guid> AmenityIds { get; set; } = [];
 
     public int Bedrooms { get; set; } = 1;
     public decimal Bathrooms { get; set; } = 1;

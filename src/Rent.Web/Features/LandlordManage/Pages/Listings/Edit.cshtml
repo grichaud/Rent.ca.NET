@@ -1,138 +1,77 @@
 @page "/{culture:locale}/landlord/listings/edit/{id:guid}"
 @model Rent.Web.Features.LandlordManage.Pages.Listings.EditModel
 @{
-    ViewData["Title"] = "Edit listing";
+    ViewData["Title"] = L["landlord.listingsEdit"].Value;
+    ViewData["Amenities"] = Model.Amenities;
+    ViewData["Cities"] = Model.Cities;
+    ViewData["IsEdit"] = true;
+    var culture = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+    if (culture != "en" && culture != "fr") { culture = "en"; }
 }
 
 @if (Model.ListingMissing)
 {
     <section class="max-w-xl mx-auto glass-card p-10 text-center">
-        <h1 class="font-sans font-bold tracking-tight text-3xl text-slate-900 dark:text-white">Listing not found</h1>
-        <a href="/landlord/listings" class="glass-button-primary inline-block mt-6">Back to listings</a>
+        <h1 class="font-sans font-bold tracking-tight text-3xl text-slate-900 dark:text-white">@L["detail.notFound"]</h1>
+        <a href="/@culture/landlord/listings" class="glass-button-primary inline-block mt-6">@L["landlord.viewListings"]</a>
     </section>
     return;
 }
 
 <section class="max-w-3xl mx-auto">
-    <a href="/landlord/listings" class="text-sm text-slate-500 dark:text-white/50 hover:underline">&larr; Back to listings</a>
-    <h1 class="font-sans font-bold tracking-tight text-3xl text-slate-900 dark:text-white mt-2">Edit listing</h1>
+    <a href="/@culture/landlord/listings" class="text-sm text-slate-500 dark:text-white/50 hover:underline">&larr; @L["landlord.backToListings"]</a>
+    <h1 class="font-sans font-bold tracking-tight text-3xl text-slate-900 dark:text-white mt-2">@L["landlord.listingsEdit"]</h1>
 
     <form method="post" enctype="multipart/form-data" class="mt-6 space-y-6">
-        <div asp-validation-summary="All" class="text-sm text-red-600 dark:text-red-400"></div>
+        <div asp-validation-summary="All" role="alert" class="text-sm text-red-600 dark:text-red-400"></div>
 
-        <section class="glass-card p-6 space-y-4">
-            <h2 class="font-semibold text-slate-900 dark:text-white">Basics</h2>
-            <div>
-                <label asp-for="Input.Title" class="block text-sm text-slate-700 dark:text-white/80 mb-1">Title</label>
-                <input asp-for="Input.Title" class="glass-input" />
-            </div>
-            <div>
-                <label asp-for="Input.Description" class="block text-sm text-slate-700 dark:text-white/80 mb-1">Description</label>
-                <textarea asp-for="Input.Description" rows="5" class="glass-input"></textarea>
-            </div>
-            <div>
-                <label asp-for="Input.PropertyType" class="block text-sm text-slate-700 dark:text-white/80 mb-1">Property type</label>
-                <select asp-for="Input.PropertyType" class="glass-input">
-                    @foreach (var t in Enum.GetValues<Rent.Web.Domain.PropertyType>())
-                    {
-                        <option value="@t">@t</option>
-                    }
-                </select>
-            </div>
-        </section>
-
-        <section class="glass-card p-6 space-y-4">
-            <h2 class="font-semibold text-slate-900 dark:text-white">Location</h2>
-            <div>
-                <label asp-for="Input.StreetAddress" class="block text-sm text-slate-700 dark:text-white/80 mb-1">Street address</label>
-                <input asp-for="Input.StreetAddress" class="glass-input" />
-            </div>
-            <div class="grid grid-cols-2 gap-3">
-                <div>
-                    <label asp-for="Input.CityName" class="block text-sm text-slate-700 dark:text-white/80 mb-1">City</label>
-                    <input asp-for="Input.CityName" class="glass-input" />
-                </div>
-                <div>
-                    <label asp-for="Input.Province" class="block text-sm text-slate-700 dark:text-white/80 mb-1">Province</label>
-                    <input asp-for="Input.Province" class="glass-input" />
-                </div>
-            </div>
-            <div class="grid grid-cols-2 gap-3">
-                <div>
-                    <label asp-for="Input.PostalCode" class="block text-sm text-slate-700 dark:text-white/80 mb-1">Postal code</label>
-                    <input asp-for="Input.PostalCode" class="glass-input" />
-                </div>
-                <div>
-                    <label asp-for="Input.Neighbourhood" class="block text-sm text-slate-700 dark:text-white/80 mb-1">Neighbourhood</label>
-                    <input asp-for="Input.Neighbourhood" class="glass-input" />
-                </div>
-            </div>
-        </section>
-
-        <section class="glass-card p-6 space-y-4">
-            <h2 class="font-semibold text-slate-900 dark:text-white">Unit details</h2>
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <div>
-                    <label asp-for="Input.Bedrooms" class="block text-sm text-slate-700 dark:text-white/80 mb-1">Bedrooms</label>
-                    <input asp-for="Input.Bedrooms" type="number" min="0" max="20" class="glass-input" />
-                </div>
-                <div>
-                    <label asp-for="Input.Bathrooms" class="block text-sm text-slate-700 dark:text-white/80 mb-1">Bathrooms</label>
-                    <input asp-for="Input.Bathrooms" type="number" step="0.5" min="0.5" class="glass-input" />
-                </div>
-                <div>
-                    <label asp-for="Input.SqFt" class="block text-sm text-slate-700 dark:text-white/80 mb-1">Sq ft</label>
-                    <input asp-for="Input.SqFt" type="number" min="0" class="glass-input" />
-                </div>
-                <div>
-                    <label asp-for="Input.Price" class="block text-sm text-slate-700 dark:text-white/80 mb-1">Price</label>
-                    <input asp-for="Input.Price" type="number" step="50" min="0" class="glass-input" />
-                </div>
-            </div>
-            <div>
-                <label asp-for="Input.AvailableDate" class="block text-sm text-slate-700 dark:text-white/80 mb-1">Available from</label>
-                <input asp-for="Input.AvailableDate" type="date" class="glass-input" />
-            </div>
-            <div class="flex gap-6">
-                <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-white/80">
-                    <input asp-for="Input.PetsAllowed" type="checkbox" class="rounded border-gray-300 dark:border-white/20" />
-                    Pet friendly
-                </label>
-                <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-white/80">
-                    <input asp-for="Input.Furnished" type="checkbox" class="rounded border-gray-300 dark:border-white/20" />
-                    Furnished
-                </label>
-            </div>
-        </section>
-
-        @if (Model.ExistingImages.Count > 0)
-        {
-            <section class="glass-card p-6 space-y-3">
-                <h2 class="font-semibold text-slate-900 dark:text-white">Current photos</h2>
-                <div class="grid grid-cols-3 sm:grid-cols-4 gap-3">
-                    @foreach (var img in Model.ExistingImages)
-                    {
-                        <div class="relative aspect-square rounded-xl overflow-hidden bg-slate-100 dark:bg-white/5">
-                            <img src="@img.Url" alt="" class="absolute inset-0 w-full h-full object-cover" />
-                            @if (img.IsPrimary)
-                            {
-                                <span class="absolute top-1 left-1 bg-brand-500 text-white text-[10px] uppercase font-semibold px-1.5 py-0.5 rounded">Cover</span>
-                            }
-                        </div>
-                    }
-                </div>
-            </section>
-        }
+        <partial name="/Features/LandlordManage/Partials/_ListingFormFields.cshtml" for="Input" />
 
         <section class="glass-card p-6 space-y-3">
-            <h2 class="font-semibold text-slate-900 dark:text-white">Add more photos</h2>
-            <input type="file" name="Input.NewImages" multiple accept="image/*"
+            <h2 class="font-semibold text-slate-900 dark:text-white">@L["landlord.formPhotos"]</h2>
+
+            @if (Model.ExistingImages.Count > 0)
+            {
+                <div>
+                    <p class="text-xs uppercase tracking-wider font-semibold text-slate-500 dark:text-white/50 mb-2">@L["landlord.currentPhotos"]</p>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        @foreach (var img in Model.ExistingImages)
+                        {
+                            <div class="relative group rounded-xl overflow-hidden">
+                                <img src="@img.Url" alt="@img.AltText" class="w-full aspect-square object-cover" />
+                                @if (img.IsPrimary)
+                                {
+                                    <span class="absolute top-1 left-1 text-[10px] uppercase tracking-wider font-bold px-1.5 py-0.5 rounded bg-brand-500 text-white">@L["landlord.coverPhoto"]</span>
+                                }
+                                <div class="absolute inset-x-0 bottom-0 flex gap-1 p-1 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
+                                    @if (!img.IsPrimary)
+                                    {
+                                        <button type="submit" name="coverImageId" value="@img.Id" formnovalidate
+                                                class="flex-1 text-[10px] rounded bg-white/90 hover:bg-white text-slate-900 py-1 font-medium"
+                                                aria-label="@L["landlord.makeCover"]">@L["landlord.makeCover"]</button>
+                                    }
+                                    <button type="submit" name="deleteImageId" value="@img.Id" formnovalidate
+                                            class="flex-1 text-[10px] rounded bg-red-600/90 hover:bg-red-600 text-white py-1 font-medium"
+                                            aria-label="@L["landlord.deletePhoto"]">@L["landlord.deletePhoto"]</button>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
+            <p class="text-xs text-slate-500 dark:text-white/50">@L["landlord.formPhotosHint"]</p>
+            <label for="new-images" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["landlord.formPhotosLabel"]</label>
+            <input id="new-images" type="file" name="Input.NewImages" multiple accept="image/jpeg,image/png,image/webp"
                    class="block w-full text-sm text-slate-700 dark:text-white/80 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-brand-500 file:text-white file:font-medium hover:file:bg-brand-600" />
         </section>
 
         <div class="flex gap-3 justify-end">
-            <a href="/landlord/listings" class="glass-button">Cancel</a>
-            <button type="submit" class="glass-button-primary">Save changes</button>
+            <a href="/@culture/landlord/listings" class="glass-button">@L["common.cancel"]</a>
+            <button type="submit" class="glass-button-primary inline-flex items-center gap-2">
+                <icon name="check" class="h-4 w-4" />
+                @L["landlord.formSave"]
+            </button>
         </div>
     </form>
 </section>
