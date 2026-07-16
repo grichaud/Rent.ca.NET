@@ -43,3 +43,6 @@ Thumbs.db
 /slice*-*.png
 # Screenshots sueltos en la raiz (parity/azure/home/etc.) — no ensuciar git status
 /*.png
+
+# Claude Code runtime lock (ephemeral, machine-local — never commit)
+.claude/scheduled_tasks.lock
