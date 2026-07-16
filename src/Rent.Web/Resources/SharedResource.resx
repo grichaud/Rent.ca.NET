@@ -211,9 +211,7 @@
   <data name="footer.listProperty" xml:space="preserve"><value>List Your Property</value></data>
   <data name="footer.pricing" xml:space="preserve"><value>Pricing</value></data>
   <data name="footer.dashboard" xml:space="preserve"><value>Landlord Dashboard</value></data>
-  <data name="footer.contact" xml:space="preserve"><value>Contact</value></data>
   <data name="footer.faq" xml:space="preserve"><value>FAQ</value></data>
-  <data name="footer.terms" xml:space="preserve"><value>Terms</value></data>
   <data name="footer.privacy" xml:space="preserve"><value>Privacy</value></data>
   <data name="footer.copyright" xml:space="preserve"><value>© 2026 Rent.ca. All rights reserved.</value></data>
   <data name="footer.builtWith" xml:space="preserve"><value>Built with care for renters across Canada.</value></data>
@@ -255,8 +253,30 @@
   <data name="auth.externalConfirmDesc2" xml:space="preserve"><value>Tell us how you'll use Rent.ca and we'll finish creating your account.</value></data>
   <data name="auth.externalConfirmVerifiedBy" xml:space="preserve"><value>Verified by {0}.</value></data>
   <data name="auth.externalConfirmFinish" xml:space="preserve"><value>Finish sign-up</value></data>
-  <data name="footer.privacyTitle" xml:space="preserve"><value>Privacy</value></data>
-  <data name="footer.privacyText" xml:space="preserve"><value>Rent.ca.NET is a portfolio project by Giovanni Richaud. No personal data is shared with third parties. For questions, please see the</value></data>
+  <data name="Faq_Title" xml:space="preserve"><value>Frequently Asked Questions</value></data>
+  <data name="Faq_Subtitle" xml:space="preserve"><value>Everything you need to know about Rent.ca</value></data>
+  <data name="Faq_Q1" xml:space="preserve"><value>How do I search for rentals?</value></data>
+  <data name="Faq_A1" xml:space="preserve"><value>Use the search bar on the homepage to search by city. You can also ask our AI assistant in plain language — just describe what you're looking for and it will run the search for you.</value></data>
+  <data name="Faq_Q2" xml:space="preserve"><value>Is Rent.ca free to use for renters?</value></data>
+  <data name="Faq_A2" xml:space="preserve"><value>Yes. Searching for rentals, saving favourites, setting up alerts, and using our AI assistant are completely free for renters.</value></data>
+  <data name="Faq_Q3" xml:space="preserve"><value>How do I contact a landlord?</value></data>
+  <data name="Faq_A3" xml:space="preserve"><value>Every listing has a contact form. Fill in your details and message, and the landlord receives your inquiry in their inbox. Your name, email and phone number are shared with that landlord so they can reply.</value></data>
+  <data name="Faq_Q4" xml:space="preserve"><value>What is the AI assistant?</value></data>
+  <data name="Faq_A4" xml:space="preserve"><value>It's a chatbot that understands plain language. It can search for properties, pull up the details of a specific listing, tell you about a city, and create a rental alert for you — all from the conversation.</value></data>
+  <data name="Faq_Q5" xml:space="preserve"><value>How do I set up alerts?</value></data>
+  <data name="Faq_A5" xml:space="preserve"><value>Create an alert from the Alerts page in your renter portal, or simply ask the AI assistant to set one up. Your saved alerts live in your portal, where you can pause or delete them at any time.</value></data>
+  <data name="Faq_Q6" xml:space="preserve"><value>Are listings verified?</value></data>
+  <data name="Faq_A6" xml:space="preserve"><value>Landlords who display a verified badge have been confirmed by our team. The badge appears on their listings and on their profile card.</value></data>
+  <data name="Faq_Q7" xml:space="preserve"><value>What cities do you cover?</value></data>
+  <data name="Faq_A7" xml:space="preserve"><value>We cover major Canadian cities including Toronto, Vancouver, Montreal, Calgary, Ottawa and Edmonton, with more being added over time.</value></data>
+  <data name="Faq_Q8" xml:space="preserve"><value>How do I list my property?</value></data>
+  <data name="Faq_A8" xml:space="preserve"><value>Sign up as a landlord and create your listing from the management portal. Listing is free on the Limited plan; Promoted and Featured upgrades are activated by the Rent.ca team.</value></data>
+  <data name="Faq_Q9" xml:space="preserve"><value>What are my rights as a tenant in Canada?</value></data>
+  <data name="Faq_A9" xml:space="preserve"><value>Tenant rights vary by province. Generally, tenants have the right to a safe living environment, privacy, and protection from unfair eviction. Always check the residential tenancy rules for your own province.</value></data>
+  <data name="Faq_Q10" xml:space="preserve"><value>Something looks wrong — how do I report it?</value></data>
+  <data name="Faq_A10" xml:space="preserve"><value>Rent.ca.NET is a portfolio project and the listings are demo data, so there is nothing to report as fraudulent. If you spot a bug or a mistake in the app itself, please open an issue on the GitHub repository linked in the footer.</value></data>
+  <data name="footer.privacyTitle" xml:space="preserve"><value>Privacy Policy</value></data>
+  <data name="footer.privacyText" xml:space="preserve"><value>Rent.ca.NET is a portfolio project by Giovanni Richaud. It is not a real rental service — the listings are demo data. When you send an inquiry, your name, email and phone number are shared with that listing's landlord. Messages you send to the AI assistant and outgoing emails are processed by third-party providers (OpenRouter, Resend). Nothing is sold or used for advertising. For questions, please see the</value></data>
   <data name="footer.privacyRepo" xml:space="preserve"><value>repo</value></data>
   <data name="renter.role" xml:space="preserve"><value>Renter</value></data>
   <data name="renter.dashboardLink" xml:space="preserve"><value>Dashboard</value></data>
@@ -576,6 +596,8 @@
   <data name="Landlords_TierFeaturedF7" xml:space="preserve"><value>Performance analytics</value></data>
   <data name="Landlords_TierFeaturedF8" xml:space="preserve"><value>Up to 40 photos</value></data>
   <data name="Landlords_PricingFooter" xml:space="preserve"><value>No contracts. Cancel anytime. All prices in CAD.</value></data>
+  <data name="Landlords_PricingDemoNote" xml:space="preserve"><value>Demo pricing — this is a portfolio project; no payments are processed.</value></data>
+  <data name="Landlords_StarRating" xml:space="preserve"><value>5 out of 5 stars</value></data>
   <data name="Landlords_TestimonialsEyebrow" xml:space="preserve"><value>Landlord Reviews</value></data>
   <data name="Landlords_TestimonialsTitle" xml:space="preserve"><value>Trusted by Landlords Across Canada</value></data>
   <data name="Landlords_TestimonialsSubtitle" xml:space="preserve"><value>Real results from property owners who chose Rent.ca.</value></data>
@@ -594,7 +616,7 @@
   <data name="Landlords_FaqQ1" xml:space="preserve"><value>How much does it cost to list?</value></data>
   <data name="Landlords_FaqA1" xml:space="preserve"><value>We offer three tiers: Limited (free), Promoted ($35 per 15 days), and Featured ($199 per 15 days). All prices in CAD with no contracts.</value></data>
   <data name="Landlords_FaqQ2" xml:space="preserve"><value>How do I get started?</value></data>
-  <data name="Landlords_FaqA2" xml:space="preserve"><value>Sign up as a landlord, verify your email, and post your first listing in under five minutes. No credit card needed for the free tier.</value></data>
+  <data name="Landlords_FaqA2" xml:space="preserve"><value>Sign up as a landlord and post your first listing in under five minutes. No credit card needed for the free tier.</value></data>
   <data name="Landlords_FaqQ3" xml:space="preserve"><value>What's included in the free tier?</value></data>
   <data name="Landlords_FaqA3" xml:space="preserve"><value>The Limited plan includes a basic listing with up to 5 photos, standard search placement, and a contact form for renter inquiries.</value></data>
   <data name="Landlords_FaqQ4" xml:space="preserve"><value>How does the AI assistant help landlords?</value></data>
@@ -602,7 +624,7 @@
   <data name="Landlords_FaqQ5" xml:space="preserve"><value>Can I manage multiple properties?</value></data>
   <data name="Landlords_FaqA5" xml:space="preserve"><value>Yes. Your dashboard lets you manage as many listings as you need from a single account, with per-listing analytics and inbox tracking.</value></data>
   <data name="Landlords_FaqQ6" xml:space="preserve"><value>How do I upgrade my listing?</value></data>
-  <data name="Landlords_FaqA6" xml:space="preserve"><value>From your dashboard, open the listing and choose Promote or Feature. The upgrade activates immediately and runs for the selected period.</value></data>
+  <data name="Landlords_FaqA6" xml:space="preserve"><value>Tier upgrades are handled by the Rent.ca team — get in touch and we'll activate Promoted or Featured on your listing for the selected period.</value></data>
   <data name="Landlords_FaqQ7" xml:space="preserve"><value>What areas do you cover?</value></data>
   <data name="Landlords_FaqA7" xml:space="preserve"><value>Rent.ca covers all major Canadian cities including Toronto, Vancouver, Montreal, Calgary, Ottawa, Edmonton, and 200+ other cities across Canada.</value></data>
   <data name="Landlords_FaqQ8" xml:space="preserve"><value>How do I cancel my subscription?</value></data>

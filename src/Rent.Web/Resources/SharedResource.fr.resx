@@ -211,9 +211,7 @@
   <data name="footer.listProperty" xml:space="preserve"><value>Publier votre propriété</value></data>
   <data name="footer.pricing" xml:space="preserve"><value>Tarification</value></data>
   <data name="footer.dashboard" xml:space="preserve"><value>Tableau de bord</value></data>
-  <data name="footer.contact" xml:space="preserve"><value>Contact</value></data>
   <data name="footer.faq" xml:space="preserve"><value>FAQ</value></data>
-  <data name="footer.terms" xml:space="preserve"><value>Conditions</value></data>
   <data name="footer.privacy" xml:space="preserve"><value>Confidentialité</value></data>
   <data name="footer.copyright" xml:space="preserve"><value>© 2026 Rent.ca. Tous droits réservés.</value></data>
   <data name="footer.builtWith" xml:space="preserve"><value>Conçu avec soin pour les locataires du Canada.</value></data>
@@ -255,8 +253,30 @@
   <data name="auth.externalConfirmDesc2" xml:space="preserve"><value>Dites-nous comment vous utiliserez Rent.ca et nous finaliserons votre compte.</value></data>
   <data name="auth.externalConfirmVerifiedBy" xml:space="preserve"><value>Vérifié par {0}.</value></data>
   <data name="auth.externalConfirmFinish" xml:space="preserve"><value>Terminer l'inscription</value></data>
-  <data name="footer.privacyTitle" xml:space="preserve"><value>Confidentialité</value></data>
-  <data name="footer.privacyText" xml:space="preserve"><value>Rent.ca.NET est un projet portfolio de Giovanni Richaud. Aucune donnée personnelle n'est partagée avec des tiers. Pour toute question, consultez le</value></data>
+  <data name="Faq_Title" xml:space="preserve"><value>Foire aux questions</value></data>
+  <data name="Faq_Subtitle" xml:space="preserve"><value>Tout ce qu'il faut savoir sur Rent.ca</value></data>
+  <data name="Faq_Q1" xml:space="preserve"><value>Comment chercher un logement?</value></data>
+  <data name="Faq_A1" xml:space="preserve"><value>Utilisez la barre de recherche de la page d'accueil pour chercher par ville. Vous pouvez aussi demander à notre assistant IA en langage courant — décrivez ce que vous cherchez et il lancera la recherche pour vous.</value></data>
+  <data name="Faq_Q2" xml:space="preserve"><value>Rent.ca est-il gratuit pour les locataires?</value></data>
+  <data name="Faq_A2" xml:space="preserve"><value>Oui. La recherche de logements, les favoris, les alertes et l'assistant IA sont entièrement gratuits pour les locataires.</value></data>
+  <data name="Faq_Q3" xml:space="preserve"><value>Comment contacter un propriétaire?</value></data>
+  <data name="Faq_A3" xml:space="preserve"><value>Chaque annonce comporte un formulaire de contact. Remplissez vos coordonnées et votre message, et le propriétaire reçoit votre demande dans sa boîte de réception. Vos nom, courriel et numéro de téléphone lui sont transmis afin qu'il puisse vous répondre.</value></data>
+  <data name="Faq_Q4" xml:space="preserve"><value>Qu'est-ce que l'assistant IA?</value></data>
+  <data name="Faq_A4" xml:space="preserve"><value>C'est un agent conversationnel qui comprend le langage courant. Il peut chercher des propriétés, afficher les détails d'une annonce précise, vous renseigner sur une ville et créer une alerte pour vous — le tout depuis la conversation.</value></data>
+  <data name="Faq_Q5" xml:space="preserve"><value>Comment créer une alerte?</value></data>
+  <data name="Faq_A5" xml:space="preserve"><value>Créez une alerte depuis la page Alertes de votre portail locataire, ou demandez simplement à l'assistant IA de le faire. Vos alertes sont conservées dans votre portail, où vous pouvez les suspendre ou les supprimer à tout moment.</value></data>
+  <data name="Faq_Q6" xml:space="preserve"><value>Les annonces sont-elles vérifiées?</value></data>
+  <data name="Faq_A6" xml:space="preserve"><value>Les propriétaires qui affichent l'insigne « vérifié » ont été confirmés par notre équipe. L'insigne apparaît sur leurs annonces et sur leur fiche de profil.</value></data>
+  <data name="Faq_Q7" xml:space="preserve"><value>Quelles villes couvrez-vous?</value></data>
+  <data name="Faq_A7" xml:space="preserve"><value>Nous couvrons les grandes villes canadiennes, dont Toronto, Vancouver, Montréal, Calgary, Ottawa et Edmonton, et d'autres s'ajoutent au fil du temps.</value></data>
+  <data name="Faq_Q8" xml:space="preserve"><value>Comment publier ma propriété?</value></data>
+  <data name="Faq_A8" xml:space="preserve"><value>Inscrivez-vous comme propriétaire et créez votre annonce depuis le portail de gestion. La publication est gratuite avec le forfait Limité; les mises à niveau Promue et En vedette sont activées par l'équipe de Rent.ca.</value></data>
+  <data name="Faq_Q9" xml:space="preserve"><value>Quels sont mes droits comme locataire au Canada?</value></data>
+  <data name="Faq_A9" xml:space="preserve"><value>Les droits des locataires varient selon la province. En général, un locataire a droit à un logement sécuritaire, au respect de sa vie privée et à une protection contre les évictions abusives. Consultez toujours les règles de location résidentielle de votre province.</value></data>
+  <data name="Faq_Q10" xml:space="preserve"><value>Quelque chose cloche — comment le signaler?</value></data>
+  <data name="Faq_A10" xml:space="preserve"><value>Rent.ca.NET est un projet portfolio et les annonces sont des données de démonstration; il n'y a donc rien à signaler comme frauduleux. Si vous trouvez un bogue ou une erreur dans l'application, ouvrez une issue dans le dépôt GitHub lié dans le pied de page.</value></data>
+  <data name="footer.privacyTitle" xml:space="preserve"><value>Politique de confidentialité</value></data>
+  <data name="footer.privacyText" xml:space="preserve"><value>Rent.ca.NET est un projet portfolio de Giovanni Richaud. Ce n'est pas un vrai service de location — les annonces sont des données de démonstration. Lorsque vous envoyez une demande, vos nom, courriel et numéro de téléphone sont transmis au propriétaire de l'annonce. Les messages envoyés à l'assistant IA et les courriels sortants sont traités par des fournisseurs tiers (OpenRouter, Resend). Rien n'est vendu ni utilisé à des fins publicitaires. Pour toute question, consultez le</value></data>
   <data name="footer.privacyRepo" xml:space="preserve"><value>dépôt</value></data>
   <data name="renter.role" xml:space="preserve"><value>Locataire</value></data>
   <data name="renter.dashboardLink" xml:space="preserve"><value>Tableau de bord</value></data>
@@ -576,6 +596,8 @@
   <data name="Landlords_TierFeaturedF7" xml:space="preserve"><value>Statistiques de performance</value></data>
   <data name="Landlords_TierFeaturedF8" xml:space="preserve"><value>Jusqu'à 40 photos</value></data>
   <data name="Landlords_PricingFooter" xml:space="preserve"><value>Sans contrat. Annulable à tout moment. Tous les prix en CAD.</value></data>
+  <data name="Landlords_PricingDemoNote" xml:space="preserve"><value>Tarifs de démonstration — ce projet est un portfolio; aucun paiement n'est traité.</value></data>
+  <data name="Landlords_StarRating" xml:space="preserve"><value>5 étoiles sur 5</value></data>
   <data name="Landlords_TestimonialsEyebrow" xml:space="preserve"><value>Avis de propriétaires</value></data>
   <data name="Landlords_TestimonialsTitle" xml:space="preserve"><value>La confiance des propriétaires partout au Canada</value></data>
   <data name="Landlords_TestimonialsSubtitle" xml:space="preserve"><value>De vrais résultats de propriétaires qui ont choisi Rent.ca.</value></data>
@@ -594,7 +616,7 @@
   <data name="Landlords_FaqQ1" xml:space="preserve"><value>Combien coûte une annonce?</value></data>
   <data name="Landlords_FaqA1" xml:space="preserve"><value>Nous offrons trois forfaits : Limité (gratuit), Promu (35 $ par 15 jours) et En vedette (199 $ par 15 jours). Tous les prix en CAD, sans contrat.</value></data>
   <data name="Landlords_FaqQ2" xml:space="preserve"><value>Comment puis-je commencer?</value></data>
-  <data name="Landlords_FaqA2" xml:space="preserve"><value>Inscrivez-vous comme propriétaire, vérifiez votre courriel et publiez votre première annonce en moins de cinq minutes. Aucune carte de crédit requise pour le forfait gratuit.</value></data>
+  <data name="Landlords_FaqA2" xml:space="preserve"><value>Inscrivez-vous comme propriétaire et publiez votre première annonce en moins de cinq minutes. Aucune carte de crédit requise pour le forfait gratuit.</value></data>
   <data name="Landlords_FaqQ3" xml:space="preserve"><value>Qu'est-ce qu'inclut le forfait gratuit?</value></data>
   <data name="Landlords_FaqA3" xml:space="preserve"><value>Le forfait Limité comprend une annonce de base avec jusqu'à 5 photos, un placement standard dans la recherche et un formulaire de contact pour les demandes des locataires.</value></data>
   <data name="Landlords_FaqQ4" xml:space="preserve"><value>Comment l'assistant IA aide-t-il les propriétaires?</value></data>
@@ -602,7 +624,7 @@
   <data name="Landlords_FaqQ5" xml:space="preserve"><value>Puis-je gérer plusieurs propriétés?</value></data>
   <data name="Landlords_FaqA5" xml:space="preserve"><value>Oui. Votre tableau de bord vous laisse gérer autant d'annonces que nécessaire depuis un seul compte, avec des statistiques par annonce et le suivi de la boîte de réception.</value></data>
   <data name="Landlords_FaqQ6" xml:space="preserve"><value>Comment passer à un forfait supérieur?</value></data>
-  <data name="Landlords_FaqA6" xml:space="preserve"><value>Depuis votre tableau de bord, ouvrez l'annonce et choisissez Promouvoir ou Mettre en vedette. La mise à niveau s'active immédiatement et dure la période choisie.</value></data>
+  <data name="Landlords_FaqA6" xml:space="preserve"><value>Les mises à niveau sont gérées par l'équipe de Rent.ca — contactez-nous et nous activerons Promue ou En vedette sur votre annonce pour la période choisie.</value></data>
   <data name="Landlords_FaqQ7" xml:space="preserve"><value>Quelles régions couvrez-vous?</value></data>
   <data name="Landlords_FaqA7" xml:space="preserve"><value>Rent.ca couvre toutes les grandes villes canadiennes dont Toronto, Vancouver, Montréal, Calgary, Ottawa, Edmonton et plus de 200 autres villes au Canada.</value></data>
   <data name="Landlords_FaqQ8" xml:space="preserve"><value>Comment annuler mon abonnement?</value></data>

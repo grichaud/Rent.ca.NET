@@ -43,9 +43,9 @@ public class LandlordsLandingModel : PageModel
                 new TierFeature("Landlords_TierPromotedF3", true),
                 new TierFeature("Landlords_TierPromotedF4", true),
                 new TierFeature("Landlords_TierPromotedF5", true),
-                new TierFeature("Landlords_TierPromotedF6", true),
-                new TierFeature("Landlords_TierPromotedF7", true),
-                new TierFeature("Landlords_TierPromotedF8", true),
+                new TierFeature("Landlords_TierPromotedF6", false),
+                new TierFeature("Landlords_TierPromotedF7", false),
+                new TierFeature("Landlords_TierPromotedF8", false),
             }),
         new PricingTier(
             NameKey:        "Landlords_TierFeatured",

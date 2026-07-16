@@ -17,11 +17,11 @@
             <icon name="building-2" class="h-3.5 w-3.5 text-brand-600 dark:text-brand-300" />
             <span class="text-xs font-medium text-slate-700 dark:text-white/80">@L["Landlords_HeroBadge"]</span>
         </div>
-        <h1 class="font-sans font-bold tracking-tight text-5xl sm:text-6xl text-slate-900 dark:text-white leading-tight">
+        <h1 class="font-sans font-bold tracking-tight text-5xl sm:text-6xl md:text-7xl text-slate-900 dark:text-white leading-[1.05]">
             <span class="block">@L["Landlords_HeroTitle1"]</span>
             <span class="block bg-gradient-to-r from-brand-500 to-cyan-500 dark:from-brand-400 dark:to-cyan-400 bg-clip-text text-transparent">@L["Landlords_HeroTitle2"]</span>
         </h1>
-        <p class="text-lg text-slate-600 dark:text-white/70 mt-6 max-w-xl mx-auto">
+        <p class="text-lg sm:text-xl text-slate-600 dark:text-white/70 mt-6 max-w-2xl mx-auto">
             @L["Landlords_HeroSubtitle"]
         </p>
         <div class="mt-10 flex flex-wrap items-center justify-center gap-3">
@@ -34,7 +34,7 @@
 
         <div class="mt-14 grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto">
             <div class="glass-card p-5 text-center">
-                <div class="text-3xl font-bold text-slate-900 dark:text-white">10,000+</div>
+                <div class="text-3xl font-bold text-slate-900 dark:text-white">@(10000.ToString("N0"))+</div>
                 <div class="text-sm text-slate-600 dark:text-white/60 mt-1">@L["Landlords_StatListings"]</div>
             </div>
             <div class="glass-card p-5 text-center">
@@ -42,7 +42,7 @@
                 <div class="text-sm text-slate-600 dark:text-white/60 mt-1">@L["Landlords_StatCities"]</div>
             </div>
             <div class="glass-card p-5 text-center">
-                <div class="text-3xl font-bold text-slate-900 dark:text-white">50,000+</div>
+                <div class="text-3xl font-bold text-slate-900 dark:text-white">@(50000.ToString("N0"))+</div>
                 <div class="text-sm text-slate-600 dark:text-white/60 mt-1">@L["Landlords_StatVisitors"]</div>
             </div>
         </div>
@@ -50,8 +50,8 @@
 </section>
 
 @*  ──────────── 2. Why list on Rent.ca ──────────── *@
-<section class="mt-24">
-    <h2 class="font-sans font-bold tracking-tight text-3xl sm:text-4xl text-slate-900 dark:text-white text-center">
+<section class="mt-24" aria-labelledby="landlords-why-heading">
+    <h2 id="landlords-why-heading" class="font-sans font-bold tracking-tight text-3xl sm:text-4xl text-slate-900 dark:text-white text-center">
         @L["Landlords_WhyTitle"]
     </h2>
     <div class="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-6">
@@ -71,7 +71,7 @@
         </div>
         <div class="glass-card p-6">
             <div class="inline-flex items-center justify-center h-12 w-12 rounded-2xl bg-purple-500/15 dark:bg-purple-500/25 mb-4">
-                <icon name="layout-grid" class="h-6 w-6 text-purple-600 dark:text-purple-300" />
+                <icon name="layout-dashboard" class="h-6 w-6 text-purple-600 dark:text-purple-300" />
             </div>
             <h3 class="font-semibold text-lg text-slate-900 dark:text-white">@L["Landlords_Why3Title"]</h3>
             <p class="text-sm text-slate-600 dark:text-white/60 mt-2 leading-relaxed">@L["Landlords_Why3Body"]</p>
@@ -80,13 +80,13 @@
 </section>
 
 @*  ──────────── 3. How It Works ──────────── *@
-<section class="mt-24">
+<section class="mt-24" aria-labelledby="landlords-how-heading">
     <div class="text-center max-w-2xl mx-auto">
         <span class="glass-badge inline-flex">
             <icon name="check-circle" class="h-3.5 w-3.5 text-brand-600 dark:text-brand-300" />
             <span class="text-xs font-medium text-slate-700 dark:text-white/80">@L["Landlords_HowEyebrow"]</span>
         </span>
-        <h2 class="mt-4 font-sans font-bold tracking-tight text-3xl sm:text-4xl text-slate-900 dark:text-white">
+        <h2 id="landlords-how-heading" class="mt-4 font-sans font-bold tracking-tight text-3xl sm:text-4xl text-slate-900 dark:text-white">
             @L["Landlords_HowTitle"]
         </h2>
         <p class="mt-3 text-slate-600 dark:text-white/70">@L["Landlords_HowSubtitle"]</p>
@@ -95,7 +95,7 @@
         @{ var steps = new[] {
             new { Num = "1", Icon = "user-plus",  TitleKey = "Landlords_Step1Title", BodyKey = "Landlords_Step1Body" },
             new { Num = "2", Icon = "file-plus",  TitleKey = "Landlords_Step2Title", BodyKey = "Landlords_Step2Body" },
-            new { Num = "3", Icon = "inbox",      TitleKey = "Landlords_Step3Title", BodyKey = "Landlords_Step3Body" },
+            new { Num = "3", Icon = "message-square", TitleKey = "Landlords_Step3Title", BodyKey = "Landlords_Step3Body" },
         }; }
         @foreach (var step in steps)
         {
@@ -186,6 +186,7 @@
         }
     </div>
     <p class="mt-10 text-center text-sm text-slate-500 dark:text-white/55">@L["Landlords_PricingFooter"]</p>
+    <p class="mt-2 text-center text-sm text-slate-500 dark:text-white/55">@L["Landlords_PricingDemoNote"]</p>
 </section>
 
 @*  ──────────── 5. Testimonials ──────────── *@
@@ -204,7 +205,7 @@
         @foreach (var t in Model.Testimonials)
         {
             <div class="glass-card p-6 flex flex-col">
-                <div class="flex items-center gap-0.5 text-amber-500">
+                <div class="flex items-center gap-0.5 text-amber-500" role="img" aria-label="@L["Landlords_StarRating"]">
                     @for (var i = 0; i < 5; i++)
                     {
                         <icon name="star" class="h-4 w-4" fill="currentColor" stroke-width="0" />

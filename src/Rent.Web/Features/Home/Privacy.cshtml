@@ -1,12 +1,16 @@
 @page "/{culture:locale}/privacy"
 @model Rent.Web.Features.Home.PrivacyModel
 @{
-    ViewData["Title"] = L["footer.privacy"].Value;
+    ViewData["Title"] = L["footer.privacyTitle"].Value;
 }
 
-<section class="max-w-2xl mx-auto glass-card p-10">
-    <h1 class="font-sans font-bold tracking-tight text-3xl text-slate-900 dark:text-white">@L["footer.privacy"]</h1>
-    <p class="text-slate-600 dark:text-white/70 mt-4">
-        @L["footer.privacyText"] <a href="https://github.com/grichaud" class="text-brand-600 dark:text-brand-400 underline">@L["footer.privacyRepo"]</a>.
-    </p>
+<section class="max-w-3xl mx-auto">
+    <div class="text-center py-8">
+        <h1 class="font-sans font-bold tracking-tight text-4xl text-slate-900 dark:text-white">@L["footer.privacyTitle"]</h1>
+    </div>
+    <div class="glass-card p-8 sm:p-10">
+        <p class="text-slate-600 dark:text-white/70 leading-relaxed">
+            @L["footer.privacyText"] <a href="https://github.com/grichaud/Rent.ca.NET" target="_blank" rel="noopener" class="text-brand-600 dark:text-brand-400 underline">@L["footer.privacyRepo"]</a>.
+        </p>
+    </div>
 </section>
