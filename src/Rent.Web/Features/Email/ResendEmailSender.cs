@@ -57,13 +57,20 @@ public class ResendEmailSender : IEmailSender
         // the Resend testing domain is allowed to reach) and keep the real recipient
         // visible in the subject. See EmailOptions.RedirectAllTo.
         var recipient = to;
+        string[]? bcc = null;
         if (!string.IsNullOrWhiteSpace(_options.RedirectAllTo))
         {
             recipient = _options.RedirectAllTo;
             subject = $"[demo → {to}] {subject}";
         }
+        else if (!string.IsNullOrWhiteSpace(_options.BccAll)
+            && !string.Equals(_options.BccAll, to, StringComparison.OrdinalIgnoreCase))
+        {
+            // Real send to the user, blind-copied to the operator for monitoring.
+            bcc = new[] { _options.BccAll };
+        }
 
-        var payload = new ResendRequest(from, new[] { recipient }, subject, html, replyTo);
+        var payload = new ResendRequest(from, new[] { recipient }, subject, html, replyTo, bcc);
 
         using var response = await _http.PostAsJsonAsync("emails", payload, JsonOptions, ct);
         var body = await response.Content.ReadAsStringAsync(ct);
@@ -82,7 +89,7 @@ public class ResendEmailSender : IEmailSender
             "Resend accepted {Subject} for {To} (id={Id}).", subject, to, parsed?.Id ?? "(none)");
     }
 
-    private record ResendRequest(string From, string[] To, string Subject, string Html, string? ReplyTo);
+    private record ResendRequest(string From, string[] To, string Subject, string Html, string? ReplyTo, string[]? Bcc);
 
     private record ResendResponse(string? Id);
 }

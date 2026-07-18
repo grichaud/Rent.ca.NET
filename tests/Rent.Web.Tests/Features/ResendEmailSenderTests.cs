@@ -67,4 +67,52 @@ public class ResendEmailSenderTests
         handler.Body!.Value.GetProperty("subject").GetString()
             .Should().Contain("[demo → ana.renter@example.com]");
     }
+
+    [Fact]
+    public async Task Send_WithBcc_DeliversToUserAndBlindCopiesOperator()
+    {
+        var (sender, handler) = Build(new EmailOptions
+        {
+            ApiKey = "test",
+            BccAll = "owner@hotmail.com"
+        });
+
+        await sender.SendWelcomeAsync(SampleWelcome());
+
+        handler.Body!.Value.GetProperty("to")[0].GetString().Should().Be("ana.renter@example.com");
+        handler.Body!.Value.GetProperty("bcc")[0].GetString().Should().Be("owner@hotmail.com");
+    }
+
+    [Fact]
+    public async Task Send_WithBccAndRedirect_RedirectWinsAndNoBcc()
+    {
+        var (sender, handler) = Build(new EmailOptions
+        {
+            ApiKey = "test",
+            RedirectAllTo = "owner@hotmail.com",
+            BccAll = "owner@hotmail.com"
+        });
+
+        await sender.SendWelcomeAsync(SampleWelcome());
+
+        handler.Body!.Value.GetProperty("to")[0].GetString().Should().Be("owner@hotmail.com");
+        handler.Body!.Value.TryGetProperty("bcc", out _).Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task Send_WithBccEqualToRecipient_SkipsBcc()
+    {
+        var (sender, handler) = Build(new EmailOptions
+        {
+            ApiKey = "test",
+            BccAll = "owner@hotmail.com"
+        });
+
+        // The operator triggers an email addressed to themselves; no redundant BCC.
+        await sender.SendPasswordResetAsync(
+            new PasswordResetEmail("owner@hotmail.com", "Owner", "https://localhost/reset", "en"));
+
+        handler.Body!.Value.GetProperty("to")[0].GetString().Should().Be("owner@hotmail.com");
+        handler.Body!.Value.TryGetProperty("bcc", out _).Should().BeFalse();
+    }
 }

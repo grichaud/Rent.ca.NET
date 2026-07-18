@@ -17,4 +17,12 @@ public class EmailOptions
     /// account owner. Leave empty in production once a real domain is verified.
     /// </summary>
     public string RedirectAllTo { get; set; } = string.Empty;
+
+    /// <summary>
+    /// When set, every outgoing email is blind-copied (BCC) to this address, so the
+    /// operator receives a copy of each real send for monitoring. Ignored while
+    /// RedirectAllTo is active (the mail already goes to that address) and skipped when
+    /// it equals the primary recipient. Requires a verified sender domain to take effect.
+    /// </summary>
+    public string BccAll { get; set; } = string.Empty;
 }
