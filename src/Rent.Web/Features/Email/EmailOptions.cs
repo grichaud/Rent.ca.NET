@@ -8,4 +8,13 @@ public class EmailOptions
     public string FromAddress { get; set; } = "onboarding@resend.dev";
     public string FromName { get; set; } = "Rent.ca";
     public string BaseUrl { get; set; } = "https://api.resend.com";
+
+    /// <summary>
+    /// Demo/testing override. When set, every outgoing email is delivered to this
+    /// single address instead of the real recipient, and the intended recipient is
+    /// noted in the subject. Lets the app send real emails while the sender is still
+    /// the Resend testing domain (onboarding@resend.dev), which only delivers to the
+    /// account owner. Leave empty in production once a real domain is verified.
+    /// </summary>
+    public string RedirectAllTo { get; set; } = string.Empty;
 }

@@ -53,7 +53,17 @@ public class ResendEmailSender : IEmailSender
             ? _options.FromAddress
             : $"{_options.FromName} <{_options.FromAddress}>";
 
-        var payload = new ResendRequest(from, new[] { to }, subject, html, replyTo);
+        // Demo mode: when RedirectAllTo is set, deliver to that single address (the one
+        // the Resend testing domain is allowed to reach) and keep the real recipient
+        // visible in the subject. See EmailOptions.RedirectAllTo.
+        var recipient = to;
+        if (!string.IsNullOrWhiteSpace(_options.RedirectAllTo))
+        {
+            recipient = _options.RedirectAllTo;
+            subject = $"[demo → {to}] {subject}";
+        }
+
+        var payload = new ResendRequest(from, new[] { recipient }, subject, html, replyTo);
 
         using var response = await _http.PostAsJsonAsync("emails", payload, JsonOptions, ct);
         var body = await response.Content.ReadAsStringAsync(ct);
