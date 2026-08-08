@@ -73,11 +73,16 @@ public class IndexModel : PageModel
         {
             Id = Guid.NewGuid(),
             UserId = userId.Value,
+            Name = string.IsNullOrWhiteSpace(Input.Name) ? null : Input.Name.Trim(),
+            // Captured now because the digest engine runs without a request and therefore
+            // without an ambient culture to read at send time.
+            Locale = LocalizationConfig.CurrentOrDefault(),
             City = string.IsNullOrWhiteSpace(Input.City) ? null : Input.City.Trim(),
             PropertyType = Input.PropertyType,
             PriceMin = Input.PriceMin,
             PriceMax = Input.PriceMax,
             BedroomsMin = Input.BedroomsMin,
+            BathroomsMin = Input.BathroomsMin,
             PetsAllowed = pets,
             Frequency = Input.Frequency,
             IsActive = true,

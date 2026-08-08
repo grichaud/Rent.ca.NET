@@ -5,6 +5,18 @@ public class Alert
     public Guid Id { get; set; } = Guid.NewGuid();
     public Guid UserId { get; set; }
 
+    /// <summary>
+    /// Optional user-facing label ("Downtown 2BR under $2500"). Used in the digest subject
+    /// so a renter with several alerts can tell at a glance which one fired.
+    /// </summary>
+    public string? Name { get; set; }
+
+    /// <summary>
+    /// UI culture captured when the alert was created ("en" / "fr"). The digest engine runs
+    /// without an HTTP request, so there is no ambient culture to fall back on at send time.
+    /// </summary>
+    public string Locale { get; set; } = "en";
+
     public string? City { get; set; }
     public PropertyType? PropertyType { get; set; }
     public decimal? PriceMin { get; set; }

@@ -80,6 +80,80 @@ public class AlertsTests : IClassFixture<RentAppFactory>
     }
 
     [Fact]
+    public async Task Alerts_Create_Persists_Name_Bathrooms_And_Locale()
+    {
+        var email = $"alert-fields+{Guid.NewGuid():N}@test.local";
+        var user = await TestAuth.CreateUserAsync(_factory, email, Roles.Renter);
+        using var client = await TestAuth.SignInAsync(_factory, email, TestAuth.DefaultPassword);
+
+        // Posted through the French route: the alert must remember that, because the digest
+        // engine sends with no request and cannot read an ambient culture later.
+        var create = await client.PostAsync("/fr/renter/alerts?handler=Create",
+            new FormUrlEncodedContent(new[]
+            {
+                new KeyValuePair<string, string>("Input.Name", "Centre-ville 2 ch."),
+                new KeyValuePair<string, string>("Input.City", "Montreal"),
+                new KeyValuePair<string, string>("Input.BathroomsMin", "1.5"),
+                new KeyValuePair<string, string>("Input.Frequency", AlertFrequency.Weekly.ToString())
+            }));
+        create.StatusCode.Should().Be(HttpStatusCode.Redirect);
+
+        using var scope = _factory.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        var saved = await db.Alerts.AsNoTracking().SingleAsync(a => a.UserId == user.Id);
+
+        saved.Name.Should().Be("Centre-ville 2 ch.");
+        // BathroomsMin was a dead column before the engine: nothing wrote it.
+        saved.BathroomsMin.Should().Be(1.5m);
+        saved.Locale.Should().Be("fr");
+    }
+
+    [Theory]
+    [InlineData("en")]
+    [InlineData("fr")]
+    public async Task Alerts_Create_Binds_Decimal_Bathrooms_In_Every_Culture(string culture)
+    {
+        // <input type="number"> always posts an invariant "1.5" regardless of the page
+        // culture (HTML spec: valid floating-point number). Model binding must accept that
+        // under fr too, or a French renter's filter is silently dropped.
+        var email = $"alert-decimal-{culture}+{Guid.NewGuid():N}@test.local";
+        var user = await TestAuth.CreateUserAsync(_factory, email, Roles.Renter);
+        using var client = await TestAuth.SignInAsync(_factory, email, TestAuth.DefaultPassword);
+
+        var resp = await client.PostAsync($"/{culture}/renter/alerts?handler=Create",
+            new FormUrlEncodedContent(new[]
+            {
+                new KeyValuePair<string, string>("Input.City", "Toronto"),
+                new KeyValuePair<string, string>("Input.BathroomsMin", "1.5"),
+                new KeyValuePair<string, string>("Input.Frequency", AlertFrequency.Daily.ToString())
+            }));
+        resp.StatusCode.Should().Be(HttpStatusCode.Redirect);
+
+        using var scope = _factory.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        var saved = await db.Alerts.AsNoTracking().SingleAsync(a => a.UserId == user.Id);
+
+        saved.BathroomsMin.Should().Be(1.5m);
+    }
+
+    [Fact]
+    public async Task Alerts_Create_Rejects_Overlong_Name()
+    {
+        using var client = await TestAuth.CreateAndSignInAsync(_factory, Roles.Renter, "alert-long-name");
+
+        var resp = await client.PostAsync("/en/renter/alerts?handler=Create",
+            new FormUrlEncodedContent(new[]
+            {
+                new KeyValuePair<string, string>("Input.Name", new string('x', 81)),
+                new KeyValuePair<string, string>("Input.City", "Toronto"),
+                new KeyValuePair<string, string>("Input.Frequency", AlertFrequency.Daily.ToString())
+            }));
+
+        resp.StatusCode.Should().Be(HttpStatusCode.OK);
+        (await resp.Content.ReadAsStringAsync()).Should().Contain("80 characters or fewer");
+    }
+
+    [Fact]
     public async Task Alerts_Toggle_FlipsIsActive()
     {
         var email = $"alert-toggle+{Guid.NewGuid():N}@test.local";

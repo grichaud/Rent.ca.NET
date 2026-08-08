@@ -16,6 +16,9 @@ namespace Rent.Web.Tests.Fixtures;
 
 public class RentAppFactory : WebApplicationFactory<Program>
 {
+    /// <summary>Shared secret the dispatch endpoint expects in tests.</summary>
+    public const string TestDispatchToken = "test-dispatch-token";
+
     private readonly SqliteConnection _connection;
 
     public FakeEmailSender EmailSender { get; } = new();
@@ -46,7 +49,14 @@ public class RentAppFactory : WebApplicationFactory<Program>
         {
             config.AddInMemoryCollection(new Dictionary<string, string?>
             {
-                ["ConnectionStrings:DefaultConnection"] = "Data Source=:memory:" // replaced below
+                ["ConnectionStrings:DefaultConnection"] = "Data Source=:memory:", // replaced below
+
+                // Alert engine: no inter-send throttle in tests (the 600ms production default
+                // exists only to stay under Resend's rate limit), and a known dispatch token
+                // so the endpoint is mapped and its auth can be exercised.
+                ["Alerts:SendDelayMs"] = "0",
+                ["Alerts:DispatchToken"] = TestDispatchToken,
+                ["Email:PublicBaseUrl"] = "https://rent-test.local"
             });
         });
         builder.ConfigureServices(services =>

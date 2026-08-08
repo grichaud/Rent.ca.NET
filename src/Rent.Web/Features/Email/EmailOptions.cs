@@ -25,4 +25,12 @@ public class EmailOptions
     /// it equals the primary recipient. Requires a verified sender domain to take effect.
     /// </summary>
     public string BccAll { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Absolute origin used to build links in emails composed outside an HTTP request.
+    /// Request-bound emails (inquiry, welcome, password reset) get their URLs from the
+    /// caller's HttpContext; the alert digest engine has no request, so it needs this.
+    /// No trailing slash.
+    /// </summary>
+    public string PublicBaseUrl { get; set; } = "https://rent-ca-net.azurewebsites.net";
 }

@@ -13,4 +13,15 @@ public static class LocalizationConfig
 
     public static bool IsSupported(string? culture) =>
         !string.IsNullOrWhiteSpace(culture) && SupportedCultures.Contains(culture);
+
+    /// <summary>
+    /// The ambient UI culture narrowed to a supported two-letter code, falling back to the
+    /// default. Used to stamp a locale onto rows that will later be rendered outside any
+    /// request (e.g. alert digests sent by the background engine).
+    /// </summary>
+    public static string CurrentOrDefault()
+    {
+        var lang = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+        return IsSupported(lang) ? lang : DefaultCulture;
+    }
 }

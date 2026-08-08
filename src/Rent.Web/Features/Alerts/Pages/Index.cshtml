@@ -40,6 +40,10 @@
                 ? L["listings.beds.studio"].Value
                 : string.Format(L["listings.beds.many"].Value, $"{a.BedroomsMin}+"));
         }
+        if (a.BathroomsMin.HasValue)
+        {
+            parts.Add(string.Format(L["listings.baths.many"].Value, $"{a.BathroomsMin.Value.ToString("0.#")}+"));
+        }
         if (a.PropertyType.HasValue) parts.Add(TypeLabel(a.PropertyType.Value));
         if (a.PetsAllowed == true) parts.Add(L["renter.alertsPetFriendly"].Value);
         else if (a.PetsAllowed == false) parts.Add(L["renter.alertsNoPets"].Value);
@@ -74,6 +78,12 @@
             <h2 class="font-semibold text-slate-900 dark:text-white mb-4">@L["renter.alertsCreateSection"]</h2>
             <form method="post" asp-page-handler="Create" class="grid gap-4 sm:grid-cols-2">
                 <div asp-validation-summary="ModelOnly" role="alert" class="text-sm text-red-600 dark:text-red-400 sm:col-span-2"></div>
+
+                <div class="sm:col-span-2">
+                    <label asp-for="Input.Name" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["renter.alertsName"]</label>
+                    <input asp-for="Input.Name" type="text" maxlength="80" class="glass-input" placeholder="@L["renter.alertsNamePlaceholder"]" />
+                    <span asp-validation-for="Input.Name" role="alert" class="text-xs text-red-600 dark:text-red-400"></span>
+                </div>
 
                 <div>
                     <label asp-for="Input.City" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["renter.alertsCity"]</label>
@@ -118,6 +128,15 @@
                 </div>
 
                 <div>
+                    <label asp-for="Input.BathroomsMin" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["renter.alertsBathroomsLabel"]</label>
+                    <input asp-for="Input.BathroomsMin" type="number" step="0.5" min="0" max="10" class="glass-input" placeholder="@L["renter.alertsTypeAny"]" />
+                    <span asp-validation-for="Input.BathroomsMin" role="alert" class="text-xs text-red-600 dark:text-red-400"></span>
+                </div>
+
+                @* Spans both columns: adding Min bathrooms made the field count odd, which
+                   left this select orphaned beside an empty cell. Full width pairs it with
+                   the frequency select below into a tidy preferences block. *@
+                <div class="sm:col-span-2">
                     <label asp-for="Input.PetsAllowed" class="block text-sm text-slate-700 dark:text-white/80 mb-1">@L["renter.alertsPetsAllowed"]</label>
                     <select asp-for="Input.PetsAllowed" class="glass-input">
                         <option value="">@L["renter.alertsTypeAny"]</option>
@@ -175,7 +194,11 @@
                     </div>
                     <div class="flex-1 min-w-0">
                         <div class="flex items-center gap-2 flex-wrap">
-                            <span class="font-semibold text-slate-900 dark:text-white truncate">@a.City</span>
+                            <span class="font-semibold text-slate-900 dark:text-white truncate">@(string.IsNullOrWhiteSpace(a.Name) ? a.City : a.Name)</span>
+                            @if (!string.IsNullOrWhiteSpace(a.Name))
+                            {
+                                <span class="text-sm text-slate-500 dark:text-white/60 truncate">@a.City</span>
+                            }
                             @if (a.IsActive)
                             {
                                 <span class="text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-700 dark:text-emerald-300">@L["renter.alertsActive"]</span>

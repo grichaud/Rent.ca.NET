@@ -182,8 +182,40 @@ In your fork's **Settings &rarr; Secrets and variables &rarr; Actions**, add:
 | --- | --- |
 | `AZURE_WEBAPP_PUBLISH_PROFILE` | The full XML contents of `publish-profile.xml` from step 7. |
 | `AZURE_SQL_CONNECTION_STRING` | Same value as `$SQL_CS` above &mdash; used by the `dotnet ef database update` step of the pipeline. |
+| `ALERTS_DISPATCH_TOKEN` | A random secret shared with the app, used by the **Alert digest** workflow. See below. |
 
 Push to `main` (or trigger **Deploy to Azure App Service** manually from the Actions tab). The workflow builds, tests, applies EF Core migrations against Azure SQL, and deploys the published output to App Service.
+
+### Alert digest engine
+
+Saved alerts are evaluated by an engine that emails renters the listings published since their last digest. Because F1 does not support "Always On", an in-process timer would stop firing whenever the worker unloads &mdash; so the schedule lives outside the app:
+
+```
+.github/workflows/alerts-dispatch.yml   (hourly cron)
+        │  POST + X-Alerts-Token
+        ▼
+POST /api/alerts/dispatch  →  AlertDigestService  →  Resend
+```
+
+Generate a token and give the same value to both sides:
+
+```bash
+TOKEN=$(openssl rand -hex 32)
+
+# 1. The app
+az webapp config appsettings set -g $RG -n $APP \
+  --settings "Alerts__DispatchToken=$TOKEN"
+
+# 2. GitHub  (Settings → Secrets and variables → Actions → New secret)
+#    Name: ALERTS_DISPATCH_TOKEN     Value: $TOKEN
+echo $TOKEN
+```
+
+Without `Alerts__DispatchToken` the endpoint returns **404** &mdash; it fails closed rather than running unauthenticated. Trigger a run by hand from the Actions tab (**Alert digest → Run workflow**); the job prints a summary such as `considered=12 due=4 sent=3 noMatches=1 failed=0`.
+
+Optional settings, all with working defaults: `Alerts__MaxAlertsPerRun` (200), `Alerts__MaxItemsPerEmail` (10), `Alerts__SendDelayMs` (600, keeps sends under Resend's rate limit), and `Email__PublicBaseUrl` (the origin used to build links in digests, which are composed with no HTTP request in flight).
+
+**Cadence.** `Daily` fires after 23 h and `Weekly` after 6 d 23 h &mdash; deliberately short of the round number so hourly-cron jitter cannot drift a daily digest into every other day. `Instant` means "every run", i.e. up to one hour, since the cron is the clock.
 
 ### Limitations (documented for honesty)
 
@@ -191,6 +223,7 @@ Push to `main` (or trigger **Deploy to Azure App Service** manually from the Act
 * If daily CPU exceeds 60 minutes, the app pauses until the next day.
 * Azure SQL auto-pause after 1 h idle means the first request after idle can take ~20 s while the database wakes.
 * F1 does not allow custom domains &mdash; the app lives at `{app-name}.azurewebsites.net`.
+* The alert digest depends on an external scheduler, so anything that stops that scheduler stops the digest, and it stops quietly. GitHub's 60-day auto-disable for scheduled workflows applies to *public* repositories only and does not affect this one while it stays private &mdash; but an exhausted Actions minute quota, a rotated token, or a job that starts failing would all have the same effect. There is currently no in-app indicator of when the digest last ran; check the **Alert digest** workflow in the Actions tab.
 * Everything above is acceptable for a portfolio demo; a paying production workload should start at B1 + a dedicated Azure SQL tier.
 
 ## Why this repo exists

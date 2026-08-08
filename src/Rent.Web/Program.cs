@@ -95,6 +95,7 @@ builder.Services.AddScoped<Rent.Web.Features.Search.SearchHandler>();
 builder.Services.AddScoped<Rent.Web.Features.Maps.MapMarkersHandler>();
 builder.Services.AddScoped<Rent.Web.Features.Favorites.IFavoriteService, Rent.Web.Features.Favorites.FavoriteService>();
 builder.Services.AddScoped<Rent.Web.Features.Admin.Services.IPopularSearchTracker, Rent.Web.Features.Admin.Services.PopularSearchTracker>();
+builder.Services.AddScoped<Rent.Web.Features.Alerts.Engine.AlertMatcher>();
 
 builder.Services.Configure<Rent.Web.Features.Maps.MapsOptions>(
     builder.Configuration.GetSection(Rent.Web.Features.Maps.MapsOptions.SectionName));
@@ -120,6 +121,11 @@ else
 {
     builder.Services.AddSingleton<Rent.Web.Features.Email.IEmailSender, Rent.Web.Features.Email.NoOpEmailSender>();
 }
+
+builder.Services.Configure<Rent.Web.Features.Alerts.Engine.AlertEngineOptions>(
+    builder.Configuration.GetSection(Rent.Web.Features.Alerts.Engine.AlertEngineOptions.SectionName));
+builder.Services.AddScoped<Rent.Web.Features.Alerts.Engine.IAlertDigestService,
+    Rent.Web.Features.Alerts.Engine.AlertDigestService>();
 
 builder.Services.Configure<Rent.Web.Features.AiChat.AiOptions>(
     builder.Configuration.GetSection(Rent.Web.Features.AiChat.AiOptions.SectionName));
@@ -206,6 +212,15 @@ builder.Services.Configure<RouteOptions>(options =>
 var razorBuilder = builder.Services.AddRazorPages(options =>
 {
     options.RootDirectory = "/Features";
+});
+
+// HTML number inputs and query strings always use an invariant "1.5", but MVC binds simple
+// types with CurrentCulture — which expects "1,5" on the French routes. Without this, a
+// decimal typed under /fr silently bound to null. See InvariantNumericModelBinder.
+razorBuilder.AddMvcOptions(options =>
+{
+    options.ModelBinderProviders.Insert(0,
+        new Rent.Web.Infrastructure.ModelBinding.InvariantNumericModelBinderProvider());
 });
 
 if (builder.Environment.IsDevelopment())

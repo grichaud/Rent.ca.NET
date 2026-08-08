@@ -786,4 +786,7 @@
   <data name="landlord.formTitlePlaceholder" xml:space="preserve"><value>Bright 2BR in downtown Toronto</value></data>
   <data name="landlord.backToListings" xml:space="preserve"><value>Back to listings</value></data>
   <data name="landlord.unitsCount" xml:space="preserve"><value>{0} units</value></data>
+  <data name="renter.alertsName" xml:space="preserve"><value>Alert name (optional)</value></data>
+  <data name="renter.alertsNamePlaceholder" xml:space="preserve"><value>e.g. Downtown 2BR under $2,500</value></data>
+  <data name="renter.alertsBathroomsLabel" xml:space="preserve"><value>Min bathrooms</value></data>
 </root>

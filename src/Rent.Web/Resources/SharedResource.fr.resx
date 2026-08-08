@@ -786,4 +786,7 @@
   <data name="landlord.formTitlePlaceholder" xml:space="preserve"><value>Beau 2 chambres au centre-ville de Toronto</value></data>
   <data name="landlord.backToListings" xml:space="preserve"><value>Retour aux annonces</value></data>
   <data name="landlord.unitsCount" xml:space="preserve"><value>{0} unités</value></data>
+  <data name="renter.alertsName" xml:space="preserve"><value>Nom de l'alerte (facultatif)</value></data>
+  <data name="renter.alertsNamePlaceholder" xml:space="preserve"><value>p. ex. 2 ch. au centre-ville sous 2 500 $</value></data>
+  <data name="renter.alertsBathroomsLabel" xml:space="preserve"><value>Salles de bain min.</value></data>
 </root>

@@ -168,6 +168,8 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid
             e.ToTable("Alerts");
             e.HasKey(x => x.Id);
 
+            e.Property(x => x.Name).HasMaxLength(80);
+            e.Property(x => x.Locale).HasMaxLength(5).IsRequired();
             e.Property(x => x.City).HasMaxLength(100);
             e.Property(x => x.PropertyType).HasConversion<string>().HasMaxLength(20);
             e.Property(x => x.Frequency).HasConversion<string>().HasMaxLength(10);
@@ -177,6 +179,9 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid
 
             e.HasIndex(x => new { x.UserId, x.IsActive });
             e.HasIndex(x => new { x.IsActive, x.City });
+
+            // Serves the digest engine's due-alert scan: WHERE IsActive = 1 ORDER BY LastSentAt.
+            e.HasIndex(x => new { x.IsActive, x.LastSentAt });
 
             e.HasOne(x => x.User)
              .WithMany()

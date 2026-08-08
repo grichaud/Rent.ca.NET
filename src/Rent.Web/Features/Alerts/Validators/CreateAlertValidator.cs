@@ -6,6 +6,10 @@ public class CreateAlertValidator : AbstractValidator<CreateAlertRequest>
 {
     public CreateAlertValidator()
     {
+        RuleFor(x => x.Name)
+            .MaximumLength(80).WithMessage("Name must be 80 characters or fewer.")
+            .When(x => !string.IsNullOrWhiteSpace(x.Name));
+
         RuleFor(x => x.City)
             .NotEmpty().WithMessage("City is required.")
             .MaximumLength(100);
@@ -26,6 +30,10 @@ public class CreateAlertValidator : AbstractValidator<CreateAlertRequest>
         RuleFor(x => x.BedroomsMin)
             .InclusiveBetween(0, 10).WithMessage("Bedrooms must be between 0 and 10.")
             .When(x => x.BedroomsMin.HasValue);
+
+        RuleFor(x => x.BathroomsMin)
+            .InclusiveBetween(0m, 10m).WithMessage("Bathrooms must be between 0 and 10.")
+            .When(x => x.BathroomsMin.HasValue);
 
         RuleFor(x => x.Frequency)
             .IsInEnum().WithMessage("Pick a valid frequency.");

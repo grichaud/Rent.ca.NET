@@ -1,0 +1,91 @@
+name: Alert digest
+
+# Drives the alert engine from outside the app.
+#
+# The App Service runs on the F1 (Free) tier, which does not support Always On: the worker is
+# unloaded after a stretch without traffic, so an in-process BackgroundService/PeriodicTimer
+# would fire erratically or not at all. This workflow is the clock instead.
+#
+# The 60-day auto-disable for scheduled workflows applies to PUBLIC repositories only
+# ("In a public repository, scheduled workflows are automatically disabled when no repository
+# activity has occurred in 60 days"). This repository is private, so it is not subject to it.
+# Should it ever be made public, that rule starts applying and this cron would go quiet after
+# two idle months.
+
+on:
+  schedule:
+    # Hourly, on the hour. Cron here is always UTC and may be delayed under platform load;
+    # the engine's cadence slack (23h for daily, 6d23h for weekly) absorbs that jitter.
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+# Nothing in this job touches the repository.
+permissions: {}
+
+concurrency:
+  # A slow run must not overlap the next tick. The endpoint also guards itself with a 409,
+  # so this is belt and braces.
+  group: alerts-dispatch
+  cancel-in-progress: false
+
+env:
+  APP_URL: https://rent-ca-net.azurewebsites.net
+
+jobs:
+  dispatch:
+    name: Trigger digest
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wake the app
+        # F1 has no Always On, and the SQL database is serverless with auto-pause, so the
+        # first request after an idle stretch can take a while. Warm the health endpoint
+        # before the real call rather than burning the dispatch attempt on a cold start.
+        run: |
+          curl --silent --show-error --max-time 180 \
+               --retry 5 --retry-delay 15 --retry-all-errors \
+               -o /dev/null -w 'health: HTTP %{http_code}\n' \
+               "$APP_URL/health" || echo 'health check did not succeed; continuing anyway'
+
+      - name: Dispatch alert digest
+        env:
+          ALERTS_DISPATCH_TOKEN: ${{ secrets.ALERTS_DISPATCH_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${ALERTS_DISPATCH_TOKEN:-}" ]; then
+            echo "::error::Secret ALERTS_DISPATCH_TOKEN is not set. Add it in Settings > Secrets and variables > Actions."
+            exit 1
+          fi
+
+          http_code=$(curl --silent --show-error \
+            --max-time 300 \
+            --retry 3 --retry-delay 20 --retry-all-errors \
+            -X POST "$APP_URL/api/alerts/dispatch" \
+            -H "X-Alerts-Token: ${ALERTS_DISPATCH_TOKEN}" \
+            -o response.json -w '%{http_code}')
+
+          echo "HTTP $http_code"
+          cat response.json || true
+          echo
+
+          # 409 means another run already holds the engine gate — expected, not a failure.
+          if [ "$http_code" = "409" ]; then
+            echo "::notice::A digest run was already in progress; nothing to do."
+            exit 0
+          fi
+
+          if [ "$http_code" != "200" ]; then
+            echo "::error::Dispatch failed with HTTP $http_code"
+            exit 1
+          fi
+
+          summary=$(jq -r '"considered=\(.considered) due=\(.due) sent=\(.sent) noMatches=\(.noMatches) failed=\(.failed) in \(.elapsedMs)ms"' response.json)
+          echo "::notice::$summary"
+
+          # Individual send failures do not red the run: the engine leaves those alerts
+          # unstamped and retries them on the next tick. Surfaced as a warning so a
+          # persistent problem is still visible hour after hour instead of silent.
+          failed=$(jq -r '.failed' response.json)
+          if [ "$failed" != "0" ]; then
+            echo "::warning::$failed alert digest(s) failed to send; they will be retried next run."
+          fi

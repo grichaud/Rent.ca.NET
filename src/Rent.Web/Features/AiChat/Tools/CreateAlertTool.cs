@@ -1,6 +1,7 @@
 using System.Text.Json;
 using Rent.Web.Domain;
 using Rent.Web.Infrastructure.Data;
+using Rent.Web.Infrastructure.Localization;
 
 namespace Rent.Web.Features.AiChat.Tools;
 
@@ -56,6 +57,9 @@ public class CreateAlertTool : IAiTool
         var alert = new Alert
         {
             UserId = userId,
+            // Stamped here for the same reason as the alerts form: the digest engine sends
+            // without a request, so there is no culture to read at that point.
+            Locale = LocalizationConfig.CurrentOrDefault(),
             City = args.City.Trim(),
             PropertyType = args.PropertyType,
             PriceMax = args.PriceMax,

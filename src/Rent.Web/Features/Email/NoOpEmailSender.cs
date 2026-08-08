@@ -25,4 +25,12 @@ public class NoOpEmailSender : IEmailSender
         _logger.LogInformation("[NoOp] Password-reset email skipped (no API key). To={Email}", data.ToEmail);
         return Task.CompletedTask;
     }
+
+    public Task SendAlertDigestAsync(AlertDigestEmail data, CancellationToken ct = default)
+    {
+        _logger.LogInformation(
+            "[NoOp] Alert digest skipped (no API key). To={Email} Matches={Count}",
+            data.ToEmail, data.TotalMatches);
+        return Task.CompletedTask;
+    }
 }

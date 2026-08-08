@@ -47,6 +47,12 @@ public class ResendEmailSender : IEmailSender
         return SendAsync(data.ToEmail, subject, html, replyTo: null, ct);
     }
 
+    public Task SendAlertDigestAsync(AlertDigestEmail data, CancellationToken ct = default)
+    {
+        var (subject, html) = EmailTemplates.AlertDigest(data);
+        return SendAsync(data.ToEmail, subject, html, replyTo: null, ct);
+    }
+
     private async Task SendAsync(string to, string subject, string html, string? replyTo, CancellationToken ct)
     {
         var from = string.IsNullOrWhiteSpace(_options.FromName)
