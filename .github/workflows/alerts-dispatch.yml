@@ -14,9 +14,17 @@ name: Alert digest
 
 on:
   schedule:
-    # Hourly, on the hour. Cron here is always UTC and may be delayed under platform load;
-    # the engine's cadence slack (23h for daily, 6d23h for weekly) absorbs that jitter.
-    - cron: '0 * * * *'
+    # Once a day at 11:00 UTC (07:00 Toronto). Cron here is always UTC and may be delayed under
+    # platform load; the engine's cadence slack (23h for daily, 6d23h for weekly) absorbs that.
+    #
+    # It used to run HOURLY, and that is what killed the database on 2026-08-10. The database is
+    # serverless with a 60-minute auto-pause delay: waking it every 60 minutes means it never
+    # reaches 60 idle minutes, so it never pauses. Awake around the clock at 0.5 vCore it burns
+    # the 100,000 vCore-second monthly free allowance in ~2.3 days, and Azure then pauses it for
+    # the rest of the month (error 42119). The site was down from 10-Aug to 1-Sep because of it.
+    #
+    # Hourly bought nothing: the digest cadence is daily and weekly, never hourly.
+    - cron: '0 11 * * *'
   workflow_dispatch:
 
 # Nothing in this job touches the repository.
