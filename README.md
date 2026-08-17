@@ -223,11 +223,13 @@ Optional settings, all with working defaults: `Alerts__MaxAlertsPerRun` (200), `
 * If daily CPU exceeds 60 minutes, the app pauses until the next day.
 * Azure SQL auto-pause after 1 h idle means the first request after idle can take ~20 s while the database wakes.
 * F1 does not allow custom domains &mdash; the app lives at `{app-name}.azurewebsites.net`.
-* The alert digest depends on an external scheduler, so anything that stops that scheduler stops the digest, and it stops quietly. GitHub's 60-day auto-disable for scheduled workflows applies to *public* repositories only and does not affect this one while it stays private &mdash; but an exhausted Actions minute quota, a rotated token, or a job that starts failing would all have the same effect. There is currently no in-app indicator of when the digest last ran; check the **Alert digest** workflow in the Actions tab.
-* Everything above is acceptable for a portfolio demo; a paying production workload should start at B1 + a dedicated Azure SQL tier.
+* The alert digest depends on an external scheduler, so anything that stops that scheduler stops the digest, and it stops quietly. An exhausted Actions minute quota, a rotated token, or a job that starts failing all have the same effect. **This repository is public, so GitHub's 60-day auto-disable for scheduled workflows applies**: if there is no repository activity for 60 days, the schedule is switched off and does not come back on its own. There is no in-app indicator of when the digest last ran; check the **Alert digest** workflow in the Actions tab.
+* Everything above is acceptable for a demo; a paying production workload should start at B1 + a dedicated Azure SQL tier.
 
 ## Why this repo exists
 
-I'm building out my portfolio as a .NET developer. The [Next.js version](https://rent-ca.vercel.app/en) showcases the product; this .NET version showcases the stack I actually work in day-to-day. Same product, two implementations, two deployments &mdash; both public, both live.
+The same product is built three times &mdash; [Next.js](https://rent-ca.vercel.app/en), this ASP.NET Core version, and an [Angular 22 + .NET Web API version](https://github.com/grichaud/Rent.ca.NET.ng) &mdash; against the same data model and the same feature slice.
+
+The point is not the app. It is what changes when the stack changes: where the rendering happens, where auth lives, what a migration costs, and what you give up by keeping the UI and the API in one deployable versus splitting them. Building the same thing more than once is the only way I have found to answer those questions with something other than an opinion.
 
 &mdash; Giovanni Richaud
